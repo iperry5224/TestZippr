@@ -1,0 +1,39 @@
+# SOPSAEL - SAELAR + SOPRA Containerized
+# SAELAR on 8443, SOPRA on 5224
+
+services:
+  saelar:
+    build:
+      context: ./saelar
+      dockerfile: Dockerfile
+    container_name: sopsael-saelar
+    ports:
+      - "8443:8443"
+    environment:
+      - STREAMLIT_SERVER_PORT=8443
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8443/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  sopra:
+    build:
+      context: ./sopra_app
+      dockerfile: Dockerfile
+    container_name: sopsael-sopra
+    ports:
+      - "5224:5224"
+    environment:
+      - STREAMLIT_SERVER_PORT=5224
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5224/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

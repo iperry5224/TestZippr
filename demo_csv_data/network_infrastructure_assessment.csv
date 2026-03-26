@@ -1,0 +1,11 @@
+category,control_id,control_name,status,severity,evidence,notes,assessed_by,assessment_date
+"Network Infrastructure",NET-001,"Network Segmentation",Failed,Critical,"Flat network topology; no VLAN segmentation between departments","Major security gap - lateral movement risk","M. Johnson","2026-02-03"
+"Network Infrastructure",NET-002,"Firewall Configuration",Passed,High,"Firewall rules reviewed; deny-by-default policy in place","1,247 rules documented and justified","M. Johnson","2026-02-03"
+"Network Infrastructure",NET-003,"VPN Security",Passed,Medium,"SSL VPN with MFA enabled; split tunneling disabled","Certificate-based auth in use","M. Johnson","2026-02-03"
+"Network Infrastructure",NET-004,"Wireless Security",Failed,High,"WPA2-Personal in use; should be WPA3-Enterprise","Guest network properly isolated","M. Johnson","2026-02-03"
+"Network Infrastructure",NET-005,"DNS Security",Passed,Medium,"DNSSEC enabled; DNS over HTTPS configured","Internal DNS servers hardened","M. Johnson","2026-02-03"
+"Network Infrastructure",NET-006,"Network Monitoring",Passed,High,"NetFlow collection enabled; IDS/IPS deployed at perimeter","24/7 SOC monitoring active","M. Johnson","2026-02-03"
+"Network Infrastructure",NET-007,"Switch Security",Failed,Medium,"Port security not enabled on 40% of access switches","DHCP snooping partially deployed","M. Johnson","2026-02-03"
+"Network Infrastructure",NET-008,"Router Hardening",Passed,Medium,"All routers running current firmware; SSH only access","SNMP v3 configured","M. Johnson","2026-02-03"
+"Network Infrastructure",NET-009,"Network Access Control",Failed,High,"802.1X not deployed; any device can connect to network","NAC solution needed","M. Johnson","2026-02-03"
+"Network Infrastructure",NET-010,"Bandwidth Management",Passed,Low,"QoS policies configured for critical applications","Traffic shaping active","M. Johnson","2026-02-03"

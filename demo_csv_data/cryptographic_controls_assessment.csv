@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+CRY-001,Cryptographic Standards Policy,Cryptographic Controls,System Comm Protection,Passed,,CRY-001 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+CRY-002,TLS Configuration,Cryptographic Controls,System Comm Protection,Passed,,CRY-002 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+CRY-003,Certificate Lifecycle Management,Cryptographic Controls,System Comm Protection,Failed,High,Automated scan results for CRY-003,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-01
+CRY-004,PKI Infrastructure Security,Cryptographic Controls,System Comm Protection,Passed,,CRY-004 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+CRY-005,Encryption Key Rotation,Cryptographic Controls,System Comm Protection,Failed,High,Automated scan results for CRY-005,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-02
+CRY-006,Hardware Security Module Usage,Cryptographic Controls,System Comm Protection,Failed,High,Automated scan results for CRY-006,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-01
+CRY-007,Deprecated Algorithm Remediation,Cryptographic Controls,System Comm Protection,Passed,,CRY-007 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+CRY-008,Crypto Agility Planning,Cryptographic Controls,System Comm Protection,Passed,,CRY-008 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+CRY-009,Disk Encryption Key Escrow,Cryptographic Controls,System Comm Protection,Passed,,CRY-009 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+CRY-010,Random Number Generation,Cryptographic Controls,System Comm Protection,Passed,,CRY-010 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06

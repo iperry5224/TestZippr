@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAELAR OWASP Top 10 Assessment Report</title>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 2rem; background: #f8f9fa; }
+        h1 { color: #1e3a5f; border-bottom: 2px solid #2d5a87; padding-bottom: 0.5rem; }
+        h2 { color: #2d5a87; margin-top: 2rem; }
+        table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+        th { background: #1e3a5f; color: #fff; padding: 12px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f5f7fa; }
+        code { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+        .summary { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+        .badge { padding: 8px 16px; border-radius: 6px; font-weight: 600; color: #fff; }
+        .meta { color: #6c757d; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+    <h1>SAELAR OWASP Top 10 Security Assessment Report</h1>
+    <p class="meta">Generated: 2026-02-18 11:39 | Platform: SAELAR (NIST 800-53 Assessment Tool) | Framework: OWASP Top 10 2024</p>
+
+    <h2>Summary</h2>
+    <div class="summary">
+        <span class="badge" style="background:#dc3545;">CRITICAL: 1</span>
+        <span class="badge" style="background:#fd7e14;">HIGH: 2</span>
+        <span class="badge" style="background:#ffc107;">MEDIUM: 5</span>
+        <span class="badge" style="background:#0dcaf0;">LOW: 3</span>
+    </div>
+
+    <h2>Findings</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Severity</th>
+                <th>ID</th>
+                <th>Category</th>
+                <th>File</th>
+                <th>Finding</th>
+                <th>Recommendation</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td><span style="background:#dc3545;color:#fff;padding:2px 8px;border-radius:4px;">CRITICAL</span></td>
+            <td>A02</td>
+            <td>Security Misconfiguration</td>
+            <td><code>nist_auth.py</code></td>
+            <td>Default credentials hardcoded (admin/admin123, auditor/audit123, viewer/view123). Demo credentials exposed in login UI.</td>
+            <td>Remove default users. Require initial setup. Use env vars or secrets manager for any default creds. Remove demo credentials expander in production.</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#fd7e14;color:#fff;padding:2px 8px;border-radius:4px;">HIGH</span></td>
+            <td>A04</td>
+            <td>Cryptographic Failures</td>
+            <td><code>nist_auth.py</code></td>
+            <td>Passwords hashed with SHA-256. SHA-256 is fast and not designed for password hashing; vulnerable to GPU cracking.</td>
+            <td>Use bcrypt, argon2, or scrypt for password hashing. Add salt (bcrypt/argon2 do this by default).</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#fd7e14;color:#fff;padding:2px 8px;border-radius:4px;">HIGH</span></td>
+            <td>A05</td>
+            <td>Injection</td>
+            <td><code>nist_setup.py</code></td>
+            <td>subprocess with shell=True. Command injection risk if arguments include user input.</td>
+            <td>Avoid shell=True. Use list form: subprocess.run(['cmd', 'arg1', 'arg2']). Validate/sanitize any user input.</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#ffc107;color:#fff;padding:2px 8px;border-radius:4px;">MEDIUM</span></td>
+            <td>A01</td>
+            <td>Broken Access Control</td>
+            <td><code>nist_setup.py</code></td>
+            <td>Auth decorators used (4 references). Verify all routes/pages check permissions before sensitive operations.</td>
+            <td>Audit every page/view for require_auth or require_permission. Ensure role checks on sensitive actions.</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#ffc107;color:#fff;padding:2px 8px;border-radius:4px;">MEDIUM</span></td>
+            <td>A02</td>
+            <td>Security Misconfiguration</td>
+            <td><code>nist_setup.py</code></td>
+            <td>Ollama listens on localhost:11434. In container/network deployment this may expose AI endpoint.</td>
+            <td>Bind Ollama to loopback only. Use reverse proxy with auth for remote access.</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#ffc107;color:#fff;padding:2px 8px;border-radius:4px;">MEDIUM</span></td>
+            <td>A03</td>
+            <td>Software Supply Chain</td>
+            <td><code>requirements.txt</code></td>
+            <td>Dependencies use flexible version ranges (>=). Pinned versions reduce supply chain risk.</td>
+            <td>Pin exact versions (==) for reproducible builds. Run pip-audit or safety check regularly.</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#ffc107;color:#fff;padding:2px 8px;border-radius:4px;">MEDIUM</span></td>
+            <td>A06</td>
+            <td>Insecure Design</td>
+            <td><code>nist_auth.py</code></td>
+            <td>User store is JSON file. No encryption at rest. Single point of failure for credential storage.</td>
+            <td>Use a proper database (e.g., PostgreSQL) or managed auth (Cognito, Auth0). Encrypt sensitive data at rest.</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#ffc107;color:#fff;padding:2px 8px;border-radius:4px;">MEDIUM</span></td>
+            <td>A07</td>
+            <td>Authentication Failures</td>
+            <td><code>nist_auth.py</code></td>
+            <td>MFA disabled (require_mfa: False). Session timeout 60 min; consider shorter for sensitive ops.</td>
+            <td>Enable MFA for admin/auditor roles. Reduce session timeout for high-privilege users.</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#0dcaf0;color:#fff;padding:2px 8px;border-radius:4px;">LOW</span></td>
+            <td>A07</td>
+            <td>Authentication Failures</td>
+            <td><code>nist_auth.py</code></td>
+            <td>Minimum password length is 8. NIST SP 800-63B recommends at least 8 with complexity, or longer passphrases.</td>
+            <td>Increase to 12+ characters. Consider password breach checking (HaveIBeenPwned API).</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#0dcaf0;color:#fff;padding:2px 8px;border-radius:4px;">LOW</span></td>
+            <td>A08</td>
+            <td>Data Integrity Failures</td>
+            <td><code>nist_auth.py</code></td>
+            <td>User JSON file has no integrity checks. Tampering could add/modify accounts.</td>
+            <td>Use HMAC or signed storage. Consider checksums or version control for config files.</td>
+        </tr>
+        
+        <tr>
+            <td><span style="background:#0dcaf0;color:#fff;padding:2px 8px;border-radius:4px;">LOW</span></td>
+            <td>A10</td>
+            <td>Mishandling Exceptional Conditions</td>
+            <td><code>nist_setup.py</code></td>
+            <td>Broad exception handlers (4 found). May hide errors and leak sensitive data in tracebacks.</td>
+            <td>Catch specific exceptions. Log errors without exposing internals. Avoid printing stack traces to users.</td>
+        </tr>
+        
+        </tbody>
+    </table>
+
+    <h2>OWASP Top 10 Reference</h2>
+    <table>
+        <thead><tr><th>ID</th><th>Category</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td>A01</td><td>Broken Access Control</td><td>Failures in enforcing access policies.</td></tr><tr><td>A02</td><td>Security Misconfiguration</td><td>Default configs, unnecessary features, unpatched flaws.</td></tr><tr><td>A03</td><td>Software Supply Chain</td><td>Vulnerable or malicious third-party components.</td></tr><tr><td>A04</td><td>Cryptographic Failures</td><td>Failures related to cryptography and data protection.</td></tr><tr><td>A05</td><td>Injection</td><td>Command, query, or code injection vulnerabilities.</td></tr><tr><td>A06</td><td>Insecure Design</td><td>Missing or ineffective threat modeling.</td></tr><tr><td>A07</td><td>Authentication Failures</td><td>Weak or broken authentication mechanisms.</td></tr><tr><td>A08</td><td>Data Integrity Failures</td><td>Unverified data, unsigned updates, deserialization.</td></tr><tr><td>A09</td><td>Logging & Monitoring</td><td>Missing or inadequate security logging.</td></tr><tr><td>A10</td><td>Mishandling Exceptional Conditions</td><td>Poor error handling, information disclosure.</td></tr>
+        </tbody>
+    </table>
+
+    <p class="meta" style="margin-top: 2rem;">Report generated by owasp_saelar_assessment.py. Review findings and remediate according to priority.</p>
+</body>
+</html>

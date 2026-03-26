@@ -1,0 +1,15 @@
+[Unit]
+Description=BeeKeeper Container Security Platform
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/apps/beekeeper
+ExecStart=/opt/apps/venv/bin/streamlit run container_xray_app.py --server.port 2323 --server.address 0.0.0.0 --server.headless true
+Restart=always
+RestartSec=10
+Environment=HOME=/home/ubuntu
+
+[Install]
+WantedBy=multi-user.target

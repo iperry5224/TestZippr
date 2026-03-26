@@ -1,0 +1,21 @@
+[Unit]
+Description=SOPRA - Security Operations Platform for Risk Assessment (HTTPS)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/apps
+ExecStart=/opt/apps/venv/bin/streamlit run sopra_setup.py \
+    --server.port 8080 \
+    --server.address 0.0.0.0 \
+    --server.headless true \
+    --server.sslCertFile=/opt/apps/ssl_certs/streamlit.crt \
+    --server.sslKeyFile=/opt/apps/ssl_certs/streamlit.key
+Restart=always
+RestartSec=5
+Environment=HOME=/home/ubuntu
+Environment=AWS_DEFAULT_REGION=us-east-1
+
+[Install]
+WantedBy=multi-user.target

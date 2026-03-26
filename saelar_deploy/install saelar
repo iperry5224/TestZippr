@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Run:  ./install saelar   or add this dir to PATH and run: install saelar
+cd "$(dirname "$0")"
+exec ./install_saelar "$@"

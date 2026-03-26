@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "igento": {
+      "command": "python",
+      "args": ["C:\\Users\\iperr\\TestZippr\\igento\\igento_server.py"],
+      "cwd": "C:\\Users\\iperr\\TestZippr\\igento"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+GOV-001,Information Security Policy,Governance & Compliance,Planning,Passed,,GOV-001 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+GOV-002,Risk Management Framework,Governance & Compliance,Risk Assessment,Passed,,GOV-002 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+GOV-003,Security Assessment & Authorization,Governance & Compliance,Risk Assessment,Failed,Critical,Automated scan results for GOV-003,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06
+GOV-004,Continuous Monitoring Program,Governance & Compliance,Risk Assessment,Passed,,GOV-004 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+GOV-005,System Security Plan,Governance & Compliance,Planning,Passed,,GOV-005 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+GOV-006,Regulatory Compliance Tracking,Governance & Compliance,Planning,Passed,,GOV-006 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+GOV-007,Security Metrics & Reporting,Governance & Compliance,Planning,Passed,,GOV-007 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+GOV-008,Security Architecture Review,Governance & Compliance,Planning,Passed,,GOV-008 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-04
+GOV-009,Interconnection Security Agreements,Governance & Compliance,Risk Assessment,Failed,High,Automated scan results for GOV-009,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-04
+GOV-010,Privacy Impact Assessment,Governance & Compliance,Planning,Failed,Medium,Automated scan results for GOV-010,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06

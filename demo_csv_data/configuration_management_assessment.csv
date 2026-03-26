@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+CFG-001,Baseline Configuration Standards,Configuration Management,Config Management,Passed,,CFG-001 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+CFG-002,Change Management Process,Configuration Management,Config Management,Failed,High,Automated scan results for CFG-002,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-05
+CFG-003,Golden Image Management,Configuration Management,Config Management,Passed,,CFG-003 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+CFG-004,Software Inventory Control,Configuration Management,Config Management,Passed,,CFG-004 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+CFG-005,Hardware Inventory Control,Configuration Management,Config Management,Passed,,CFG-005 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+CFG-006,Configuration Drift Detection,Configuration Management,Config Management,Passed,,CFG-006 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+CFG-007,Firmware Security Management,Configuration Management,System Info Integrity,Passed,,CFG-007 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+CFG-008,Network Device Configuration Backup,Configuration Management,Config Management,Passed,,CFG-008 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+CFG-009,Least Functionality Enforcement,Configuration Management,Config Management,Passed,,CFG-009 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+CFG-010,Security Configuration Compliance Reporting,Configuration Management,Config Management,Passed,,CFG-010 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02

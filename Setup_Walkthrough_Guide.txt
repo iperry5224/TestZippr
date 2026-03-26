@@ -1,0 +1,335 @@
+================================================================================
+     AWS SECURITY ASSESSMENT ENVIRONMENT - SETUP WALKTHROUGH GUIDE
+================================================================================
+
+This guide explains step-by-step what happens when you run the setup script.
+
+================================================================================
+                           HOW TO START THE SETUP
+================================================================================
+
+You have two options to run the setup:
+
+OPTION 1 - From Windows PowerShell:
+-----------------------------------
+    cd C:\Users\iperr\TestZippr
+    .\setup_environment.ps1
+
+OPTION 2 - From WSL Terminal:
+-----------------------------
+    cd /mnt/c/Users/iperr/TestZippr
+    bash setup_environment.sh
+
+
+================================================================================
+                         STEP-BY-STEP BREAKDOWN
+================================================================================
+
+STEP 1: PREREQUISITES CHECK
+---------------------------
+What you'll see:
+    [INFO] Step 1: Checking prerequisites...
+    [✓] Running in WSL environment
+    [✓] Python 3 found: 3.12.3
+    [✓] pip3 found
+    [✓] Python venv module available
+
+What happens:
+    The script verifies Python 3, pip, and venv are installed. If anything 
+    is missing, it will automatically install it using apt-get.
+
+You may see:
+    A prompt for your sudo password if packages need to be installed.
+
+--------------------------------------------------------------------------------
+
+STEP 2: VIRTUAL ENVIRONMENT CREATION
+------------------------------------
+What you'll see:
+    [INFO] Step 2: Setting up Python virtual environment...
+    [✓] Virtual environment created at /mnt/c/Users/iperr/TestZippr/security-venv
+    [✓] Virtual environment activated
+
+What happens:
+    Creates an isolated Python environment called "security-venv" so packages 
+    don't conflict with your system Python.
+
+If it already exists, you'll be asked:
+    "Virtual environment already exists. Do you want to recreate it? (y/N):"
+    
+    - Press N to keep existing (faster)
+    - Press Y to start fresh
+
+--------------------------------------------------------------------------------
+
+STEP 3: REQUIREMENTS FILE
+-------------------------
+What you'll see:
+    [INFO] Step 3: Creating requirements file...
+    [✓] Requirements file created
+
+What happens:
+    Creates/updates requirements.txt with the packages needed:
+    - boto3      - AWS SDK
+    - streamlit  - Web UI framework
+    - pandas     - Data processing
+    - rich       - Pretty terminal output
+
+--------------------------------------------------------------------------------
+
+STEP 4: INSTALL PYTHON DEPENDENCIES
+-----------------------------------
+What you'll see:
+    [INFO] Step 4: Installing Python dependencies...
+    Collecting boto3>=1.34.0
+      Downloading boto3-1.34.xx.whl (...)
+    ...
+    [✓] All Python dependencies installed
+
+What happens:
+    Installs all Python packages into the virtual environment.
+
+Duration:
+    Usually 1-3 minutes depending on your internet speed.
+
+--------------------------------------------------------------------------------
+
+STEP 5: AWS CREDENTIALS CONFIGURATION
+-------------------------------------
+
+SCENARIO A - Credentials already exist:
+
+    What you'll see:
+        [INFO] Step 5: Configuring AWS credentials...
+        [✓] AWS credentials file found
+        [✓] AWS connection verified!
+             Account: 016230494923
+             Identity: arn:aws:iam::016230494923:user/iperry7223
+
+    What happens:
+        The script detects your existing credentials and tests the connection.
+
+SCENARIO B - No credentials found:
+
+    What you'll see:
+        [!] AWS credentials not configured
+
+        To configure AWS credentials, you have several options:
+
+          Option 1: Run AWS configure
+            $ aws configure
+
+          Option 2: Set environment variables
+            $ export AWS_ACCESS_KEY_ID='your-access-key'
+            ...
+
+        Would you like to configure AWS credentials now? (y/N):
+
+    If you press Y, you'll be prompted:
+        Enter AWS Access Key ID: AKIA...
+        Enter AWS Secret Access Key: ******* (hidden as you type)
+        Enter default region (e.g., us-east-1): us-east-1
+
+--------------------------------------------------------------------------------
+
+STEP 6: AWS CLI CHECK
+---------------------
+What you'll see:
+    [INFO] Step 6: Checking AWS CLI...
+    [✓] AWS CLI found: 2.x.x
+
+What happens:
+    Verifies AWS CLI is installed. If not, it downloads and installs AWS CLI v2.
+
+Duration:
+    If installation needed, approximately 2-3 minutes.
+
+--------------------------------------------------------------------------------
+
+STEP 7: CREATE LAUNCHER SCRIPTS
+-------------------------------
+What you'll see:
+    [INFO] Step 7: Creating launcher scripts...
+    [✓] Launcher scripts created
+
+What happens:
+    Creates easy-to-use scripts:
+
+    Script                  | What It Does
+    ------------------------|--------------------------------------------
+    run_nist_controls.sh    | Activates venv + launches NIST UI
+    run_pentest.sh          | Activates venv + launches PenTest UI
+    run_assessment.sh       | Interactive menu with all options
+
+--------------------------------------------------------------------------------
+
+STEP 8: ACTIVATION SCRIPT
+-------------------------
+What you'll see:
+    [INFO] Step 8: Creating quick activation script...
+    [✓] Activation script created
+
+What happens:
+    Creates activate_env.sh - a quick way to jump into the environment.
+
+
+================================================================================
+                            FINAL SUMMARY
+================================================================================
+
+After completion, you'll see:
+
+    ╔═══════════════════════════════════════════════════════════════════════╗
+    ║                    SETUP COMPLETE!                                    ║
+    ╚═══════════════════════════════════════════════════════════════════════╝
+
+    Your AWS Security Assessment environment is ready!
+
+    📁 Location: /mnt/c/Users/iperr/TestZippr
+
+    🚀 Quick Start Commands:
+
+       # Activate the environment
+       source /mnt/c/Users/iperr/TestZippr/activate_env.sh
+
+       # Or run apps directly:
+       ./run_nist_controls.sh      # NIST 800-53 UI
+       ./run_pentest.sh            # PenTest UI
+       ./run_assessment.sh         # Interactive menu
+
+    🔐 AWS Connection: Connected
+       Account ID: 016230494923
+
+    Happy Security Testing! 🛡️
+
+
+================================================================================
+                         TIME ESTIMATES
+================================================================================
+
+Component                    | Time
+-----------------------------|------------------
+Prerequisites check          | ~10 seconds
+Create virtual environment   | ~5 seconds
+Install Python packages      | ~1-3 minutes
+AWS credential check         | ~5 seconds
+Create launcher scripts      | ~5 seconds
+-----------------------------|------------------
+TOTAL                        | ~2-4 minutes
+
+
+================================================================================
+                    QUESTIONS YOU MIGHT BE ASKED
+================================================================================
+
+1. "Do you want to recreate the virtual environment?"
+   - Only asked if a virtual environment already exists
+   - Answer N to keep existing (faster), Y to start fresh
+
+2. "Would you like to configure AWS credentials now?"
+   - Only asked if AWS credentials are not already set up
+   - Answer Y to configure interactively, N to skip and configure later
+
+3. Sudo password prompt
+   - Only asked if system packages need to be installed
+   - Enter your Linux user password
+
+
+================================================================================
+                    WHAT YOU'LL HAVE AFTER SETUP
+================================================================================
+
+FILES CREATED:
+--------------
+    security-venv/           - Python virtual environment
+    activate_env.sh          - Quick environment activation script
+    run_nist_controls.sh     - NIST 800-53 Assessment launcher
+    run_pentest.sh           - Penetration Testing launcher
+    run_assessment.sh        - Interactive menu launcher
+
+READY TO RUN:
+-------------
+    ./run_assessment.sh   →  Shows interactive menu:
+    
+        1) NIST 800-53 Controls Assessment (CLI)
+        2) NIST 800-53 Controls Assessment (Streamlit UI)  ← Opens browser
+        3) AWS Penetration Test (CLI)
+        4) AWS Penetration Test (Streamlit UI)             ← Opens browser
+        5) Run Both CLI Assessments
+        6) Exit
+
+
+================================================================================
+                         COMPLETE FILE STRUCTURE
+================================================================================
+
+After setup, your TestZippr folder will contain:
+
+    C:\Users\iperr\TestZippr\
+    │
+    ├── SETUP & CONFIGURATION
+    │   ├── setup_environment.sh        - Main setup script (bash)
+    │   ├── setup_environment.ps1       - Windows PowerShell wrapper
+    │   ├── requirements.txt            - Python dependencies
+    │   ├── activate_env.sh             - Quick environment activation
+    │   └── security-venv/              - Python virtual environment
+    │
+    ├── LAUNCHER SCRIPTS
+    │   ├── run_nist_controls.sh        - Launch NIST assessment UI
+    │   ├── run_pentest.sh              - Launch penetration testing UI
+    │   └── run_assessment.sh           - Interactive menu (all tools)
+    │
+    ├── NIST 800-53 CONTROLS ASSESSMENT
+    │   ├── nist_800_53_controls.py     - CLI assessment engine
+    │   └── nist_controls_app.py        - Streamlit web UI
+    │
+    ├── PENETRATION TESTING TOOLKIT
+    │   ├── aws_pentest_toolkit.py      - CLI pentest engine
+    │   └── pentest_app.py              - Streamlit web UI
+    │
+    ├── DOCUMENTATION
+    │   ├── NIST_800-53_Controls_Reference_Guide.txt
+    │   └── Setup_Walkthrough_Guide.txt  (this file)
+    │
+    └── OTHER
+        └── root-mfa.py                 - Original AWS test script
+
+
+================================================================================
+                         TROUBLESHOOTING
+================================================================================
+
+PROBLEM: "Permission denied" when running scripts
+SOLUTION: Make scripts executable:
+    chmod +x setup_environment.sh
+    chmod +x run_*.sh
+
+PROBLEM: "python3: command not found"
+SOLUTION: Install Python in WSL:
+    sudo apt update
+    sudo apt install python3 python3-pip python3-venv
+
+PROBLEM: "aws: command not found" after setup
+SOLUTION: Restart your terminal or run:
+    source ~/.bashrc
+
+PROBLEM: "NoCredentialsError" when running assessments
+SOLUTION: Configure AWS credentials:
+    aws configure
+    
+    Or set environment variables:
+    export AWS_ACCESS_KEY_ID='your-key'
+    export AWS_SECRET_ACCESS_KEY='your-secret'
+    export AWS_DEFAULT_REGION='us-east-1'
+
+PROBLEM: Streamlit doesn't open in browser
+SOLUTION: Manually open the URL shown in terminal:
+    http://localhost:8501
+    or
+    http://localhost:8502
+
+
+================================================================================
+                              END OF GUIDE
+================================================================================
+

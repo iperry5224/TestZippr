@@ -1,0 +1,206 @@
+SOPRA REMEDIATION SCRIPTS - Export Index
+============================================================
+
+AD-001       Domain Admin Account Security                           -> AD_001.ps1
+AD-002       Service Account Management                              -> AD_002.ps1
+AD-003       Group Policy Security                                   -> AD_003.ps1
+AD-004       Password Policy Enforcement                             -> AD_004.ps1
+AD-005       Kerberos Configuration                                  -> AD_005.ps1
+AD-006       LDAP Signing & Channel Binding                          -> AD_006.ps1
+AD-007       AdminSDHolder Protection                                -> AD_007.ps1
+AD-008       Trust Relationship Security                             -> AD_008.ps1
+AD-009       Replication Security                                    -> AD_009.ps1
+AD-010       Audit Policy Configuration                              -> AD_010.ps1
+APP-001      Secure Software Development Lifecycle                   -> APP_001.ps1
+APP-002      Static Application Security Testing                     -> APP_002.ps1
+APP-003      Dynamic Application Security Testing                    -> APP_003.ps1
+APP-004      Software Composition Analysis                           -> APP_004.ps1
+APP-005      Web Application Firewall                                -> APP_005.ps1
+APP-006      API Security                                            -> APP_006.ps1
+APP-007      Secure Code Review                                      -> APP_007.ps1
+APP-008      Input Validation                                        -> APP_008.ps1
+APP-009      Secrets Management                                      -> APP_009.ps1
+APP-010      Security Headers & TLS Configuration                    -> APP_010.ps1
+CFG-001      Baseline Configuration Standards                        -> CFG_001.ps1
+CFG-002      Change Management Process                               -> CFG_002.ps1
+CFG-003      Golden Image Management                                 -> CFG_003.ps1
+CFG-004      Software Inventory Control                              -> CFG_004.ps1
+CFG-005      Hardware Inventory Control                              -> CFG_005.ps1
+CFG-006      Configuration Drift Detection                           -> CFG_006.ps1
+CFG-007      Firmware Security Management                            -> CFG_007.ps1
+CFG-008      Network Device Configuration Backup                     -> CFG_008.ps1
+CFG-009      Least Functionality Enforcement                         -> CFG_009.ps1
+CFG-010      Security Configuration Compliance Reporting             -> CFG_010.ps1
+CP-001       Business Continuity Plan                                -> CP_001.ps1
+CP-002       Disaster Recovery Plan                                  -> CP_002.ps1
+CP-003       DR Testing & Exercises                                  -> CP_003.ps1
+CP-004       Backup Verification & Testing                           -> CP_004.ps1
+CP-005       Alternate Processing Site                               -> CP_005.ps1
+CP-006       System Recovery Prioritization                          -> CP_006.ps1
+CP-007       Data Backup Offsite Storage                             -> CP_007.ps1
+CP-008       Telecommunications Redundancy                           -> CP_008.ps1
+CP-009       Essential Personnel Identification                      -> CP_009.ps1
+CP-010       Contingency Plan Training                               -> CP_010.ps1
+CRY-001      Cryptographic Standards Policy                          -> CRY_001.ps1
+CRY-002      TLS Configuration                                       -> CRY_002.ps1
+CRY-003      Certificate Lifecycle Management                        -> CRY_003.ps1
+CRY-004      PKI Infrastructure Security                             -> CRY_004.ps1
+CRY-005      Encryption Key Rotation                                 -> CRY_005.ps1
+CRY-006      Hardware Security Module Usage                          -> CRY_006.ps1
+CRY-007      Deprecated Algorithm Remediation                        -> CRY_007.ps1
+CRY-008      Crypto Agility Planning                                 -> CRY_008.ps1
+CRY-009      Disk Encryption Key Escrow                              -> CRY_009.ps1
+CRY-010      Random Number Generation                                -> CRY_010.ps1
+DAT-001      Data Classification                                     -> DAT_001.ps1
+DAT-002      Data Loss Prevention                                    -> DAT_002.ps1
+DAT-003      Encryption at Rest                                      -> DAT_003.ps1
+DAT-004      Encryption in Transit                                   -> DAT_004.ps1
+DAT-005      Backup & Recovery                                       -> DAT_005.ps1
+DAT-006      Data Retention Policy                                   -> DAT_006.ps1
+DAT-007      Sensitive Data Handling                                 -> DAT_007.ps1
+DAT-008      Database Encryption                                     -> DAT_008.ps1
+DAT-009      Key Management                                          -> DAT_009.ps1
+DAT-010      Data Access Auditing                                    -> DAT_010.ps1
+ECS-001      Email Gateway Protection                                -> ECS_001.ps1
+ECS-002      DMARC/DKIM/SPF Implementation                           -> ECS_002.ps1
+ECS-003      Email Encryption                                        -> ECS_003.ps1
+ECS-004      Phishing Protection                                     -> ECS_004.ps1
+ECS-005      Email Data Loss Prevention                              -> ECS_005.ps1
+ECS-006      Unified Communications Security                         -> ECS_006.ps1
+ECS-007      Email Retention & Archival                              -> ECS_007.ps1
+ECS-008      Secure File Transfer                                    -> ECS_008.ps1
+ECS-009      Collaboration Platform Security                         -> ECS_009.ps1
+ECS-010      External Email Marking                                  -> ECS_010.ps1
+END-001      Endpoint Protection Platform                            -> END_001.ps1
+END-002      Patch Management                                        -> END_002.ps1
+END-003      Host-based Firewall                                     -> END_003.ps1
+END-004      Application Whitelisting                                -> END_004.ps1
+END-005      Local Admin Rights                                      -> END_005.ps1
+END-006      USB/Removable Media Control                             -> END_006.ps1
+END-007      Full Disk Encryption                                    -> END_007.ps1
+END-008      EDR/XDR Deployment                                      -> END_008.ps1
+END-009      Secure Boot Configuration                               -> END_009.ps1
+END-010      Endpoint Logging                                        -> END_010.ps1
+GOV-001      Information Security Policy                             -> GOV_001.ps1
+GOV-002      Risk Management Framework                               -> GOV_002.ps1
+GOV-003      Security Assessment & Authorization                     -> GOV_003.ps1
+GOV-004      Continuous Monitoring Program                           -> GOV_004.ps1
+GOV-005      System Security Plan                                    -> GOV_005.ps1
+GOV-006      Regulatory Compliance Tracking                          -> GOV_006.ps1
+GOV-007      Security Metrics & Reporting                            -> GOV_007.ps1
+GOV-008      Security Architecture Review                            -> GOV_008.ps1
+GOV-009      Interconnection Security Agreements                     -> GOV_009.ps1
+GOV-010      Privacy Impact Assessment                               -> GOV_010.ps1
+IAM-001      Multi-Factor Authentication                             -> IAM_001.ps1
+IAM-002      Privileged Access Management                            -> IAM_002.ps1
+IAM-003      Role-Based Access Control                               -> IAM_003.ps1
+IAM-004      Account Lifecycle Management                            -> IAM_004.ps1
+IAM-005      Password Vault/Management                               -> IAM_005.ps1
+IAM-006      Session Management                                      -> IAM_006.ps1
+IAM-007      Access Review Process                                   -> IAM_007.ps1
+IAM-008      Separation of Duties                                    -> IAM_008.ps1
+IAM-009      Remote Access Security                                  -> IAM_009.ps1
+IAM-010      Identity Federation                                     -> IAM_010.ps1
+IR-001       Incident Response Plan                                  -> IR_001.ps1
+IR-002       Incident Response Team                                  -> IR_002.ps1
+IR-003       Tabletop Exercises                                      -> IR_003.ps1
+IR-004       Evidence Preservation & Chain of Custody                -> IR_004.ps1
+IR-005       Incident Classification & Prioritization                -> IR_005.ps1
+IR-006       External Reporting Requirements                         -> IR_006.ps1
+IR-007       Forensic Readiness                                      -> IR_007.ps1
+IR-008       Automated Incident Response                             -> IR_008.ps1
+IR-009       Lessons Learned Process                                 -> IR_009.ps1
+IR-010       Incident Communication Plan                             -> IR_010.ps1
+MON-001      SIEM Implementation                                     -> MON_001.ps1
+MON-002      Log Collection & Aggregation                            -> MON_002.ps1
+MON-003      Log Retention & Protection                              -> MON_003.ps1
+MON-004      Real-time Alerting                                      -> MON_004.ps1
+MON-005      Security Event Correlation                              -> MON_005.ps1
+MON-006      Threat Detection Rules                                  -> MON_006.ps1
+MON-007      Network Traffic Analysis                                -> MON_007.ps1
+MON-008      User Behavior Analytics                                 -> MON_008.ps1
+MON-009      Incident Response Integration                           -> MON_009.ps1
+MON-010      Compliance Reporting                                    -> MON_010.ps1
+NET-001      Network Segmentation                                    -> NET_001.ps1
+NET-002      Firewall Rule Review                                    -> NET_002.ps1
+NET-003      IDS/IPS Configuration                                   -> NET_003.ps1
+NET-004      VPN Security                                            -> NET_004.ps1
+NET-005      Switch Port Security                                    -> NET_005.ps1
+NET-006      Router ACL Review                                       -> NET_006.ps1
+NET-007      Network Device Hardening                                -> NET_007.ps1
+NET-008      Wireless Security                                       -> NET_008.ps1
+NET-009      DNS Security                                            -> NET_009.ps1
+NET-010      Network Monitoring                                      -> NET_010.ps1
+PHY-001      Physical Access Control                                 -> PHY_001.ps1
+PHY-002      Visitor Management                                      -> PHY_002.ps1
+PHY-003      Surveillance Systems                                    -> PHY_003.ps1
+PHY-004      Server Room Access                                      -> PHY_004.ps1
+PHY-005      Environmental Controls                                  -> PHY_005.ps1
+PHY-006      Cable Management                                        -> PHY_006.ps1
+PHY-007      Equipment Disposal                                      -> PHY_007.ps1
+PHY-008      Emergency Power                                         -> PHY_008.ps1
+PHY-009      Fire Suppression                                        -> PHY_009.ps1
+PHY-010      Physical Security Logging                               -> PHY_010.ps1
+SAT-001      Security Awareness Program                              -> SAT_001.ps1
+SAT-002      Phishing Simulation Program                             -> SAT_002.ps1
+SAT-003      Role-Based Security Training                            -> SAT_003.ps1
+SAT-004      Social Engineering Awareness                            -> SAT_004.ps1
+SAT-005      Personnel Screening                                     -> SAT_005.ps1
+SAT-006      Personnel Termination Procedures                        -> SAT_006.ps1
+SAT-007      Access Agreements                                       -> SAT_007.ps1
+SAT-008      Insider Threat Awareness                                -> SAT_008.ps1
+SAT-009      Security Training Effectiveness Measurement             -> SAT_009.ps1
+SAT-010      Third-Party Personnel Security                          -> SAT_010.ps1
+SCR-001      Vendor Risk Assessment Program                          -> SCR_001.ps1
+SCR-002      Software Bill of Materials                              -> SCR_002.ps1
+SCR-003      Third-Party Software Patching                           -> SCR_003.ps1
+SCR-004      Supplier Security Requirements                          -> SCR_004.ps1
+SCR-005      Component Authenticity Verification                     -> SCR_005.ps1
+SCR-006      Supply Chain Incident Notification                      -> SCR_006.ps1
+SCR-007      Vendor Access Controls                                  -> SCR_007.ps1
+SCR-008      Cloud Service Provider Assessment                       -> SCR_008.ps1
+SCR-009      End-of-Life Technology Management                       -> SCR_009.ps1
+SCR-010      Open Source Software Governance                         -> SCR_010.ps1
+SRV-001      Server Hardening Baseline                               -> SRV_001.ps1
+SRV-002      Unnecessary Services Disabled                           -> SRV_002.ps1
+SRV-003      Database Security                                       -> SRV_003.ps1
+SRV-004      File Server Permissions                                 -> SRV_004.ps1
+SRV-005      Web Server Security                                     -> SRV_005.ps1
+SRV-006      Email Server Security                                   -> SRV_006.ps1
+SRV-007      Backup Server Protection                                -> SRV_007.ps1
+SRV-008      Virtualization Security                                 -> SRV_008.ps1
+SRV-009      Server Certificate Management                           -> SRV_009.ps1
+SRV-010      Server Access Logging                                   -> SRV_010.ps1
+VCS-001      Hypervisor Hardening                                    -> VCS_001.ps1
+VCS-002      VM Isolation & Segmentation                             -> VCS_002.ps1
+VCS-003      Container Runtime Security                              -> VCS_003.ps1
+VCS-004      Container Registry Security                             -> VCS_004.ps1
+VCS-005      VM Snapshot Management                                  -> VCS_005.ps1
+VCS-006      Kubernetes RBAC                                         -> VCS_006.ps1
+VCS-007      Virtual Network Security                                -> VCS_007.ps1
+VCS-008      Container Secrets Management                            -> VCS_008.ps1
+VCS-009      VM Template Security                                    -> VCS_009.ps1
+VCS-010      Container Network Policies                              -> VCS_010.ps1
+VM-001       Vulnerability Scanning Program                          -> VM_001.ps1
+VM-002       Vulnerability Remediation SLAs                          -> VM_002.ps1
+VM-003       Asset Discovery & Inventory                             -> VM_003.ps1
+VM-004       Penetration Testing                                     -> VM_004.ps1
+VM-005       Threat Intelligence Integration                         -> VM_005.ps1
+VM-006       Web Application Scanning                                -> VM_006.ps1
+VM-007       Container Image Scanning                                -> VM_007.ps1
+VM-008       Database Vulnerability Assessment                       -> VM_008.ps1
+VM-009       Vulnerability Exception Management                      -> VM_009.ps1
+VM-010       Zero-Day Response Procedure                             -> VM_010.ps1
+WMS-001      Mobile Device Management                                -> WMS_001.ps1
+WMS-002      BYOD Security Policy                                    -> WMS_002.ps1
+WMS-003      Wireless Network Security                               -> WMS_003.ps1
+WMS-004      Rogue Wireless Detection                                -> WMS_004.ps1
+WMS-005      Guest Wireless Isolation                                -> WMS_005.ps1
+WMS-006      Mobile Application Security                             -> WMS_006.ps1
+WMS-007      Mobile Device Encryption                                -> WMS_007.ps1
+WMS-008      Lost/Stolen Device Response                             -> WMS_008.ps1
+WMS-009      Bluetooth Security                                      -> WMS_009.ps1
+WMS-010      Wireless Penetration Testing                            -> WMS_010.ps1
+
+============================================================
+Total: 200 controls with PowerShell remediation steps

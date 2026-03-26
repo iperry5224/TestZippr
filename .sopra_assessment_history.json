@@ -1,0 +1,1417 @@
+[
+  {
+    "timestamp": "2026-02-08T14:37:00.591810",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T14:54:02.072488",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T14:54:33.221473",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T14:59:30.296254",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T15:46:14.246725",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T15:48:36.540375",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T15:48:51.093392",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T15:49:00.269648",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T15:49:07.968437",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T15:52:59.847782",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:00:40.324913",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:04:19.800180",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:06:02.541873",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:11:50.205927",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:21:59.953110",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:24:30.888845",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:32:24.686351",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:42:04.067431",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:45:26.562462",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:50:46.107108",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:53:38.502069",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-08T16:57:15.865094",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T09:04:04.361819",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T09:06:36.548582",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T10:49:12.899489",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T10:49:41.377696",
+    "source": "Test Data (Demo)",
+    "total": 80,
+    "passed": 47,
+    "failed": 33,
+    "compliance_pct": 58.8,
+    "severity_counts": {
+      "Critical": 9,
+      "High": 14,
+      "Medium": 9,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Data Protection": 50.0,
+      "Endpoint Security": 60.0,
+      "Identity & Access Management": 40.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Server Security": 60.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T11:40:40.496886",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T11:55:53.423964",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T11:56:42.065470",
+    "source": "Test Data (Demo) \u2014 FIPS 199 Moderate",
+    "total": 155,
+    "passed": 94,
+    "failed": 61,
+    "compliance_pct": 60.6,
+    "severity_counts": {
+      "Critical": 16,
+      "High": 32,
+      "Medium": 13
+    },
+    "category_scores": {
+      "Active Directory Security": 14.3,
+      "Application Security": 50.0,
+      "Configuration Management": 88.9,
+      "Contingency Planning": 62.5,
+      "Cryptographic Controls": 71.4,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 66.7,
+      "Endpoint Security": 71.4,
+      "Governance & Compliance": 66.7,
+      "Identity & Access Management": 37.5,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 100.0,
+      "Network Infrastructure": 66.7,
+      "Physical Security": 85.7,
+      "Security Awareness & Training": 55.6,
+      "Server Security": 71.4,
+      "Supply Chain Risk Management": 42.9,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 44.4,
+      "Wireless & Mobile Security": 71.4
+    }
+  },
+  {
+    "timestamp": "2026-02-09T12:12:07.460196",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T12:22:12.101796",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T12:31:58.111886",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T12:43:43.264528",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T12:44:45.599874",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T12:47:53.638479",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T12:51:12.684680",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T13:13:26.411051",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T13:16:03.528902",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T13:17:34.399905",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T13:21:23.966316",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T14:43:11.180499",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T14:44:52.968532",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-09T14:47:43.725028",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-10T12:43:31.180618",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-10T13:16:05.891357",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-10T14:02:49.093810",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-10T14:41:52.739867",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  },
+  {
+    "timestamp": "2026-02-11T10:23:19.869434",
+    "source": "Test Data (Demo) \u2014 FIPS 199 High",
+    "total": 200,
+    "passed": 121,
+    "failed": 79,
+    "compliance_pct": 60.5,
+    "severity_counts": {
+      "Critical": 17,
+      "High": 42,
+      "Medium": 19,
+      "Low": 1
+    },
+    "category_scores": {
+      "Active Directory Security": 40.0,
+      "Application Security": 60.0,
+      "Configuration Management": 90.0,
+      "Contingency Planning": 60.0,
+      "Cryptographic Controls": 70.0,
+      "Data Protection": 50.0,
+      "Email & Communications Security": 70.0,
+      "Endpoint Security": 60.0,
+      "Governance & Compliance": 70.0,
+      "Identity & Access Management": 40.0,
+      "Incident Response": 50.0,
+      "Monitoring & Logging": 80.0,
+      "Network Infrastructure": 60.0,
+      "Physical Security": 80.0,
+      "Security Awareness & Training": 60.0,
+      "Server Security": 60.0,
+      "Supply Chain Risk Management": 50.0,
+      "Virtualization & Container Security": 50.0,
+      "Vulnerability Management": 40.0,
+      "Wireless & Mobile Security": 70.0
+    }
+  }
+]

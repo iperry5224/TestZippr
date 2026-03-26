@@ -1,0 +1,11 @@
+category,control_id,control_name,status,severity,evidence,notes,assessed_by,assessment_date
+"Active Directory Security",AD-001,"Domain Admin Account Security",Failed,Critical,"Found 12 Domain Admin accounts; only 3 have documented justification","Immediate action required - reduce to <5 accounts","J. Smith","2026-02-03"
+"Active Directory Security",AD-002,"Service Account Management",Failed,High,"47 service accounts using standard passwords older than 365 days","Recommend migration to gMSA","J. Smith","2026-02-03"
+"Active Directory Security",AD-003,"Group Policy Security",Passed,Medium,"All GPOs reviewed and documented; no unauthorized changes detected","Last GPO audit: 2026-01-15","J. Smith","2026-02-03"
+"Active Directory Security",AD-004,"Kerberos Configuration",Failed,High,"RC4 encryption still enabled; AES not enforced","Security risk - Kerberoasting vulnerability","J. Smith","2026-02-03"
+"Active Directory Security",AD-005,"LDAP Security",Passed,Medium,"LDAP signing required; channel binding enabled","Compliant with CIS benchmarks","J. Smith","2026-02-03"
+"Active Directory Security",AD-006,"Active Directory Backup",Passed,High,"Daily backups verified; tested restore on 2026-01-20","Backup retention: 30 days","J. Smith","2026-02-03"
+"Active Directory Security",AD-007,"Privileged Access Workstations",Failed,Critical,"No PAWs deployed; admins use regular workstations","High priority remediation needed","J. Smith","2026-02-03"
+"Active Directory Security",AD-008,"AdminSDHolder Protection",Passed,Medium,"AdminSDHolder ACLs reviewed; no unauthorized modifications","Monitoring enabled","J. Smith","2026-02-03"
+"Active Directory Security",AD-009,"Stale Account Management",Failed,Medium,"Found 234 accounts inactive >90 days still enabled","Automated cleanup recommended","J. Smith","2026-02-03"
+"Active Directory Security",AD-010,"Protected Users Group",Failed,High,"Only 2 of 12 privileged accounts in Protected Users group","Add remaining privileged accounts","J. Smith","2026-02-03"

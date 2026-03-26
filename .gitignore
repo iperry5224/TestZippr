@@ -1,0 +1,43 @@
+# Virtual environments & local Python
+security-venv/
+.venv/
+venv/
+env/
+
+# Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# AWS / auth (do not publish)
+.saelar_aws_config.json
+.nist_users.json
+.env
+.env.*
+*.pem
+*.ppk
+id_rsa
+id_rsa.pub
+
+# TLS private keys (self-signed / local dev)
+*.key
+
+# Accidental mirrored path (OneDrive Desktop reports) — do not publish
+C?/
+**/NIST_Assessment_Reports/
+**/AI-Guides/
+**/OneDrive/**
+
+# Streamlit / app local state (optional; uncomment if you do not want history in repo)
+# .streamlit/secrets.toml
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+~$*
+Home_Expense_Summary*.docx
+.idea/
+.vscode/
+
+# Large local artifacts (optional — remove line if you want zips in Git)
+# *.zip

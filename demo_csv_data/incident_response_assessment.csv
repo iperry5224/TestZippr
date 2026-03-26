@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+IR-001,Incident Response Plan,Incident Response,Incident Response,Failed,Critical,Automated scan results for IR-001,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-03
+IR-002,Incident Response Team,Incident Response,Incident Response,Failed,High,Automated scan results for IR-002,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-01
+IR-003,Tabletop Exercises,Incident Response,Incident Response,Passed,,IR-003 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+IR-004,Evidence Preservation & Chain of Custody,Incident Response,Incident Response,Passed,,IR-004 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+IR-005,Incident Classification & Prioritization,Incident Response,Incident Response,Passed,,IR-005 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+IR-006,External Reporting Requirements,Incident Response,Incident Response,Failed,High,Automated scan results for IR-006,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06
+IR-007,Forensic Readiness,Incident Response,Incident Response,Passed,,IR-007 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+IR-008,Automated Incident Response,Incident Response,Incident Response,Failed,Medium,Automated scan results for IR-008,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-04
+IR-009,Lessons Learned Process,Incident Response,Incident Response,Failed,Medium,Automated scan results for IR-009,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-05
+IR-010,Incident Communication Plan,Incident Response,Incident Response,Passed,,IR-010 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06

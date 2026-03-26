@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+APP-001,Secure Software Development Lifecycle,Application Security,System Services,Passed,,APP-001 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-04
+APP-002,Static Application Security Testing,Application Security,System Services,Passed,,APP-002 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+APP-003,Dynamic Application Security Testing,Application Security,System Services,Failed,High,Automated scan results for APP-003,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-05
+APP-004,Software Composition Analysis,Application Security,System Services,Passed,,APP-004 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+APP-005,Web Application Firewall,Application Security,System Comm Protection,Failed,High,Automated scan results for APP-005,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06
+APP-006,API Security,Application Security,System Comm Protection,Passed,,APP-006 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-04
+APP-007,Secure Code Review,Application Security,System Services,Passed,,APP-007 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+APP-008,Input Validation,Application Security,System Info Integrity,Failed,Critical,Automated scan results for APP-008,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-02
+APP-009,Secrets Management,Application Security,Identification Auth,Failed,Critical,Automated scan results for APP-009,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06
+APP-010,Security Headers & TLS Configuration,Application Security,System Comm Protection,Passed,,APP-010 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06

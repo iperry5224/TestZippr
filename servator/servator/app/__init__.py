@@ -1,0 +1,1 @@
+"""Servator web application."""

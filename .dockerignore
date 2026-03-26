@@ -1,0 +1,63 @@
+# Virtual environments
+security-venv/
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.cursor/
+
+# Git
+.git/
+.gitignore
+
+# Local configuration (will be mounted or set via env vars)
+.saelar_aws_config.json
+.nist_users.json
+
+# Test files
+test_*.py
+*_test.py
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Shell scripts (not needed in container)
+*.sh
+!entrypoint.sh
+
+# Batch files
+*.bat
+*.ps1
+
+# Old/legacy files
+nist_rev5_comprehensive_app.py
+
+# C folder (if exists)
+C/

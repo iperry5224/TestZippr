@@ -1,0 +1,387 @@
+================================================================================
+     NIST 800-53 SECURITY CONTROLS ASSESSMENT TOOL - REFERENCE GUIDE
+================================================================================
+
+Created: December 10, 2025
+Control Families: AU (Audit & Accountability) and SA (System & Services Acquisition)
+
+================================================================================
+                              GETTING STARTED
+================================================================================
+
+STARTING THE STREAMLIT UI:
+--------------------------
+From WSL terminal with venv activated:
+
+    cd /mnt/c/Users/iperr/TestZippr
+    streamlit run nist_controls_app.py
+
+Then open your browser to: http://localhost:8501
+
+
+COMMAND LINE USAGE (Alternative):
+---------------------------------
+    # Run all controls
+    python nist_800_53_controls.py
+
+    # Run only AU (Audit) controls
+    python nist_800_53_controls.py --family AU
+
+    # Run only SA (Acquisition) controls
+    python nist_800_53_controls.py --family SA
+
+    # Specify AWS region
+    python nist_800_53_controls.py --region us-east-1
+
+    # Export results to JSON
+    python nist_800_53_controls.py --export
+
+    # Export to specific file
+    python nist_800_53_controls.py --export --output my_assessment.json
+
+
+================================================================================
+                           UNDERSTANDING RESULTS
+================================================================================
+
+STATUS INDICATORS:
+------------------
+    ✅ PASS      - Control requirements are met
+    ❌ FAIL      - Critical issue requiring immediate attention
+    ⚠️ WARNING   - Potential issue to review
+    🔴 ERROR     - Could not evaluate (permissions issue, etc.)
+    ➖ N/A       - Not applicable to your environment
+
+COMPLIANCE SCORE:
+-----------------
+    Score = (Passed Controls / Total Applicable Controls) x 100
+
+    70%+ = Good compliance posture
+    50-70% = Needs improvement
+    <50% = Critical attention required
+
+
+================================================================================
+                    AU - AUDIT AND ACCOUNTABILITY CONTROLS
+================================================================================
+
+AU-2: AUDIT EVENTS
+------------------
+What it checks:
+    - Is CloudTrail enabled?
+    - Is CloudTrail actively logging?
+    - Is there a multi-region trail configured?
+
+Why it matters:
+    Ensures your organization can track who did what and when.
+
+Remediation:
+    aws cloudtrail create-trail --name my-trail --s3-bucket-name my-log-bucket
+    aws cloudtrail start-logging --name my-trail
+
+--------------------------------------------------------------------------------
+
+AU-3: CONTENT OF AUDIT RECORDS
+------------------------------
+What it checks:
+    - Are event selectors configured to capture management events?
+    - Are data events being captured?
+    - Is CloudWatch Logs integration enabled?
+
+Why it matters:
+    Audit records must contain who, what, when, where, and outcome.
+
+Remediation:
+    aws cloudtrail put-event-selectors --trail-name my-trail \
+      --event-selectors '[{"ReadWriteType":"All","IncludeManagementEvents":true}]'
+
+--------------------------------------------------------------------------------
+
+AU-4: AUDIT LOG STORAGE CAPACITY
+--------------------------------
+What it checks:
+    - Is there an S3 bucket for CloudTrail logs?
+    - Is bucket versioning enabled?
+    - Are CloudWatch Log Group retention policies set?
+
+Why it matters:
+    Prevents loss of audit data due to storage exhaustion.
+
+Remediation:
+    aws s3api put-bucket-versioning --bucket my-log-bucket \
+      --versioning-configuration Status=Enabled
+
+--------------------------------------------------------------------------------
+
+AU-6: AUDIT REVIEW, ANALYSIS, AND REPORTING
+-------------------------------------------
+What it checks:
+    - Are there CloudWatch alarms for audit events?
+    - Is CloudTrail Insights enabled?
+    - Are SNS notifications configured?
+
+Why it matters:
+    Enables timely detection of security incidents.
+
+Remediation:
+    aws cloudtrail put-insight-selectors --trail-name my-trail \
+      --insight-selectors '[{"InsightType":"ApiCallRateInsight"}]'
+
+--------------------------------------------------------------------------------
+
+AU-8: TIME STAMPS
+-----------------
+What it checks:
+    - AWS services automatically use Amazon Time Sync Service
+    - EC2 instances should use NTP (169.254.169.123)
+
+Why it matters:
+    Accurate timestamps are critical for forensic analysis.
+
+Remediation (for EC2 instances):
+    # In /etc/chrony.conf or /etc/ntp.conf:
+    server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4
+
+--------------------------------------------------------------------------------
+
+AU-9: PROTECTION OF AUDIT INFORMATION  *** CRITICAL CONTROL ***
+----------------------------------------------------------------
+What it checks:
+    - Is log file validation enabled?
+    - Are logs encrypted with KMS?
+    - Is the S3 bucket blocking public access?
+
+Why it matters:
+    Prevents tampering with or unauthorized access to audit logs.
+
+Remediation:
+    # Enable log file validation
+    aws cloudtrail update-trail --name my-trail --enable-log-file-validation
+
+    # Enable KMS encryption
+    aws cloudtrail update-trail --name my-trail --kms-key-id alias/my-key
+
+    # Block public access on S3 bucket
+    aws s3api put-public-access-block --bucket my-log-bucket \
+      --public-access-block-configuration \
+      "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+
+--------------------------------------------------------------------------------
+
+AU-11: AUDIT RECORD RETENTION
+-----------------------------
+What it checks:
+    - S3 lifecycle policies for CloudTrail buckets
+    - CloudWatch Logs retention settings
+
+Why it matters:
+    Ensures audit records are retained per organizational/regulatory requirements.
+
+Remediation:
+    aws logs put-retention-policy --log-group-name my-log-group \
+      --retention-in-days 365
+
+--------------------------------------------------------------------------------
+
+AU-12: AUDIT GENERATION
+-----------------------
+What it checks:
+    - Are CloudTrail trails actively logging?
+    - Is AWS Config recording?
+    - Are VPC Flow Logs enabled?
+
+Why it matters:
+    Ensures comprehensive audit record generation across all services.
+
+Remediation:
+    # Enable VPC Flow Logs
+    aws ec2 create-flow-logs --resource-type VPC --resource-ids vpc-12345678 \
+      --traffic-type ALL --log-destination-type cloud-watch-logs \
+      --log-group-name my-vpc-flow-logs
+
+
+================================================================================
+                  SA - SYSTEM AND SERVICES ACQUISITION CONTROLS
+================================================================================
+
+SA-3: SYSTEM DEVELOPMENT LIFE CYCLE
+-----------------------------------
+What it checks:
+    - Are CodePipeline pipelines configured?
+    - Are CodeBuild projects in use?
+
+Why it matters:
+    Ensures controlled, repeatable deployment processes.
+
+Remediation:
+    Implement CI/CD using AWS CodePipeline and CodeBuild.
+
+--------------------------------------------------------------------------------
+
+SA-4: ACQUISITION PROCESS
+-------------------------
+What it checks:
+    - Is AWS Organizations configured?
+    - Manual review required for procurement documentation
+
+Why it matters:
+    Security requirements must be included in acquisition processes.
+
+Remediation:
+    - Document security requirements in procurement processes
+    - Maintain vendor security assessments
+    - Include security clauses in contracts
+
+--------------------------------------------------------------------------------
+
+SA-8: SECURITY AND PRIVACY ENGINEERING PRINCIPLES
+-------------------------------------------------
+What it checks:
+    - Are KMS keys being used for encryption?
+    - Is EBS encryption by default enabled?
+    - Are security groups following least privilege?
+
+Why it matters:
+    Security must be built into systems from the start.
+
+Remediation:
+    # Enable EBS encryption by default
+    aws ec2 enable-ebs-encryption-by-default
+
+--------------------------------------------------------------------------------
+
+SA-9: EXTERNAL SYSTEM SERVICES
+------------------------------
+What it checks:
+    - IAM roles with external trust relationships
+    - VPC endpoints for private AWS service access
+
+Why it matters:
+    Third-party integrations must be identified and assessed.
+
+Remediation:
+    - Review and document all external service integrations
+    - Implement VPC endpoints for private connectivity
+
+--------------------------------------------------------------------------------
+
+SA-10: DEVELOPER CONFIGURATION MANAGEMENT
+-----------------------------------------
+What it checks:
+    - Are CodeCommit repositories in use?
+    - Is version control being used for code artifacts?
+
+Why it matters:
+    Ensures proper change management for code.
+
+Remediation:
+    Use CodeCommit or other version control for all code artifacts.
+
+--------------------------------------------------------------------------------
+
+SA-11: DEVELOPER TESTING AND EVALUATION
+---------------------------------------
+What it checks:
+    - Are there CodeBuild projects for testing?
+    - Do CodePipeline stages include test phases?
+
+Why it matters:
+    Security testing must be part of development.
+
+Remediation:
+    Add testing stages to your CI/CD pipelines.
+
+--------------------------------------------------------------------------------
+
+SA-15: DEVELOPMENT PROCESS, STANDARDS, AND TOOLS
+------------------------------------------------
+What it checks:
+    - Are CloudFormation stacks in use (Infrastructure as Code)?
+    - Is Service Catalog configured?
+
+Why it matters:
+    Ensures standardized, approved development practices.
+
+Remediation:
+    Adopt Infrastructure as Code using CloudFormation or Terraform.
+
+
+================================================================================
+                              EXPORT OPTIONS
+================================================================================
+
+The Streamlit UI provides three export formats:
+
+1. JSON (📄)
+   - Full structured data
+   - Best for: automation, API integration, programmatic analysis
+
+2. CSV (📊)
+   - Spreadsheet-compatible
+   - Best for: Excel analysis, tracking over time, reporting
+
+3. Text Report (📝)
+   - Human-readable summary
+   - Best for: documentation, auditors, management
+
+
+================================================================================
+                              BEST PRACTICES
+================================================================================
+
+1. RUN ASSESSMENTS REGULARLY
+   - Weekly for development environments
+   - Daily for production environments
+   - Before and after major changes
+
+2. PRIORITIZE REMEDIATION
+   - ❌ FAIL items first (security gaps)
+   - ⚠️ WARNING items second (improvement opportunities)
+
+3. TRACK PROGRESS
+   - Export JSON results weekly
+   - Compare scores over time
+   - Document remediation efforts
+
+4. DOCUMENT EXCEPTIONS
+   - Some controls may not apply (N/A)
+   - Document business justification for exceptions
+
+5. INTEGRATE WITH CI/CD
+   - Run CLI version in pipelines
+   - Fail builds on critical findings
+
+
+================================================================================
+                              FILE LOCATIONS
+================================================================================
+
+Assessment Script:     C:\Users\iperr\TestZippr\nist_800_53_controls.py
+Streamlit UI:          C:\Users\iperr\TestZippr\nist_controls_app.py
+This Reference Guide:  C:\Users\iperr\TestZippr\NIST_800-53_Controls_Reference_Guide.txt
+
+
+================================================================================
+                              QUICK REFERENCE
+================================================================================
+
+START UI:
+    cd /mnt/c/Users/iperr/TestZippr && streamlit run nist_controls_app.py
+
+RUN CLI (ALL):
+    python nist_800_53_controls.py
+
+RUN CLI (AU ONLY):
+    python nist_800_53_controls.py --family AU
+
+RUN CLI (SA ONLY):
+    python nist_800_53_controls.py --family SA
+
+EXPORT JSON:
+    python nist_800_53_controls.py --export --output assessment.json
+
+
+================================================================================
+                         END OF REFERENCE GUIDE
+================================================================================
+

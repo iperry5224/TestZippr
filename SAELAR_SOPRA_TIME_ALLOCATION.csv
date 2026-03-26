@@ -1,0 +1,26 @@
+Phase,Task,Personal (70%),Billable (30%)
+Conceptualizing,"Requirements gathering for NIST 800-53 Rev 5 assessment tool",100%,—
+Conceptualizing,"Research CISA BOD 22-01 / KEV integration approach",100%,—
+Conceptualizing,"Architecture design: SAELAR (AWS-focused) vs SOPRA (on-prem)",80%,20%
+Conceptualizing,"FIPS 199 baselines, control families, assessment methodology alignment",90%,10%
+Conceptualizing,"AI/Bedrock integration concept for remediation and risk scoring",100%,—
+Prototyping,"SAELAR: Initial NIST control checks (AU, SA families)",70%,30%
+Prototyping,"SOPRA: Streamlit UI mockups, multi-page layout",80%,20%
+Prototyping,"AWS API integration proof-of-concept (boto3, Security Hub, Config)",60%,40%
+Prototyping,"CISA KEV checker prototype, catalog ingestion",90%,10%
+Prototyping,"Bedrock AI integration prototype",100%,—
+Prototyping,"SOPRA: ISSO Toolkit, FIPS 199 selector, control crosswalk",75%,25%
+Coding,"NIST 800-53 Rev 5 full assessor (14 control families)",65%,35%
+Coding,"SAELAR: IAM, CloudTrail, GuardDuty, S3, KMS checks",60%,40%
+Coding,"SAELAR: Risk scoring, dashboard, certificate views",70%,30%
+Coding,"SOPRA: 200 controls, 20 categories, assessment engine",65%,35%
+Coding,"SOPRA: ISSO Toolkit (12 tools), remediation scripts",75%,25%
+Coding,"SOPRA: AI assistant, continuous monitoring, KEV integration",70%,30%
+Coding,"Auth module, user management, role-based access",80%,20%
+Coding,"S3 report export, CSV ingestion, demo data",60%,40%
+Deployment,"Docker containerization (SAELAR, SOPRA)",70%,30%
+Deployment,"EC2 deployment scripts, security groups, IAM profiles",55%,45%
+Deployment,"sopsael deploy script, playbook, start/stop automation",75%,25%
+Deployment,"ngrok tunnel setup, troubleshooting connectivity",80%,20%
+Deployment,"Original EC2 systemd deployment, SOPRA updates",50%,50%
+Deployment,"Documentation (SOPSAEL playbook, architecture, team Q&A)",85%,15%

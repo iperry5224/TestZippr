@@ -1,0 +1,171 @@
+[2026-02-24 15:27:55] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: FAIL
+  Overall: ISSUE DETECTED
+
+[2026-02-25 09:20:23] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-02-27 08:51:06] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-02 09:06:06] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: FAIL
+  saelar service: FAIL
+  sopra service: FAIL
+  ngrok-saelar-sopra: FAIL
+  https://sopra.ngrok.dev: FAIL
+  https://saelar.ngrok.dev: FAIL
+  Overall: ISSUE DETECTED
+
+[2026-03-02 09:30:26] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-02 09:31:49] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-03 09:32:57] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-04 09:33:56] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-06 08:49:42] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-11 17:33:44] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: FAIL
+  saelar service: FAIL
+  sopra service: FAIL
+  ngrok-saelar-sopra: FAIL
+  https://sopra.ngrok.dev: FAIL
+  https://saelar.ngrok.dev: FAIL
+  Overall: ISSUE DETECTED
+
+[2026-03-12 09:34:53] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: FAIL
+  saelar service: FAIL
+  sopra service: FAIL
+  ngrok-saelar-sopra: FAIL
+  https://sopra.ngrok.dev: FAIL
+  https://saelar.ngrok.dev: FAIL
+  Overall: ISSUE DETECTED
+
+[2026-03-16 08:42:18] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: FAIL
+  saelar service: FAIL
+  sopra service: FAIL
+  ngrok-saelar-sopra: FAIL
+  https://sopra.ngrok.dev: FAIL
+  https://saelar.ngrok.dev: FAIL
+  Overall: ISSUE DETECTED
+
+[2026-03-17 08:59:16] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-18 09:29:15] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: FAIL
+  saelar service: FAIL
+  sopra service: FAIL
+  ngrok-saelar-sopra: FAIL
+  https://sopra.ngrok.dev: FAIL
+  https://saelar.ngrok.dev: FAIL
+  Overall: ISSUE DETECTED
+
+[2026-03-19 08:49:08] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-20 09:25:02] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-21 14:40:20] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-22 18:32:53] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+
+[2026-03-23 09:09:26] SAELAR/SOPRA Tunnel Verification
+  ngrok tunnels: OK
+  saelar service: OK
+  sopra service: OK
+  ngrok-saelar-sopra: OK
+  https://sopra.ngrok.dev: OK
+  https://saelar.ngrok.dev: OK
+  Overall: UP
+

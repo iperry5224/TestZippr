@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+CP-001,Business Continuity Plan,Contingency Planning,Contingency Planning,Passed,,CP-001 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+CP-002,Disaster Recovery Plan,Contingency Planning,Contingency Planning,Passed,,CP-002 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+CP-003,DR Testing & Exercises,Contingency Planning,Contingency Planning,Passed,,CP-003 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+CP-004,Backup Verification & Testing,Contingency Planning,Contingency Planning,Failed,High,Automated scan results for CP-004,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06
+CP-005,Alternate Processing Site,Contingency Planning,Contingency Planning,Failed,High,Automated scan results for CP-005,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-03
+CP-006,System Recovery Prioritization,Contingency Planning,Contingency Planning,Failed,Medium,Automated scan results for CP-006,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-02
+CP-007,Data Backup Offsite Storage,Contingency Planning,Contingency Planning,Failed,High,Automated scan results for CP-007,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-04
+CP-008,Telecommunications Redundancy,Contingency Planning,Contingency Planning,Passed,,CP-008 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-04
+CP-009,Essential Personnel Identification,Contingency Planning,Contingency Planning,Passed,,CP-009 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+CP-010,Contingency Plan Training,Contingency Planning,Contingency Planning,Passed,,CP-010 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03

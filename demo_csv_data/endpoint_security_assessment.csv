@@ -1,0 +1,11 @@
+category,control_id,control_name,status,severity,evidence,notes,assessed_by,assessment_date
+"Endpoint Security",END-001,"Antivirus/EDR Deployment",Passed,Critical,"CrowdStrike Falcon deployed on 98.5% of endpoints","12 systems pending - scheduled for next maintenance","R. Davis","2026-02-03"
+"Endpoint Security",END-002,"Endpoint Patching",Failed,High,"147 endpoints missing critical patches older than 30 days","Patch compliance at 87%","R. Davis","2026-02-03"
+"Endpoint Security",END-003,"Host-Based Firewall",Passed,Medium,"Windows Firewall enabled via GPO on all domain systems","Default deny outbound for non-standard ports","R. Davis","2026-02-03"
+"Endpoint Security",END-004,"Application Whitelisting",Failed,High,"No application control solution deployed","AppLocker evaluation in progress","R. Davis","2026-02-03"
+"Endpoint Security",END-005,"USB Device Control",Passed,Medium,"USB storage devices blocked via GPO","Exceptions require manager approval","R. Davis","2026-02-03"
+"Endpoint Security",END-006,"Full Disk Encryption",Failed,Critical,"BitLocker enabled on only 67% of laptops","33% of mobile devices at risk","R. Davis","2026-02-03"
+"Endpoint Security",END-007,"Browser Security",Passed,Medium,"Chrome managed via enterprise policy; extensions restricted","Automatic updates enabled","R. Davis","2026-02-03"
+"Endpoint Security",END-008,"Local Admin Rights",Failed,High,"42% of users have local admin rights on workstations","Violates least privilege principle","R. Davis","2026-02-03"
+"Endpoint Security",END-009,"Screen Lock Policy",Passed,Low,"15-minute inactivity lock enforced via GPO","Password required on wake","R. Davis","2026-02-03"
+"Endpoint Security",END-010,"Endpoint Logging",Passed,Medium,"Windows Event Forwarding configured to SIEM","PowerShell logging enabled","R. Davis","2026-02-03"

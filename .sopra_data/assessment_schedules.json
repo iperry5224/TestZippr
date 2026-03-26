@@ -1,0 +1,74 @@
+[
+  {
+    "id": "SCHED-0001",
+    "category": "Active Directory Security",
+    "frequency_days": 90,
+    "last_assessed": "2026-02-09",
+    "assigned_to": "TBD",
+    "status": "On Schedule",
+    "next_due": "2026-05-10"
+  },
+  {
+    "id": "SCHED-0002",
+    "category": "Data Protection",
+    "frequency_days": 90,
+    "last_assessed": "2026-02-09",
+    "assigned_to": "TBD",
+    "status": "On Schedule",
+    "next_due": "2026-05-10"
+  },
+  {
+    "id": "SCHED-0003",
+    "category": "Endpoint Security",
+    "frequency_days": 90,
+    "last_assessed": "2026-02-09",
+    "assigned_to": "TBD",
+    "status": "On Schedule",
+    "next_due": "2026-05-10"
+  },
+  {
+    "id": "SCHED-0004",
+    "category": "Identity & Access Management",
+    "frequency_days": 90,
+    "last_assessed": "2026-02-09",
+    "assigned_to": "TBD",
+    "status": "On Schedule",
+    "next_due": "2026-05-10"
+  },
+  {
+    "id": "SCHED-0005",
+    "category": "Monitoring & Logging",
+    "frequency_days": 90,
+    "last_assessed": "2026-02-09",
+    "assigned_to": "TBD",
+    "status": "On Schedule",
+    "next_due": "2026-05-10"
+  },
+  {
+    "id": "SCHED-0006",
+    "category": "Network Infrastructure",
+    "frequency_days": 90,
+    "last_assessed": "2026-02-09",
+    "assigned_to": "TBD",
+    "status": "On Schedule",
+    "next_due": "2026-05-10"
+  },
+  {
+    "id": "SCHED-0007",
+    "category": "Physical Security",
+    "frequency_days": 90,
+    "last_assessed": "2026-02-09",
+    "assigned_to": "TBD",
+    "status": "On Schedule",
+    "next_due": "2026-05-10"
+  },
+  {
+    "id": "SCHED-0008",
+    "category": "Server Security",
+    "frequency_days": 90,
+    "last_assessed": "2026-02-09",
+    "assigned_to": "TBD",
+    "status": "On Schedule",
+    "next_due": "2026-05-10"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "system_info_name": "SAE Test V1",
+  "system_info_acronym": "SAETV1",
+  "system_info_owner": "Sir Victor K.",
+  "system_info_owner_email": "",
+  "system_info_ao": "",
+  "system_info_ao_email": "",
+  "system_info_isso": "Sir Anthony Av.",
+  "system_info_isso_email": "",
+  "system_info_categorization": "Moderate",
+  "system_info_status": "Operational",
+  "system_info_description": "SAETV1 provides a platform for SAE exploratory research for cyber innovation ",
+  "system_info_boundary": "AWS Commercial Cloud"
+}

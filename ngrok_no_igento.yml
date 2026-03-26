@@ -1,0 +1,15 @@
+version: "2"
+authtoken: 36tYWSq8csrb0yWQVpMLCjAbnTL_32tNgrk27z4aWQecyM2KP
+tunnels:
+  periculo:
+    addr: 9000
+    proto: http
+    domain: periculo.ngrok.dev
+  saelar:
+    addr: 8484
+    proto: http
+    domain: saelar.ngrok.dev
+  sopra:
+    addr: 8080
+    proto: http
+    domain: sopra.ngrok.dev

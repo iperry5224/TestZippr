@@ -1,0 +1,562 @@
+{
+  "AD-001": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Domain Admin Account Security",
+    "family": "Access Control"
+  },
+  "AD-002": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Service Account Management",
+    "family": "Access Control"
+  },
+  "AD-003": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Group Policy Security",
+    "family": "Configuration Management"
+  },
+  "AD-004": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Kerberos Configuration",
+    "family": "Identification & Auth"
+  },
+  "AD-005": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "LDAP Security",
+    "family": "Identification & Auth"
+  },
+  "AD-006": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Active Directory Backup",
+    "family": "System & Comm Protection"
+  },
+  "AD-007": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Privileged Access Workstations",
+    "family": "Access Control"
+  },
+  "AD-008": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "AdminSDHolder Protection",
+    "family": "Access Control"
+  },
+  "AD-009": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Stale Account Management",
+    "family": "System & Comm Protection"
+  },
+  "AD-010": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Protected Users Group",
+    "family": "Audit & Accountability"
+  },
+  "DAT-001": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Data Classification",
+    "family": "Risk Assessment"
+  },
+  "DAT-002": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Encryption at Rest",
+    "family": "System & Info Integrity"
+  },
+  "DAT-003": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Encryption in Transit",
+    "family": "System & Comm Protection"
+  },
+  "DAT-004": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Key Management",
+    "family": "System & Comm Protection"
+  },
+  "DAT-005": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Data Loss Prevention",
+    "family": "Contingency Planning"
+  },
+  "DAT-006": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Backup Encryption",
+    "family": "System & Info Integrity"
+  },
+  "DAT-007": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Data Retention",
+    "family": "Media Protection"
+  },
+  "DAT-008": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "PII Protection",
+    "family": "System & Comm Protection"
+  },
+  "DAT-009": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Database Access Logging",
+    "family": "System & Comm Protection"
+  },
+  "DAT-010": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Secure File Transfer",
+    "family": "Audit & Accountability"
+  },
+  "END-001": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Antivirus/EDR Deployment",
+    "family": "System & Info Integrity"
+  },
+  "END-002": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Endpoint Patching",
+    "family": "System & Info Integrity"
+  },
+  "END-003": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Host-Based Firewall",
+    "family": "System & Comm Protection"
+  },
+  "END-004": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Application Whitelisting",
+    "family": "Configuration Management"
+  },
+  "END-005": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "USB Device Control",
+    "family": "Access Control"
+  },
+  "END-006": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Full Disk Encryption",
+    "family": "Media Protection"
+  },
+  "END-007": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Browser Security",
+    "family": "System & Comm Protection"
+  },
+  "END-008": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Local Admin Rights",
+    "family": "System & Info Integrity"
+  },
+  "END-009": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Screen Lock Policy",
+    "family": "System & Info Integrity"
+  },
+  "END-010": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Endpoint Logging",
+    "family": "Audit & Accountability"
+  },
+  "IAM-001": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Multi-Factor Authentication",
+    "family": "Identification & Auth"
+  },
+  "IAM-002": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Password Policy",
+    "family": "Access Control"
+  },
+  "IAM-003": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Privileged Access Management",
+    "family": "Access Control"
+  },
+  "IAM-004": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Access Reviews",
+    "family": "Access Control"
+  },
+  "IAM-005": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "SSO Implementation",
+    "family": "Identification & Auth"
+  },
+  "IAM-006": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Account Provisioning",
+    "family": "Access Control"
+  },
+  "IAM-007": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Account Deprovisioning",
+    "family": "Access Control"
+  },
+  "IAM-008": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Service Account Security",
+    "family": "Access Control"
+  },
+  "IAM-009": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Least Privilege",
+    "family": "Access Control"
+  },
+  "IAM-010": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Identity Governance",
+    "family": "Identification & Auth"
+  },
+  "MON-001": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Centralized Logging",
+    "family": "Audit & Accountability"
+  },
+  "MON-002": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Log Retention",
+    "family": "Audit & Accountability"
+  },
+  "MON-003": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Security Alerting",
+    "family": "Audit & Accountability"
+  },
+  "MON-004": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Audit Trail Integrity",
+    "family": "System & Info Integrity"
+  },
+  "MON-005": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Network Monitoring",
+    "family": "System & Info Integrity"
+  },
+  "MON-006": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "User Activity Monitoring",
+    "family": "System & Info Integrity"
+  },
+  "MON-007": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Cloud Monitoring",
+    "family": "System & Info Integrity"
+  },
+  "MON-008": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Vulnerability Scanning",
+    "family": "System & Info Integrity"
+  },
+  "MON-009": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Incident Response",
+    "family": "Incident Response"
+  },
+  "MON-010": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Threat Intelligence",
+    "family": "Audit & Accountability"
+  },
+  "NET-001": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Network Segmentation",
+    "family": "System & Comm Protection"
+  },
+  "NET-002": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Firewall Configuration",
+    "family": "System & Comm Protection"
+  },
+  "NET-003": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "VPN Security",
+    "family": "System & Info Integrity"
+  },
+  "NET-004": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Wireless Security",
+    "family": "System & Comm Protection"
+  },
+  "NET-005": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "DNS Security",
+    "family": "System & Comm Protection"
+  },
+  "NET-006": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Network Monitoring",
+    "family": "Access Control"
+  },
+  "NET-007": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Switch Security",
+    "family": "Configuration Management"
+  },
+  "NET-008": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Router Hardening",
+    "family": "System & Comm Protection"
+  },
+  "NET-009": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Network Access Control",
+    "family": "System & Comm Protection"
+  },
+  "NET-010": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Bandwidth Management",
+    "family": "System & Info Integrity"
+  },
+  "PHY-001": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Data Center Access Control",
+    "family": "Physical & Environmental"
+  },
+  "PHY-002": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Surveillance Systems",
+    "family": "Physical & Environmental"
+  },
+  "PHY-003": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Visitor Management",
+    "family": "Physical & Environmental"
+  },
+  "PHY-004": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Environmental Controls",
+    "family": "Physical & Environmental"
+  },
+  "PHY-005": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Fire Suppression",
+    "family": "Physical & Environmental"
+  },
+  "PHY-006": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Power Protection",
+    "family": "Physical & Environmental"
+  },
+  "PHY-007": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Cable Security",
+    "family": "Media Protection"
+  },
+  "PHY-008": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Secure Disposal",
+    "family": "Physical & Environmental"
+  },
+  "PHY-009": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Server Rack Security",
+    "family": "Physical & Environmental"
+  },
+  "PHY-010": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Emergency Procedures",
+    "family": "Audit & Accountability"
+  },
+  "SRV-001": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Server Hardening Baseline",
+    "family": "Configuration Management"
+  },
+  "SRV-002": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Server Patching",
+    "family": "Configuration Management"
+  },
+  "SRV-003": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Database Security",
+    "family": "System & Comm Protection"
+  },
+  "SRV-004": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Web Server Security",
+    "family": "Access Control"
+  },
+  "SRV-005": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Virtualization Security",
+    "family": "System & Comm Protection"
+  },
+  "SRV-006": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Container Security",
+    "family": "System & Comm Protection"
+  },
+  "SRV-007": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Backup Server Protection",
+    "family": "Contingency Planning"
+  },
+  "SRV-008": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Certificate Management",
+    "family": "System & Comm Protection"
+  },
+  "SRV-009": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "Server Access Control",
+    "family": "System & Comm Protection"
+  },
+  "SRV-010": {
+    "type": "System-Specific",
+    "provider": "",
+    "notes": "",
+    "control_name": "File Integrity Monitoring",
+    "family": "Audit & Accountability"
+  }
+}

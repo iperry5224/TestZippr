@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+SCR-001,Vendor Risk Assessment Program,Supply Chain Risk Management,System Services,Passed,,SCR-001 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-04
+SCR-002,Software Bill of Materials,Supply Chain Risk Management,System Services,Passed,,SCR-002 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+SCR-003,Third-Party Software Patching,Supply Chain Risk Management,System Info Integrity,Failed,High,Automated scan results for SCR-003,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-02
+SCR-004,Supplier Security Requirements,Supply Chain Risk Management,System Services,Passed,,SCR-004 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+SCR-005,Component Authenticity Verification,Supply Chain Risk Management,System Services,Failed,Medium,Automated scan results for SCR-005,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-01
+SCR-006,Supply Chain Incident Notification,Supply Chain Risk Management,Incident Response,Failed,High,Automated scan results for SCR-006,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06
+SCR-007,Vendor Access Controls,Supply Chain Risk Management,Access Control,Failed,High,Automated scan results for SCR-007,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06
+SCR-008,Cloud Service Provider Assessment,Supply Chain Risk Management,System Services,Passed,,SCR-008 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+SCR-009,End-of-Life Technology Management,Supply Chain Risk Management,System Services,Failed,High,Automated scan results for SCR-009,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-04
+SCR-010,Open Source Software Governance,Supply Chain Risk Management,System Services,Passed,,SCR-010 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05

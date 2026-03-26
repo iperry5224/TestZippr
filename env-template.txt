@@ -1,0 +1,19 @@
+# =============================================================================
+# SAELAR Environment Variables Template
+# =============================================================================
+# Rename this file to .env and fill in your values
+# IMPORTANT: Never commit .env to version control!
+# =============================================================================
+
+# AWS Credentials
+AWS_ACCESS_KEY_ID=your_access_key_here
+AWS_SECRET_ACCESS_KEY=your_secret_key_here
+AWS_DEFAULT_REGION=us-east-1
+
+# S3 Bucket for storing assessment reports
+S3_BUCKET_NAME=your-saelar-reports-bucket
+
+# Optional: Custom paths (defaults work for most cases)
+# SAELAR_LOGO_PATH=/app/assets/saelar_logo.png
+# SAELAR_CERT_DIR=/app/ssl_certs
+# SAELAR_CONFIG_FILE=/app/.saelar_aws_config.json

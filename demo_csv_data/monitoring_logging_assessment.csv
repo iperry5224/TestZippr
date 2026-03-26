@@ -1,0 +1,11 @@
+category,control_id,control_name,status,severity,evidence,notes,assessed_by,assessment_date
+"Monitoring & Logging",MON-001,"Centralized Logging",Passed,Critical,"Splunk Enterprise deployed; all systems forwarding logs","12TB daily log ingestion","D. Garcia","2026-02-03"
+"Monitoring & Logging",MON-002,"Log Retention",Passed,High,"Hot storage: 90 days; Cold storage: 1 year","Meets regulatory requirements","D. Garcia","2026-02-03"
+"Monitoring & Logging",MON-003,"Security Alerting",Passed,High,"247 correlation rules active; MITRE ATT&CK mapped","Mean time to alert: 3 minutes","D. Garcia","2026-02-03"
+"Monitoring & Logging",MON-004,"Audit Trail Integrity",Passed,Critical,"Logs hashed and forwarded to immutable storage","Tamper detection enabled","D. Garcia","2026-02-03"
+"Monitoring & Logging",MON-005,"Network Monitoring",Passed,Medium,"Full packet capture at perimeter; NetFlow internal","30-day PCAP retention","D. Garcia","2026-02-03"
+"Monitoring & Logging",MON-006,"User Activity Monitoring",Failed,High,"No UAM solution for privileged users","Cannot detect insider threats effectively","D. Garcia","2026-02-03"
+"Monitoring & Logging",MON-007,"Cloud Monitoring",Passed,High,"AWS CloudTrail and Azure Activity Logs forwarded to SIEM","GuardDuty and Defender enabled","D. Garcia","2026-02-03"
+"Monitoring & Logging",MON-008,"Vulnerability Scanning",Failed,Medium,"Scans only monthly; should be weekly","19% of assets not scanned in 60+ days","D. Garcia","2026-02-03"
+"Monitoring & Logging",MON-009,"Incident Response",Passed,High,"Documented IR playbooks; tabletop exercise completed","Mean time to respond: 47 minutes","D. Garcia","2026-02-03"
+"Monitoring & Logging",MON-010,"Threat Intelligence",Passed,Medium,"Commercial TI feeds integrated; IOC matching enabled","STIX/TAXII automated ingestion","D. Garcia","2026-02-03"

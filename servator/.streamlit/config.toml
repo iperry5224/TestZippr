@@ -1,0 +1,14 @@
+# Servator - Control Center Theme
+# Dark, professional, back-office aesthetic
+
+[theme]
+primaryColor = "#64748b"
+backgroundColor = "#0f172a"
+secondaryBackgroundColor = "#1e293b"
+textColor = "#f8fafc"
+font = "sans serif"
+
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = true

@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+WMS-001,Mobile Device Management,Wireless & Mobile Security,Access Control,Passed,,WMS-001 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+WMS-002,BYOD Security Policy,Wireless & Mobile Security,Access Control,Passed,,WMS-002 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+WMS-003,Wireless Network Security,Wireless & Mobile Security,System Comm Protection,Failed,High,Automated scan results for WMS-003,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06
+WMS-004,Rogue Wireless Detection,Wireless & Mobile Security,System Info Integrity,Passed,,WMS-004 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+WMS-005,Guest Wireless Isolation,Wireless & Mobile Security,System Comm Protection,Passed,,WMS-005 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+WMS-006,Mobile Application Security,Wireless & Mobile Security,System Services,Passed,,WMS-006 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+WMS-007,Mobile Device Encryption,Wireless & Mobile Security,System Comm Protection,Passed,,WMS-007 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+WMS-008,Lost/Stolen Device Response,Wireless & Mobile Security,Media Protection,Failed,High,Automated scan results for WMS-008,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-05
+WMS-009,Bluetooth Security,Wireless & Mobile Security,System Comm Protection,Passed,,WMS-009 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-04
+WMS-010,Wireless Penetration Testing,Wireless & Mobile Security,Risk Assessment,Failed,Medium,Automated scan results for WMS-010,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-01
