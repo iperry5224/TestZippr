@@ -1,0 +1,11 @@
+category,control_id,control_name,status,severity,evidence,notes,assessed_by,assessment_date
+"Data Protection",DAT-001,"Data Classification",Failed,High,"No formal data classification policy implemented","Cannot identify sensitive data locations","L. Martinez","2026-02-03"
+"Data Protection",DAT-002,"Encryption at Rest",Failed,Critical,"Only 45% of databases have TDE enabled","PII stored unencrypted in 3 systems","L. Martinez","2026-02-03"
+"Data Protection",DAT-003,"Encryption in Transit",Passed,High,"TLS 1.2+ required for all internal and external traffic","Certificate pinning on mobile apps","L. Martinez","2026-02-03"
+"Data Protection",DAT-004,"Key Management",Passed,Medium,"HSM-backed key storage; keys rotated annually","Separation of duties enforced","L. Martinez","2026-02-03"
+"Data Protection",DAT-005,"Data Loss Prevention",Failed,High,"No DLP solution deployed","Email and USB are unmonitored egress points","L. Martinez","2026-02-03"
+"Data Protection",DAT-006,"Backup Encryption",Passed,High,"All backups encrypted with AES-256","Keys stored separately from backup media","L. Martinez","2026-02-03"
+"Data Protection",DAT-007,"Data Retention",Failed,Medium,"No automated retention/deletion policies","Some data retained beyond legal requirements","L. Martinez","2026-02-03"
+"Data Protection",DAT-008,"PII Protection",Failed,Critical,"PII found in 7 unsecured SharePoint sites","Immediate remediation required","L. Martinez","2026-02-03"
+"Data Protection",DAT-009,"Database Access Logging",Passed,Medium,"All database queries logged to SIEM","Sensitive column access alerts configured","L. Martinez","2026-02-03"
+"Data Protection",DAT-010,"Secure File Transfer",Passed,Medium,"SFTP/SCP required; FTP disabled","Managed file transfer solution in use","L. Martinez","2026-02-03"

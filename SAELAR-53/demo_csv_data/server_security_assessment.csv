@@ -1,0 +1,11 @@
+category,control_id,control_name,status,severity,evidence,notes,assessed_by,assessment_date
+"Server Security",SRV-001,"Server Hardening Baseline",Passed,High,"CIS Level 1 benchmarks applied to 95% of Windows servers","Linux servers use STIG baselines","A. Wilson","2026-02-03"
+"Server Security",SRV-002,"Server Patching",Failed,Critical,"23 servers missing critical security updates","Includes 3 internet-facing systems","A. Wilson","2026-02-03"
+"Server Security",SRV-003,"Database Security",Failed,High,"SQL Server SA account still enabled on 5 instances","TDE not enabled on PII databases","A. Wilson","2026-02-03"
+"Server Security",SRV-004,"Web Server Security",Passed,High,"IIS hardened; TLS 1.2+ only; HSTS enabled","Security headers configured correctly","A. Wilson","2026-02-03"
+"Server Security",SRV-005,"Virtualization Security",Passed,Medium,"VMware vSphere 8.0; vMotion encrypted","VM escape protections enabled","A. Wilson","2026-02-03"
+"Server Security",SRV-006,"Container Security",Failed,Medium,"Docker containers running as root; no image scanning","Kubernetes RBAC not configured","A. Wilson","2026-02-03"
+"Server Security",SRV-007,"Backup Server Protection",Passed,Critical,"Backup servers air-gapped; immutable storage enabled","Ransomware protection verified","A. Wilson","2026-02-03"
+"Server Security",SRV-008,"Certificate Management",Failed,Medium,"12 certificates expiring within 30 days","No automated renewal process","A. Wilson","2026-02-03"
+"Server Security",SRV-009,"Server Access Control",Passed,High,"Jump server required for all administrative access","Session recording enabled","A. Wilson","2026-02-03"
+"Server Security",SRV-010,"File Integrity Monitoring",Passed,Medium,"OSSEC deployed on critical servers","Alerts on config file changes","A. Wilson","2026-02-03"

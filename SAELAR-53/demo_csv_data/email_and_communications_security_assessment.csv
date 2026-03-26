@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+ECS-001,Email Gateway Protection,Email & Communications Security,System Info Integrity,Failed,Critical,Automated scan results for ECS-001,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-02
+ECS-002,DMARC/DKIM/SPF Implementation,Email & Communications Security,System Comm Protection,Passed,,ECS-002 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+ECS-003,Email Encryption,Email & Communications Security,System Comm Protection,Passed,,ECS-003 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+ECS-004,Phishing Protection,Email & Communications Security,System Info Integrity,Passed,,ECS-004 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-04
+ECS-005,Email Data Loss Prevention,Email & Communications Security,System Comm Protection,Passed,,ECS-005 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+ECS-006,Unified Communications Security,Email & Communications Security,System Comm Protection,Passed,,ECS-006 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-04
+ECS-007,Email Retention & Archival,Email & Communications Security,Audit Accountability,Passed,,ECS-007 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+ECS-008,Secure File Transfer,Email & Communications Security,System Comm Protection,Failed,High,Automated scan results for ECS-008,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-02
+ECS-009,Collaboration Platform Security,Email & Communications Security,Access Control,Failed,Medium,Automated scan results for ECS-009,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-03
+ECS-010,External Email Marking,Email & Communications Security,System Info Integrity,Passed,,ECS-010 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05

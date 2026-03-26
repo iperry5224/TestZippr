@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+SAT-001,Security Awareness Program,Security Awareness & Training,Personnel Security,Failed,High,Automated scan results for SAT-001,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-06
+SAT-002,Phishing Simulation Program,Security Awareness & Training,Personnel Security,Passed,,SAT-002 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+SAT-003,Role-Based Security Training,Security Awareness & Training,Personnel Security,Failed,Medium,Automated scan results for SAT-003,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-05
+SAT-004,Social Engineering Awareness,Security Awareness & Training,Personnel Security,Passed,,SAT-004 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
+SAT-005,Personnel Screening,Security Awareness & Training,Personnel Security,Passed,,SAT-005 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+SAT-006,Personnel Termination Procedures,Security Awareness & Training,Personnel Security,Failed,Critical,Automated scan results for SAT-006,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-04
+SAT-007,Access Agreements,Security Awareness & Training,Personnel Security,Passed,,SAT-007 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+SAT-008,Insider Threat Awareness,Security Awareness & Training,Personnel Security,Passed,,SAT-008 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+SAT-009,Security Training Effectiveness Measurement,Security Awareness & Training,Personnel Security,Passed,,SAT-009 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+SAT-010,Third-Party Personnel Security,Security Awareness & Training,Personnel Security,Failed,High,Automated scan results for SAT-010,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-01

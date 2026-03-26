@@ -1,0 +1,11 @@
+category,control_id,control_name,status,severity,evidence,notes,assessed_by,assessment_date
+"Identity & Access Management",IAM-001,"Multi-Factor Authentication",Failed,Critical,"MFA only enabled for 62% of users; VPN has MFA","Admin accounts and cloud apps lack MFA","K. Thompson","2026-02-03"
+"Identity & Access Management",IAM-002,"Password Policy",Passed,High,"14-character minimum; complexity required; 90-day expiry","Password history: 24 passwords","K. Thompson","2026-02-03"
+"Identity & Access Management",IAM-003,"Privileged Access Management",Failed,High,"No PAM solution; shared admin credentials exist","CyberArk POC planned for Q2","K. Thompson","2026-02-03"
+"Identity & Access Management",IAM-004,"Access Reviews",Failed,Medium,"No regular access certification process","Last review was 18 months ago","K. Thompson","2026-02-03"
+"Identity & Access Management",IAM-005,"SSO Implementation",Passed,Medium,"Azure AD SSO for 85% of applications","SAML/OIDC protocols in use","K. Thompson","2026-02-03"
+"Identity & Access Management",IAM-006,"Account Provisioning",Passed,High,"Automated provisioning via HR system integration","Accounts created within 24 hours of hire","K. Thompson","2026-02-03"
+"Identity & Access Management",IAM-007,"Account Deprovisioning",Failed,Critical,"Average 5-day delay in termination account disable","3 terminated employees retained access >30 days","K. Thompson","2026-02-03"
+"Identity & Access Management",IAM-008,"Service Account Security",Failed,High,"127 service accounts with non-expiring passwords","No service account inventory","K. Thompson","2026-02-03"
+"Identity & Access Management",IAM-009,"Least Privilege",Failed,Medium,"40% of users have excessive permissions","Role-based access not fully implemented","K. Thompson","2026-02-03"
+"Identity & Access Management",IAM-010,"Identity Governance",Passed,Medium,"Azure AD Identity Governance licensed and configured","Entitlement management active","K. Thompson","2026-02-03"

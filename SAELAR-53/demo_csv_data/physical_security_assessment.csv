@@ -1,0 +1,11 @@
+category,control_id,control_name,status,severity,evidence,notes,assessed_by,assessment_date
+"Physical Security",PHY-001,"Data Center Access Control",Passed,Critical,"Biometric + badge access required; mantrap entry","Access logs retained 1 year","S. Brown","2026-02-03"
+"Physical Security",PHY-002,"Surveillance Systems",Passed,High,"CCTV coverage of all entry points and server rooms","90-day video retention","S. Brown","2026-02-03"
+"Physical Security",PHY-003,"Visitor Management",Passed,Medium,"All visitors logged; escort required in secure areas","Visitor badges expire same day","S. Brown","2026-02-03"
+"Physical Security",PHY-004,"Environmental Controls",Passed,High,"HVAC with N+1 redundancy; temperature monitoring","Alerts at 75°F threshold","S. Brown","2026-02-03"
+"Physical Security",PHY-005,"Fire Suppression",Passed,Critical,"FM-200 clean agent system; smoke detection installed","Last inspection: 2026-01-10","S. Brown","2026-02-03"
+"Physical Security",PHY-006,"Power Protection",Passed,High,"Dual UPS feeds; generator with 72-hour fuel capacity","Monthly generator tests documented","S. Brown","2026-02-03"
+"Physical Security",PHY-007,"Cable Security",Failed,Medium,"Network cables not secured in some areas; no cable locks","Potential for unauthorized taps","S. Brown","2026-02-03"
+"Physical Security",PHY-008,"Secure Disposal",Passed,Medium,"NIST 800-88 compliant media destruction","Certificate of destruction retained","S. Brown","2026-02-03"
+"Physical Security",PHY-009,"Server Rack Security",Failed,Low,"30% of racks missing front door locks","Ordered replacement locks","S. Brown","2026-02-03"
+"Physical Security",PHY-010,"Emergency Procedures",Passed,Medium,"Documented evacuation plan; emergency contacts posted","Drill conducted 2026-01-25","S. Brown","2026-02-03"

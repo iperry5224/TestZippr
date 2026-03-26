@@ -1,0 +1,11 @@
+control_id,control_name,category,family,status,severity,evidence,notes,assessed_by,assessment_date
+VCS-001,Hypervisor Hardening,Virtualization & Container Security,Config Management,Failed,Critical,Automated scan results for VCS-001,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-03
+VCS-002,VM Isolation & Segmentation,Virtualization & Container Security,System Comm Protection,Failed,High,Automated scan results for VCS-002,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-01
+VCS-003,Container Runtime Security,Virtualization & Container Security,System Comm Protection,Failed,High,Automated scan results for VCS-003,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-05
+VCS-004,Container Registry Security,Virtualization & Container Security,System Info Integrity,Failed,High,Automated scan results for VCS-004,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-01
+VCS-005,VM Snapshot Management,Virtualization & Container Security,Media Protection,Passed,,VCS-005 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-01
+VCS-006,Kubernetes RBAC,Virtualization & Container Security,Access Control,Passed,,VCS-006 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-02
+VCS-007,Virtual Network Security,Virtualization & Container Security,System Comm Protection,Passed,,VCS-007 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-06
+VCS-008,Container Secrets Management,Virtualization & Container Security,Identification Auth,Failed,Critical,Automated scan results for VCS-008,Requires remediation per SLA,SOPRA Automated Scanner,2026-02-05
+VCS-009,VM Template Security,Virtualization & Container Security,Config Management,Passed,,VCS-009 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-03
+VCS-010,Container Network Policies,Virtualization & Container Security,System Comm Protection,Passed,,VCS-010 meets baseline requirements,Compliant,SOPRA Automated Scanner,2026-02-05
