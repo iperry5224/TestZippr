@@ -9,6 +9,7 @@ security risk scores from assessment reports.
 import streamlit as st
 import pandas as pd
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
@@ -536,10 +537,15 @@ def main():
     # Load assessment
     if uploaded_file:
         try:
-            data = json.load(uploaded_file)
+            import tempfile as _tmpmod
+            uploaded_file.seek(0)
+            raw_bytes = uploaded_file.read()
+            tmp_dir = os.path.join(_tmpmod.gettempdir(), "saelar_docs")
+            os.makedirs(tmp_dir, exist_ok=True)
+            tmp_path = Path(tmp_dir) / uploaded_file.name
+            tmp_path.write_bytes(raw_bytes)
             calculator = RiskScoreCalculator()
-            # Process uploaded file
-            st.session_state.assessment = calculator.load_nist_assessment(Path(uploaded_file.name))
+            st.session_state.assessment = calculator.load_nist_assessment(tmp_path)
             st.success("✅ Assessment loaded successfully!")
         except Exception as e:
             st.error(f"Error loading file: {e}")
