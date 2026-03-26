@@ -39,5 +39,10 @@ Home_Expense_Summary*.docx
 .idea/
 .vscode/
 
+# Build / packaging
+*.egg-info/
+dist/
+build/
+
 # Large local artifacts (optional — remove line if you want zips in Git)
 # *.zip

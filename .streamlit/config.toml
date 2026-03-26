@@ -9,6 +9,8 @@ font = "sans serif"
 [server]
 port = 8080
 headless = true
+maxUploadSize = 200
+enableXsrfProtection = true
 
 [browser]
 gatherUsageStats = false
