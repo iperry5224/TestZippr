@@ -9,6 +9,7 @@ from docx.enum.style import WD_STYLE_TYPE
 from datetime import datetime
 import boto3
 import os
+import tempfile
 
 def create_saelar_overview():
     """Create SAELAR-53 Overview Word Document."""
@@ -191,7 +192,9 @@ def create_saelar_overview():
     footer_run.font.color.rgb = RGBColor(128, 128, 128)
     
     # Save document
-    output_path = r'C:\Users\iperr\OneDrive\Desktop\AI-Guides\SAELAR-53_Overview.docx'
+    _docs_dir = os.path.join(tempfile.gettempdir(), "saelar_docs")
+    os.makedirs(_docs_dir, exist_ok=True)
+    output_path = os.path.join(_docs_dir, "SAELAR-53_Overview.docx")
     doc.save(output_path)
     print(f'[OK] Document saved to: {output_path}')
     

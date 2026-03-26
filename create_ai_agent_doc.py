@@ -7,6 +7,8 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from datetime import datetime
+import os
+import tempfile
 
 def create_document():
     doc = Document()
@@ -447,7 +449,9 @@ def create_document():
     footer2.add_run(f'Generated: January 20, 2026').italic = True
     
     # Save
-    output_path = r'C:\Users\iperr\OneDrive\Desktop\AI-Guides\SAELAR_AI_Agent_Integration_Recommendations_v4.docx'
+    _docs_dir = os.path.join(tempfile.gettempdir(), "saelar_docs")
+    os.makedirs(_docs_dir, exist_ok=True)
+    output_path = os.path.join(_docs_dir, "SAELAR_AI_Agent_Integration_Recommendations_v4.docx")
     doc.save(output_path)
     print(f'Document saved to: {output_path}')
     return output_path

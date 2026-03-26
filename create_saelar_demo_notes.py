@@ -3,6 +3,8 @@ from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from datetime import datetime
+import os
+import tempfile
 
 
 def create_demo_notes():
@@ -130,7 +132,9 @@ def create_demo_notes():
     doc.add_paragraph("— End of SAELAR Demo Notes —")
     doc.add_paragraph()
 
-    out_path = r"C:\Users\iperr\TestZippr\SAELAR_Demo_notes.docx"
+    _docs_dir = os.path.join(tempfile.gettempdir(), "saelar_docs")
+    os.makedirs(_docs_dir, exist_ok=True)
+    out_path = os.path.join(_docs_dir, "SAELAR_Demo_notes.docx")
     doc.save(out_path)
     print(f"Saved: {out_path}")
     return out_path
