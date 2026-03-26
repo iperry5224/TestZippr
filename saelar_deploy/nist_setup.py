@@ -3136,11 +3136,7 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                         }
                         
                         # Generate document
-                        system_name = system_info.get('system_name', 'System')
-                        safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-                        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\RAR_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
-                        
-                        doc_path = create_rar_document(rar_data, output_path)
+                        doc_path = create_rar_document(rar_data)
                         
                         # Store in session state for download/open buttons
                         st.session_state.rar_generated_path = doc_path
@@ -3176,7 +3172,13 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                     if st.button("📂 Open RAR Document", use_container_width=True, key="open_rar_btn"):
                         try:
                             import subprocess
-                            subprocess.Popen(['start', '', doc_path], shell=True)
+                            import platform
+                            if platform.system() == "Darwin":
+                                subprocess.Popen(["open", doc_path])
+                            elif platform.system() == "Windows":
+                                subprocess.Popen(["start", "", doc_path], shell=True)
+                            else:
+                                subprocess.Popen(["xdg-open", doc_path])
                             st.info(f"Opening: {os.path.basename(doc_path)}")
                         except Exception as e:
                             st.error(f"Could not open file: {e}")
@@ -3752,9 +3754,7 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                         
                         # Generate Word document
                         safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-                        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\SSP_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
-                        
-                        doc_path = create_ssp_document(ssp_data, output_path)
+                        doc_path = create_ssp_document(ssp_data)
                         
                         # Store path for download button
                         st.session_state.ssp_doc_path = doc_path
@@ -3789,41 +3789,42 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                                 # Upload SSP to Documentation/SSPs/ folder
                                 s3_key = f"Documentation/SSPs/SSP_{safe_name}_{timestamp}.docx"
                                 
-                                s3_client.upload_fileobj(
-                                    open(doc_path, 'rb'),
-                                    s3_bucket,
-                                    s3_key,
-                                    ExtraArgs={
-                                        'Metadata': {
-                                            'document_type': 'System Security Plan (SSP)',
-                                            'system_name': system_name,
-                                            'generated_by': 'SAELAR-53 SSP Generator'
+                                with open(doc_path, 'rb') as ssp_fh:
+                                    s3_client.upload_fileobj(
+                                        ssp_fh,
+                                        s3_bucket,
+                                        s3_key,
+                                        ExtraArgs={
+                                            'Metadata': {
+                                                'document_type': 'System Security Plan (SSP)',
+                                                'system_name': system_name,
+                                                'generated_by': 'SAELAR-53 SSP Generator'
+                                            }
                                         }
-                                    }
-                                )
+                                    )
                                 s3_uploaded = True
                                 s3_location = f"s3://{s3_bucket}/{s3_key}"
                                 
                                 # Create and upload POA&M to Documentation/POA&Ms/ folder
                                 if include_poam and ssp_data.get('poam'):
-                                    poam_local_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\POAM_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
-                                    poam_doc_path = create_poam_document(ssp_data, poam_local_path)
+                                    poam_doc_path = create_poam_document(ssp_data)
                                     
                                     poam_s3_key = f"Documentation/POA&Ms/POAM_{safe_name}_{timestamp}.docx"
                                     
-                                    s3_client.upload_fileobj(
-                                        open(poam_doc_path, 'rb'),
-                                        s3_bucket,
-                                        poam_s3_key,
-                                        ExtraArgs={
-                                            'Metadata': {
-                                                'document_type': 'Plan of Action & Milestones (POA&M)',
-                                                'system_name': system_name,
-                                                'generated_by': 'SAELAR-53 POA&M Generator',
-                                                'poam_count': str(len(ssp_data.get('poam', [])))
+                                    with open(poam_doc_path, 'rb') as poam_fh:
+                                        s3_client.upload_fileobj(
+                                            poam_fh,
+                                            s3_bucket,
+                                            poam_s3_key,
+                                            ExtraArgs={
+                                                'Metadata': {
+                                                    'document_type': 'Plan of Action & Milestones (POA&M)',
+                                                    'system_name': system_name,
+                                                    'generated_by': 'SAELAR-53 POA&M Generator',
+                                                    'poam_count': str(len(ssp_data.get('poam', [])))
+                                                }
                                             }
-                                        }
-                                    )
+                                        )
                                     poam_s3_uploaded = True
                                     poam_s3_location = f"s3://{s3_bucket}/{poam_s3_key}"
                         except Exception as s3_error:
