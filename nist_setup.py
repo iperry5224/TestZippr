@@ -235,6 +235,105 @@ aws bedrock list-foundation-models --region us-east-1 --query 'modelSummaries[*]
         raise Exception(f"Bedrock error: {error_msg}")
 
 
+# =============================================================================
+# BEDROCK KNOWLEDGE BASE (RAG)
+# =============================================================================
+
+def _load_kb_config() -> dict:
+    """Load Knowledge Base config from file or environment."""
+    kb_id = os.environ.get("SAELAR_KB_ID", "")
+    if kb_id:
+        return {"knowledge_base_id": kb_id}
+    config_path = Path(__file__).parent / ".saelar_kb_config.json"
+    if config_path.exists():
+        try:
+            with open(config_path) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def retrieve_from_knowledge_base(query: str, max_results: int = 5, region: str = "us-east-1") -> list:
+    """
+    Retrieve relevant document chunks from the Bedrock Knowledge Base.
+
+    Returns a list of dicts with 'text' and 'score' keys, or an empty list
+    if the KB is not configured or the call fails.
+    """
+    kb_config = _load_kb_config()
+    kb_id = kb_config.get("knowledge_base_id", "")
+    if not kb_id:
+        return []
+
+    try:
+        client = boto3.client("bedrock-agent-runtime", region_name=region)
+        response = client.retrieve(
+            knowledgeBaseId=kb_id,
+            retrievalQuery={"text": query},
+            retrievalConfiguration={
+                "vectorSearchConfiguration": {
+                    "numberOfResults": max_results
+                }
+            },
+        )
+        results = []
+        for item in response.get("retrievalResults", []):
+            text = item.get("content", {}).get("text", "")
+            score = item.get("score", 0)
+            source = item.get("location", {}).get("s3Location", {}).get("uri", "")
+            if text:
+                results.append({"text": text, "score": score, "source": source})
+        return results
+    except Exception as e:
+        print(f"Knowledge Base retrieval failed (non-fatal): {e}")
+        return []
+
+
+def call_ai_with_rag(
+    messages: list,
+    system_prompt: str,
+    max_tokens: int = 4096,
+    region: str = "us-east-1",
+) -> str:
+    """
+    Enhanced AI call that retrieves relevant context from the Knowledge Base
+    before calling the model.  Falls through to plain call_ai if KB is not
+    configured or returns no results.
+    """
+    user_query = ""
+    for msg in reversed(messages):
+        if msg["role"] == "user":
+            user_query = msg["content"]
+            break
+
+    if not user_query:
+        return call_ai(messages, system_prompt, max_tokens, region)
+
+    kb_results = retrieve_from_knowledge_base(user_query, max_results=5, region=region)
+
+    if kb_results:
+        kb_context_parts = [
+            "=== RETRIEVED COMPLIANCE DOCUMENTS (from Knowledge Base) ==="
+        ]
+        for i, r in enumerate(kb_results, 1):
+            source_label = r["source"].split("/")[-1] if r["source"] else "document"
+            kb_context_parts.append(
+                f"\n--- Document {i} (source: {source_label}, relevance: {r['score']:.2f}) ---\n{r['text']}"
+            )
+        kb_context_parts.append(
+            "\n=== END RETRIEVED DOCUMENTS ===\n"
+            "Use the retrieved documents above to inform your answer when relevant. "
+            "Cite the source document when referencing specific information."
+        )
+        kb_context = "\n".join(kb_context_parts)
+        enhanced_prompt = system_prompt + "\n\n" + kb_context
+    else:
+        enhanced_prompt = system_prompt
+
+    return call_ai(messages, enhanced_prompt, max_tokens, region)
+
+
 def get_ai_mode_status() -> dict:
     """
     Get the current AI mode status for display in UI.
@@ -269,10 +368,12 @@ def get_ai_mode_status() -> dict:
                 "color": "#10b981"
             }
         else:
+            kb_config = _load_kb_config()
+            kb_detail = " + Knowledge Base (RAG)" if kb_config.get("knowledge_base_id") else ""
             return {
-                "mode": "Cloud (AWS Bedrock)",
+                "mode": f"Cloud (AWS Bedrock{kb_detail})",
                 "status": "☁️ Cloud Mode",
-                "details": "Internet required",
+                "details": "Data stays within AWS",
                 "color": "#3b82f6"
             }
 
@@ -2244,11 +2345,11 @@ Guidelines:
                 for msg in st.session_state.chad_messages:
                     messages.append({"role": msg["role"], "content": msg["content"]})
                 
-                # Call AI (uses Ollama in air-gapped mode, Bedrock otherwise)
-                assistant_message = call_ai(
+                # Call AI with RAG (retrieves from Knowledge Base, then Bedrock/Ollama)
+                assistant_message = call_ai_with_rag(
                     messages=messages,
                     system_prompt=system_prompt,
-                    max_tokens=8192  # Increased for comprehensive report generation
+                    max_tokens=8192
                 )
                 
                 # Add assistant response to history
