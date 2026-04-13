@@ -1,39 +1,41 @@
 #!/bin/bash
-# Post-deployment: install dependencies and restart SAELAR
-SAELAR_DIR="/home/ec2-user/saelar"
+#===============================================================================
+# SAE GRC Tools — Post-deployment hook
+# Sets permissions, installs dependencies, and restarts all apps
+#===============================================================================
+
+GRC_HOME="/home/ec2-user/grc_tools"
 
 echo "[CodeDeploy] Setting permissions..."
-chown -R ec2-user:ec2-user "$SAELAR_DIR"
-chmod +x "$SAELAR_DIR/start_saelar.sh" 2>/dev/null || true
+chown -R ec2-user:ec2-user "$GRC_HOME"
 
-# Install/update dependencies if venv exists
-if [ -f "$SAELAR_DIR/venv/bin/activate" ]; then
-    echo "[CodeDeploy] Updating dependencies..."
-    source "$SAELAR_DIR/venv/bin/activate"
-    pip install -q -r "$SAELAR_DIR/requirements.txt" 2>/dev/null || true
-    deactivate
-fi
+#----------------------------------------------------------------------
+# For each app directory: install deps and restart if service exists
+#----------------------------------------------------------------------
+for app_dir in "$GRC_HOME"/*/; do
+    app_name=$(basename "$app_dir")
+    echo "[CodeDeploy] Processing: $app_name"
 
-# Restart via systemd if service exists, otherwise start directly
-if systemctl is-enabled saelar 2>/dev/null; then
-    echo "[CodeDeploy] Restarting SAELAR via systemd..."
-    systemctl restart saelar
-else
-    echo "[CodeDeploy] Starting SAELAR directly..."
-    cd "$SAELAR_DIR"
-    source venv/bin/activate
-    nohup streamlit run nist_setup.py \
-        --server.port 8484 \
-        --server.address 0.0.0.0 \
-        --server.headless true \
-        --server.fileWatcherType none &
-fi
+    # Make scripts executable
+    chmod +x "$app_dir"/*.sh 2>/dev/null || true
+
+    # Install/update dependencies if venv and requirements.txt exist
+    if [ -f "$app_dir/venv/bin/activate" ] && [ -f "$app_dir/requirements.txt" ]; then
+        echo "[CodeDeploy]   Updating dependencies for $app_name..."
+        source "$app_dir/venv/bin/activate"
+        pip install -q -r "$app_dir/requirements.txt" 2>/dev/null || true
+        deactivate
+    fi
+
+    # Restart systemd service if it exists
+    svc_name=$(echo "$app_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+    if systemctl is-enabled "$svc_name" 2>/dev/null; then
+        echo "[CodeDeploy]   Restarting $svc_name service..."
+        systemctl restart "$svc_name"
+    fi
+done
 
 sleep 3
 
-# Verify
-if pgrep -f "streamlit run nist_setup" > /dev/null; then
-    echo "[CodeDeploy] SAELAR is running"
-else
-    echo "[CodeDeploy] WARNING: SAELAR may not have started"
-fi
+echo "[CodeDeploy] Deployment complete. Running services:"
+systemctl list-units --type=service --state=running | grep -E "saelar|sopra|beekeeper" || echo "  (no GRC services registered yet)"

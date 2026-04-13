@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/saelar
+    destination: /home/ec2-user/grc_tools
     overwrite: true
 file_exists_behavior: OVERWRITE
 
