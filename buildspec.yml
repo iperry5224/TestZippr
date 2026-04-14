@@ -1,5 +1,10 @@
 version: 0.2
 
+env:
+  variables:
+    S3_BUCKET: "saelarallpurpose"
+    S3_PREFIX: "deployments"
+
 phases:
   install:
     runtime-versions:
@@ -7,12 +12,14 @@ phases:
   pre_build:
     commands:
       - echo "Packaging SAE GRC Tools for deployment..."
+      - echo "Build started on $(date)"
   build:
     commands:
-      - echo "Build started on $(date)"
       - echo "Creating deployment artifact..."
-
-artifacts:
-  files:
-    - '**/*'
-  discard-paths: no
+      - zip -r grc-tools-latest.zip . -x '.git/*' '__pycache__/*' '*.pyc' '.env*' '*.pem' '*.key' 'venv/*' '.venv/*'
+  post_build:
+    commands:
+      - echo "Uploading to S3..."
+      - aws s3 cp grc-tools-latest.zip s3://${S3_BUCKET}/${S3_PREFIX}/grc-tools-latest.zip
+      - echo "Deploy artifact uploaded to s3://${S3_BUCKET}/${S3_PREFIX}/grc-tools-latest.zip"
+      - echo "The EC2 deploy agent will pick this up within 60 seconds."
