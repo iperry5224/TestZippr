@@ -3250,7 +3250,7 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
             with col3:
                 if st.button("📝 Generate RAR Document", use_container_width=True, key="generate_rar_btn"):
                     try:
-                        from wordy import create_rar_document
+                        from wordy import create_rar_markdown
                         import os
                         
                         # Build RAR data from assessment
@@ -3335,55 +3335,28 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                             },
                         }
                         
-                        # Generate document
-                        doc_path = create_rar_document(rar_data)
-                        
-                        # Store in session state for download/open buttons
-                        st.session_state.rar_generated_path = doc_path
+                        # Generate markdown document (no file I/O)
+                        rar_markdown = create_rar_markdown(rar_data)
+                        st.session_state.rar_generated_md = rar_markdown
                         st.session_state.rar_generated = True
                         st.rerun()
                         
                     except Exception as e:
                         st.error(f"❌ Error generating RAR: {str(e)}")
             
-            # Show download and open buttons if RAR was generated
-            if st.session_state.get('rar_generated', False) and st.session_state.get('rar_generated_path'):
-                doc_path = st.session_state.rar_generated_path
+            # Show download button if RAR was generated
+            if st.session_state.get('rar_generated', False) and st.session_state.get('rar_generated_md'):
+                rar_md = st.session_state.rar_generated_md
                 st.success(f"✅ RAR Document generated!")
                 
-                col_dl1, col_dl2 = st.columns(2)
-                with col_dl1:
-                    # Read the file for download
-                    try:
-                        with open(doc_path, 'rb') as f:
-                            doc_bytes = f.read()
-                        st.download_button(
-                            "📥 Download RAR Document",
-                            data=doc_bytes,
-                            file_name=os.path.basename(doc_path),
-                            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                            use_container_width=True,
-                            key="download_rar_btn"
-                        )
-                    except Exception as e:
-                        st.error(f"Could not read file: {e}")
-                
-                with col_dl2:
-                    if st.button("📂 Open RAR Document", use_container_width=True, key="open_rar_btn"):
-                        try:
-                            import subprocess
-                            import platform
-                            if platform.system() == "Darwin":
-                                subprocess.Popen(["open", doc_path])
-                            elif platform.system() == "Windows":
-                                subprocess.Popen(["start", "", doc_path], shell=True)
-                            else:
-                                subprocess.Popen(["xdg-open", doc_path])
-                            st.info(f"Opening: {os.path.basename(doc_path)}")
-                        except Exception as e:
-                            st.error(f"Could not open file: {e}")
-                
-                st.caption(f"📁 Saved to: {doc_path}")
+                st.download_button(
+                    "📥 Download RAR Document (.md)",
+                    data=rar_md.encode('utf-8'),
+                    file_name=f"RAR_{datetime.now().strftime('%Y%m%d')}.md",
+                    mime="text/markdown",
+                    use_container_width=True,
+                    key="download_rar_btn"
+                )
         
         # NIST 800-30 Enhanced Analysis Tab
         with tab5_risk:
@@ -3804,7 +3777,7 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
         """Render the System Security Plan Generator page."""
         from datetime import datetime
         from ssp_generator import SSPGenerator, SystemCategorization
-        from wordy import create_ssp_document, create_poam_document
+        from wordy import create_ssp_document, create_poam_document, create_ssp_markdown, create_poam_markdown
         
         st.markdown("""
         <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); padding: 1.5rem;
@@ -3952,16 +3925,10 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                         st.session_state.ssp_description = system_description
                         st.session_state.ssp_boundary = authorization_boundary
                         
-                        # Generate Word document
+                        # Generate Markdown document (no file I/O — avoids Errno 5)
                         safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-                        doc_path = create_ssp_document(ssp_data)
-                        
-                        # Store path for download button
-                        st.session_state.ssp_doc_path = doc_path
-                        
-                        # Read the file for download
-                        with open(doc_path, 'rb') as f:
-                            doc_bytes = f.read()
+                        ssp_markdown = create_ssp_markdown(ssp_data)
+                        doc_bytes = ssp_markdown.encode('utf-8')
                         
                         # Upload to S3 Documentation/SSPs/ folder
                         s3_uploaded = False
@@ -3987,44 +3954,39 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                                 
                                 # Upload SSP to Documentation/SSPs/ folder
-                                s3_key = f"Documentation/SSPs/SSP_{safe_name}_{timestamp}.docx"
+                                s3_key = f"Documentation/SSPs/SSP_{safe_name}_{timestamp}.md"
                                 
-                                with open(doc_path, 'rb') as ssp_fh:
-                                    s3_client.upload_fileobj(
-                                        ssp_fh,
-                                        s3_bucket,
-                                        s3_key,
-                                        ExtraArgs={
-                                            'Metadata': {
-                                                'document_type': 'System Security Plan (SSP)',
-                                                'system_name': system_name,
-                                                'generated_by': 'SAELAR-53 SSP Generator'
-                                            }
-                                        }
-                                    )
+                                s3_client.put_object(
+                                    Bucket=s3_bucket,
+                                    Key=s3_key,
+                                    Body=doc_bytes,
+                                    Metadata={
+                                        'document_type': 'System Security Plan (SSP)',
+                                        'system_name': system_name,
+                                        'generated_by': 'SAELAR-53 SSP Generator'
+                                    }
+                                )
                                 s3_uploaded = True
                                 s3_location = f"s3://{s3_bucket}/{s3_key}"
                                 
                                 # Create and upload POA&M to Documentation/POA&Ms/ folder
                                 if include_poam and ssp_data.get('poam'):
-                                    poam_doc_path = create_poam_document(ssp_data)
+                                    poam_markdown = create_poam_markdown(ssp_data)
+                                    poam_bytes = poam_markdown.encode('utf-8')
                                     
-                                    poam_s3_key = f"Documentation/POA&Ms/POAM_{safe_name}_{timestamp}.docx"
+                                    poam_s3_key = f"Documentation/POA&Ms/POAM_{safe_name}_{timestamp}.md"
                                     
-                                    with open(poam_doc_path, 'rb') as poam_fh:
-                                        s3_client.upload_fileobj(
-                                            poam_fh,
-                                            s3_bucket,
-                                            poam_s3_key,
-                                            ExtraArgs={
-                                                'Metadata': {
-                                                    'document_type': 'Plan of Action & Milestones (POA&M)',
-                                                    'system_name': system_name,
-                                                    'generated_by': 'SAELAR-53 POA&M Generator',
-                                                    'poam_count': str(len(ssp_data.get('poam', [])))
-                                                }
-                                            }
-                                        )
+                                    s3_client.put_object(
+                                        Bucket=s3_bucket,
+                                        Key=poam_s3_key,
+                                        Body=poam_bytes,
+                                        Metadata={
+                                            'document_type': 'Plan of Action & Milestones (POA&M)',
+                                            'system_name': system_name,
+                                            'generated_by': 'SAELAR-53 POA&M Generator',
+                                            'poam_count': str(len(ssp_data.get('poam', [])))
+                                        }
+                                    )
                                     poam_s3_uploaded = True
                                     poam_s3_location = f"s3://{s3_bucket}/{poam_s3_key}"
                         except Exception as s3_error:
@@ -4039,15 +4001,13 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                         """, unsafe_allow_html=True)
                         
                         st.download_button(
-                            label="📥 Download SSP Document (.docx)",
+                            label="📥 Download SSP Document (.md)",
                             data=doc_bytes,
-                            file_name=f"SSP_{safe_name}_{datetime.now().strftime('%Y%m%d')}.docx",
-                            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            file_name=f"SSP_{safe_name}_{datetime.now().strftime('%Y%m%d')}.md",
+                            mime="text/markdown",
                             type="primary",
                             use_container_width=True
                         )
-                        
-                        st.info(f"📄 Local copy saved to: `{doc_path}`")
                         
                         if s3_uploaded:
                             st.success(f"☁️ SSP uploaded to S3: `{s3_location}`")
