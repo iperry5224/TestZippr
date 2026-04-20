@@ -1,18 +1,18 @@
 #!/bin/bash
 #===============================================================================
-# SAE GRC Tools — Post-deployment hook
+# GRCP — Post-deployment hook
 # Sets permissions, installs dependencies, and restarts all apps
 #===============================================================================
 
-GRC_HOME="/home/ec2-user/grc_tools"
+GRCP_HOME="/home/ec2-user/grcp"
 
 echo "[CodeDeploy] Setting permissions..."
-chown -R ec2-user:ec2-user "$GRC_HOME"
+chown -R ec2-user:ec2-user "$GRCP_HOME"
 
 #----------------------------------------------------------------------
 # For each app directory: install deps and restart if service exists
 #----------------------------------------------------------------------
-for app_dir in "$GRC_HOME"/*/; do
+for app_dir in "$GRCP_HOME"/*/; do
     app_name=$(basename "$app_dir")
     echo "[CodeDeploy] Processing: $app_name"
 
@@ -28,7 +28,7 @@ for app_dir in "$GRC_HOME"/*/; do
     fi
 
     # Restart systemd service if it exists
-    svc_name=$(echo "$app_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+    svc_name="grcp-${app_name}"
     if systemctl is-enabled "$svc_name" 2>/dev/null; then
         echo "[CodeDeploy]   Restarting $svc_name service..."
         systemctl restart "$svc_name"
@@ -38,4 +38,4 @@ done
 sleep 3
 
 echo "[CodeDeploy] Deployment complete. Running services:"
-systemctl list-units --type=service --state=running | grep -E "saelar|sopra|beekeeper" || echo "  (no GRC services registered yet)"
+systemctl list-units --type=service --state=running | grep -E "grcp-" || echo "  (no GRCP services registered yet)"

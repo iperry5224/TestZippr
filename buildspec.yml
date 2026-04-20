@@ -11,15 +11,15 @@ phases:
       python: 3.12
   pre_build:
     commands:
-      - echo "Packaging SAE GRC Tools for deployment..."
+      - echo "Packaging GRCP tools for deployment..."
       - echo "Build started on $(date)"
   build:
     commands:
       - echo "Creating deployment artifact..."
-      - zip -r grc-tools-latest.zip . -x '.git/*' '__pycache__/*' '*.pyc' '.env*' '*.pem' '*.key' 'venv/*' '.venv/*'
+      - zip -r grcp-latest.zip . -x '.git/*' '__pycache__/*' '*.pyc' '.env*' '*.pem' '*.key' 'venv/*' '.venv/*'
   post_build:
     commands:
       - echo "Uploading to S3..."
-      - aws s3 cp grc-tools-latest.zip s3://${S3_BUCKET}/${S3_PREFIX}/grc-tools-latest.zip
-      - echo "Deploy artifact uploaded to s3://${S3_BUCKET}/${S3_PREFIX}/grc-tools-latest.zip"
+      - aws s3 cp grcp-latest.zip s3://${S3_BUCKET}/${S3_PREFIX}/grcp-latest.zip
+      - echo "Deploy artifact uploaded to s3://${S3_BUCKET}/${S3_PREFIX}/grcp-latest.zip"
       - echo "The EC2 deploy agent will pick this up within 60 seconds."
