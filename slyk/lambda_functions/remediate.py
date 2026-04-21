@@ -134,10 +134,129 @@ def _check_guardduty():
     return [] if detectors else ["not-enabled"]
 
 
+def remediate_securityhub_finding(finding_id, action="generate"):
+    """Generate or execute remediation for a specific Security Hub finding."""
+    sh = boto3.client("securityhub")
+
+    try:
+        resp = sh.get_findings(Filters={
+            "Id": [{"Value": finding_id, "Comparison": "EQUALS"}]
+        })
+        findings = resp.get("Findings", [])
+        if not findings:
+            return {"error": f"Finding {finding_id} not found"}
+
+        finding = findings[0]
+        title = finding.get("Title", "")
+        description = finding.get("Description", "")
+        severity = finding.get("Severity", {}).get("Label", "UNKNOWN")
+        product = finding.get("ProductName", "")
+        resources = finding.get("Resources", [])
+        resource_type = resources[0].get("Type", "") if resources else ""
+        resource_id = resources[0].get("Id", "") if resources else ""
+        remediation_text = finding.get("Remediation", {}).get("Recommendation", {}).get("Text", "")
+        remediation_url = finding.get("Remediation", {}).get("Recommendation", {}).get("Url", "")
+
+        scripts = []
+
+        if "S3" in resource_type or "s3" in title.lower():
+            bucket = resource_id.split(":")[-1] if ":" in resource_id else resource_id
+            if "encrypt" in title.lower() or "encryption" in description.lower():
+                scripts.append(f"aws s3api put-bucket-encryption --bucket {bucket} --server-side-encryption-configuration '{{\"Rules\":[{{\"ApplyServerSideEncryptionByDefault\":{{\"SSEAlgorithm\":\"AES256\"}}}}}}'")
+            if "public" in title.lower() or "public" in description.lower():
+                scripts.append(f"aws s3api put-public-access-block --bucket {bucket} --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true")
+            if "versioning" in title.lower():
+                scripts.append(f"aws s3api put-bucket-versioning --bucket {bucket} --versioning-configuration Status=Enabled")
+
+        elif "IAM" in resource_type or "iam" in title.lower():
+            if "mfa" in title.lower():
+                scripts.append("# Enable MFA for the affected user via AWS Console or CLI")
+                scripts.append("# aws iam create-virtual-mfa-device --virtual-mfa-device-name <user>-mfa --outfile /tmp/qr.png --bootstrap-method QRCodePNG")
+            if "key" in title.lower() and ("rotate" in title.lower() or "age" in title.lower() or "old" in description.lower()):
+                scripts.append("# Rotate old access keys:")
+                scripts.append("# aws iam create-access-key --user-name <user>")
+                scripts.append("# aws iam delete-access-key --user-name <user> --access-key-id <old-key-id>")
+            if "policy" in title.lower() and ("admin" in title.lower() or "wildcard" in description.lower()):
+                scripts.append("# Review and scope down the overly permissive policy")
+
+        elif "EC2" in resource_type or "ec2" in title.lower():
+            instance_id = resource_id.split("/")[-1] if "/" in resource_id else resource_id
+            if "security group" in title.lower() or "unrestricted" in title.lower():
+                scripts.append(f"# Review and restrict security group rules for instance {instance_id}")
+                scripts.append(f"aws ec2 describe-instance-attribute --instance-id {instance_id} --attribute groupSet")
+            if "imds" in title.lower() or "metadata" in title.lower():
+                scripts.append(f"aws ec2 modify-instance-metadata-options --instance-id {instance_id} --http-tokens required --http-endpoint enabled")
+
+        if not scripts:
+            scripts.append(f"# AWS Recommendation: {remediation_text}" if remediation_text else "# No automated remediation available — manual review required")
+            if remediation_url:
+                scripts.append(f"# Reference: {remediation_url}")
+
+        result = {
+            "source": "security_hub",
+            "finding_id": finding_id,
+            "title": title,
+            "severity": severity,
+            "product": product,
+            "resource_type": resource_type,
+            "resource_id": resource_id,
+            "remediation_scripts": scripts,
+            "aws_recommendation": remediation_text,
+            "reference_url": remediation_url,
+            "action": action,
+        }
+
+        if action == "execute":
+            executed = []
+            for script in scripts:
+                if script.startswith("#"):
+                    continue
+                try:
+                    import subprocess
+                    subprocess.run(script, shell=True, capture_output=True, timeout=30)
+                    executed.append({"script": script[:80], "status": "executed"})
+                except Exception as e:
+                    executed.append({"script": script[:80], "status": f"failed: {e}"})
+            result["execution_results"] = executed
+
+        # Update workflow status if fix was executed
+        if action == "execute" and executed:
+            try:
+                sh.batch_update_findings(
+                    FindingIdentifiers=[{"Id": finding_id, "ProductArn": finding.get("ProductArn", "")}],
+                    Workflow={"Status": "NOTIFIED"},
+                    Note={"Text": "Remediation applied by SLyK-53", "UpdatedBy": "SLyK-53"}
+                )
+                result["finding_status_updated"] = True
+            except:
+                result["finding_status_updated"] = False
+
+        return result
+
+    except ClientError as e:
+        return {"error": str(e)}
+
+
 def handler(event, context):
     params = {p["name"]: p["value"] for p in event.get("parameters", [])}
     control_id = params.get("control_id", "").upper()
     action = params.get("action", "generate")
+    finding_id = params.get("finding_id", "")
+
+    # Route to Security Hub remediation if finding_id provided
+    if finding_id:
+        result = remediate_securityhub_finding(finding_id, action)
+        body = json.dumps(result)
+        return {
+            "messageVersion": "1.0",
+            "response": {
+                "actionGroup": event.get("actionGroup", ""),
+                "apiPath": event.get("apiPath", ""),
+                "httpMethod": "POST",
+                "httpStatusCode": 200,
+                "responseBody": {"application/json": {"body": body}},
+            },
+        }
 
     playbook = REMEDIATION_PLAYBOOKS.get(control_id)
     if not playbook:
@@ -145,6 +264,7 @@ def handler(event, context):
         body = json.dumps({
             "error": f"No remediation playbook for {control_id}",
             "available_controls": available,
+            "tip": "You can also provide a finding_id from Security Hub for targeted remediation",
         })
     else:
         targets = playbook["scan"]()

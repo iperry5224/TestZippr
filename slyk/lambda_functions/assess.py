@@ -151,6 +151,120 @@ CONTROL_CHECKS = {
 }
 
 
+# =========================================================================
+# SECURITY HUB INTEGRATION
+# =========================================================================
+
+SECURITYHUB_NIST_MAP = {
+    "IAM": "AC",
+    "EC2": "SC",
+    "S3": "SC",
+    "RDS": "SC",
+    "CloudTrail": "AU",
+    "CloudWatch": "SI",
+    "GuardDuty": "SI",
+    "Inspector": "RA",
+    "Macie": "SC",
+    "KMS": "SC",
+    "Lambda": "CM",
+    "Config": "CA",
+    "SNS": "IR",
+    "SecretsManager": "IA",
+    "SSM": "CM",
+    "ELB": "SC",
+    "WAF": "SC",
+}
+
+
+def import_security_hub_findings(max_findings=100, severity_filter=None):
+    """Import findings from AWS Security Hub and map to NIST controls."""
+    try:
+        sh = boto3.client("securityhub")
+
+        filters = {
+            "RecordState": [{"Value": "ACTIVE", "Comparison": "EQUALS"}],
+            "WorkflowStatus": [{"Value": "NEW", "Comparison": "EQUALS"}],
+        }
+        if severity_filter:
+            filters["SeverityLabel"] = [{"Value": s, "Comparison": "EQUALS"} for s in severity_filter]
+
+        findings = []
+        paginator_token = None
+
+        while True:
+            kwargs = {"Filters": filters, "MaxResults": min(max_findings - len(findings), 100)}
+            if paginator_token:
+                kwargs["NextToken"] = paginator_token
+
+            resp = sh.get_findings(**kwargs)
+            findings.extend(resp.get("Findings", []))
+
+            paginator_token = resp.get("NextToken")
+            if not paginator_token or len(findings) >= max_findings:
+                break
+
+        # Process findings
+        processed = []
+        severity_counts = {"CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 0, "INFORMATIONAL": 0}
+        product_counts = {}
+
+        for f in findings:
+            severity = f.get("Severity", {}).get("Label", "INFORMATIONAL")
+            severity_counts[severity] = severity_counts.get(severity, 0) + 1
+
+            product = f.get("ProductName", f.get("GeneratorId", "Unknown").split("/")[0])
+            product_counts[product] = product_counts.get(product, 0) + 1
+
+            resource_type = ""
+            resource_id = ""
+            resources = f.get("Resources", [])
+            if resources:
+                resource_type = resources[0].get("Type", "")
+                resource_id = resources[0].get("Id", "")
+
+            nist_family = "SI"
+            for service_key, family in SECURITYHUB_NIST_MAP.items():
+                if service_key.lower() in product.lower() or service_key.lower() in resource_type.lower():
+                    nist_family = family
+                    break
+
+            compliance_controls = []
+            compliance = f.get("Compliance", {})
+            for assoc in compliance.get("AssociatedStandards", []):
+                compliance_controls.append(assoc.get("StandardsId", ""))
+            for ctrl in compliance.get("SecurityControlId", ""):
+                compliance_controls.append(ctrl)
+
+            processed.append({
+                "finding_id": f.get("Id", ""),
+                "title": f.get("Title", ""),
+                "description": f.get("Description", "")[:500],
+                "severity": severity,
+                "severity_score": f.get("Severity", {}).get("Normalized", 0),
+                "product": product,
+                "resource_type": resource_type,
+                "resource_id": resource_id[:100],
+                "region": f.get("Region", ""),
+                "nist_family": nist_family,
+                "compliance_controls": compliance_controls,
+                "remediation_text": f.get("Remediation", {}).get("Recommendation", {}).get("Text", ""),
+                "remediation_url": f.get("Remediation", {}).get("Recommendation", {}).get("Url", ""),
+                "first_observed": f.get("FirstObservedAt", ""),
+                "last_observed": f.get("LastObservedAt", ""),
+                "workflow_status": f.get("Workflow", {}).get("Status", ""),
+            })
+
+        return {
+            "total_findings": len(processed),
+            "severity_counts": severity_counts,
+            "product_counts": product_counts,
+            "findings": processed,
+        }
+
+    except ClientError as e:
+        return {"error": str(e), "total_findings": 0, "findings": []}
+
+
 def run_assessment(families=None):
     results = []
     for control_id, (name, check_fn) in CONTROL_CHECKS.items():
@@ -166,8 +280,36 @@ def run_assessment(families=None):
 
 def handler(event, context):
     params = {p["name"]: p["value"] for p in event.get("parameters", [])}
+    api_path = event.get("apiPath", "")
+
+    # Route to Security Hub import if requested
+    if api_path == "/securityhub" or params.get("source") == "securityhub":
+        max_findings = int(params.get("max_findings", "50"))
+        severity = params.get("severity", "").upper()
+        severity_filter = severity.split(",") if severity else None
+
+        sh_results = import_security_hub_findings(
+            max_findings=max_findings,
+            severity_filter=severity_filter,
+        )
+
+        body = json.dumps(sh_results)
+
+        return {
+            "messageVersion": "1.0",
+            "response": {
+                "actionGroup": event.get("actionGroup", ""),
+                "apiPath": api_path,
+                "httpMethod": "POST",
+                "httpStatusCode": 200,
+                "responseBody": {"application/json": {"body": body}},
+            },
+        }
+
+    # Standard NIST assessment
     families_str = params.get("families", "ALL")
     families = families_str.split(",") if families_str != "ALL" else ["ALL"]
+    include_securityhub = params.get("include_securityhub", "false").lower() == "true"
 
     results = run_assessment(families)
 
@@ -186,7 +328,17 @@ def handler(event, context):
         "compliance_percentage": compliance_pct,
     }
 
-    body = json.dumps({"summary": summary, "controls": results})
+    response_data = {"summary": summary, "controls": results}
+
+    # Include Security Hub findings if requested
+    if include_securityhub:
+        sh_results = import_security_hub_findings(max_findings=50, severity_filter=["CRITICAL", "HIGH"])
+        response_data["security_hub"] = sh_results
+        summary["security_hub_findings"] = sh_results["total_findings"]
+        summary["critical_findings"] = sh_results["severity_counts"].get("CRITICAL", 0)
+        summary["high_findings"] = sh_results["severity_counts"].get("HIGH", 0)
+
+    body = json.dumps(response_data)
 
     return {
         "messageVersion": "1.0",

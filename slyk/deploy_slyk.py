@@ -151,6 +151,8 @@ def create_iam_roles():
                     "ec2:ModifyInstanceMetadataOptions",
                     "iam:CreateVirtualMFADevice", "iam:EnableMFADevice",
                     "ssm:SendCommand", "ssm:GetCommandInvocation",
+                    "securityhub:GetFindings", "securityhub:BatchUpdateFindings",
+                    "securityhub:DescribeHub",
                 ],
                 "Resource": "*"
             },
@@ -343,22 +345,36 @@ Guidelines:
             "/assess": {
                 "post": {
                     "operationId": "assessCompliance",
-                    "summary": "Run NIST 800-53 compliance assessment",
+                    "summary": "Run NIST 800-53 compliance assessment with optional Security Hub integration",
                     "parameters": [
-                        {"name": "families", "in": "query", "schema": {"type": "string"}, "description": "Comma-separated control families (AC,AU,IA) or ALL"}
+                        {"name": "families", "in": "query", "schema": {"type": "string"}, "description": "Comma-separated control families (AC,AU,IA) or ALL"},
+                        {"name": "include_securityhub", "in": "query", "schema": {"type": "string", "enum": ["true", "false"]}, "description": "Include Security Hub findings in assessment"}
                     ],
-                    "responses": {"200": {"description": "Assessment results"}}
+                    "responses": {"200": {"description": "Assessment results with optional Security Hub findings"}}
+                }
+            },
+            "/securityhub": {
+                "post": {
+                    "operationId": "getSecurityHubFindings",
+                    "summary": "Import and analyze AWS Security Hub findings from GuardDuty, Inspector, Macie, and other services",
+                    "parameters": [
+                        {"name": "source", "in": "query", "schema": {"type": "string"}, "description": "Set to securityhub"},
+                        {"name": "max_findings", "in": "query", "schema": {"type": "string"}, "description": "Maximum findings to retrieve (default 50)"},
+                        {"name": "severity", "in": "query", "schema": {"type": "string"}, "description": "Filter by severity: CRITICAL,HIGH,MEDIUM,LOW or blank for all"}
+                    ],
+                    "responses": {"200": {"description": "Security Hub findings mapped to NIST control families"}}
                 }
             },
             "/remediate": {
                 "post": {
                     "operationId": "remediateControl",
-                    "summary": "Generate or execute remediation for a failed control",
+                    "summary": "Generate or execute remediation for a failed NIST control or a specific Security Hub finding",
                     "parameters": [
                         {"name": "control_id", "in": "query", "schema": {"type": "string"}, "description": "NIST control ID (e.g., AC-2)"},
+                        {"name": "finding_id", "in": "query", "schema": {"type": "string"}, "description": "Security Hub finding ID for targeted remediation"},
                         {"name": "action", "in": "query", "schema": {"type": "string", "enum": ["generate", "execute"]}, "description": "Generate scripts or execute them"}
                     ],
-                    "responses": {"200": {"description": "Remediation plan"}}
+                    "responses": {"200": {"description": "Remediation plan with scripts"}}
                 }
             },
             "/harden": {
