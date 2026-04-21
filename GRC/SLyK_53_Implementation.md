@@ -1,4 +1,4 @@
-# GRCP Option E: Bedrock Agent + API Gateway + Console Integration
+# SLyK-53 (SAE Light Yaml Kit): Bedrock Agent + API Gateway + Console Integration
 
 ## Implementation Guide
 
@@ -13,7 +13,7 @@
 ```
 AWS Console
     │
-    ├─→ Service Catalog Link: "Open GRCP Security Assistant"
+    ├─→ Service Catalog Link: "Open SLyK-53 Security Assistant"
     │       │
     │       ▼
     │   API Gateway (HTTPS endpoint)
@@ -21,7 +21,7 @@ AWS Console
     │       ▼
     │   S3-hosted React UI (static site)
     │       │
-    │       ├─→ Bedrock Agent (chat + orchestration)
+    │       ├─→ Bedrock Agent (SLyK Agent — chat + orchestration)
     │       │       │
     │       │       ├─→ Action Group: ASSESS (Lambda)
     │       │       ├─→ Action Group: REMEDIATE (Lambda)
@@ -36,8 +36,8 @@ AWS Console
 
 **How the user experiences it:**
 1. User is logged into AWS Console
-2. Clicks "GRCP Security Assistant" link (Service Catalog or bookmark)
-3. A new tab opens with the GRCP React UI (hosted on S3 + CloudFront)
+2. Clicks "SLyK-53 Security Assistant" link (Service Catalog or bookmark)
+3. A new tab opens with the SLyK React UI (hosted on S3 + CloudFront)
 4. User is auto-authenticated via their existing AWS session
 5. Full GUI with chat, dashboards, and action buttons — looks like SAELAR but runs serverless
 
@@ -272,10 +272,10 @@ aws lambda create-function \
 
 ```bash
 aws bedrock-agent create-agent \
-    --agent-name "GRCP-Security-Assistant" \
-    --description "GRC Platform security compliance, remediation, and hardening assistant for System 5065" \
+    --agent-name "SLyK-53-Security-Assistant" \
+    --description "SLyK-53 security compliance, remediation, and hardening assistant for System 5065" \
     --foundation-model "amazon.titan-text-express-v1" \
-    --instruction "You are GRCP, a security compliance assistant for NOAA System 5065. You help users assess NIST 800-53 controls, remediate findings, and harden AWS assets. Always explain what you're doing and ask for confirmation before making changes. Provide specific, actionable guidance with AWS CLI commands." \
+    --instruction "You are SLyK, the SAE Light Yaml Kit security assistant for NOAA System 5065. You are part of the GRCP (GRC Platform) family of tools. You help users assess NIST 800-53 controls, remediate findings, and harden AWS assets. Always explain what you're doing and ask for confirmation before making changes. Provide specific, actionable guidance with AWS CLI commands." \
     --agent-resource-role-arn "arn:aws:iam::656443597515:role/saelar-role" \
     --region us-east-1
 ```
@@ -286,7 +286,7 @@ aws bedrock-agent create-agent \
 # grcp-agent-api.yaml
 openapi: 3.0.0
 info:
-  title: GRCP Security Assistant API
+  title: SLyK-53 Security Assistant API
   version: 1.0.0
 
 paths:
@@ -400,7 +400,7 @@ aws bedrock-agent create-agent-alias \
 ```
 
 Test in the Bedrock Console:
-1. Go to **Bedrock** > **Agents** > **GRCP-Security-Assistant**
+1. Go to **Bedrock** > **Agents** > **SLyK-53-Security-Assistant**
 2. Click **Test** in the right panel
 3. Type: "Assess my NIST 800-53 compliance for AC controls"
 4. Verify the agent invokes the Lambda and returns results
@@ -470,7 +470,7 @@ function ChatInterface({ credentials }) {
       <div className="messages">
         {messages.map((msg, i) => (
           <div key={i} className={`message ${msg.role}`}>
-            <strong>{msg.role === 'user' ? 'You' : '🛡️ GRCP'}:</strong>
+            <strong>{msg.role === 'user' ? 'You' : '🛡️ SLyK'}:</strong>
             <p>{msg.content}</p>
           </div>
         ))}
@@ -478,7 +478,7 @@ function ChatInterface({ credentials }) {
       <div className="input-row">
         <input value={input} onChange={e => setInput(e.target.value)}
                onKeyDown={e => e.key === 'Enter' && sendMessage()}
-               placeholder="Ask GRCP: 'Assess my S3 buckets' or 'Harden my EC2 instances'" />
+               placeholder="Ask SLyK: 'Assess my S3 buckets' or 'Harden my EC2 instances'" />
         <button onClick={sendMessage}>Send</button>
       </div>
     </div>
@@ -521,11 +521,11 @@ cd grcp-ui
 npm run build
 
 # Deploy to S3
-aws s3 sync build/ s3://grcp-ui-5065/ --delete
+aws s3 sync build/ s3://slyk-ui-5065/ --delete
 
 # Create CloudFront distribution
 aws cloudfront create-distribution \
-    --origin-domain-name grcp-ui-5065.s3.amazonaws.com \
+    --origin-domain-name slyk-ui-5065.s3.amazonaws.com \
     --default-root-object index.html
 ```
 
@@ -537,8 +537,8 @@ aws cloudfront create-distribution \
 
 ```bash
 aws apigateway create-rest-api \
-    --name "GRCP-API" \
-    --description "GRCP Security Assistant API" \
+    --name "SLyK-API" \
+    --description "SLyK-53 Security Assistant API" \
     --endpoint-configuration types=REGIONAL \
     --region us-east-1
 ```
@@ -547,7 +547,7 @@ aws apigateway create-rest-api \
 
 ```bash
 aws cognito-identity create-identity-pool \
-    --identity-pool-name "GRCP-Identity-Pool" \
+    --identity-pool-name "SLyK-Identity-Pool" \
     --allow-unauthenticated-identities false \
     --supported-login-providers '{}' \
     --region us-east-1
@@ -558,17 +558,17 @@ Configure the identity pool to accept IAM authentication (Console session).
 **Step 4.3 — Add to Service Catalog**
 
 ```bash
-# Create a Service Catalog portfolio for GRCP
+# Create a Service Catalog portfolio for SLyK
 aws servicecatalog create-portfolio \
-    --display-name "GRCP Security Tools" \
-    --description "GRC Platform security compliance and hardening tools" \
+    --display-name "SLyK-53 Security Tools" \
+    --description "SLyK-53 — Console-integrated security compliance and hardening (part of GRCP)" \
     --provider-name "SAE Team" \
     --region us-east-1
 
 # Create a product that links to the UI
 aws servicecatalog create-product \
-    --name "GRCP Security Assistant" \
-    --description "AI-powered security compliance, remediation, and hardening" \
+    --name "SLyK-53 Security Assistant" \
+    --description "AI-powered security compliance, remediation, and hardening (GRCP)" \
     --product-type CLOUD_FORMATION_TEMPLATE \
     --provisioning-artifact-parameters '{"Info": {"LoadTemplateFromURL": "https://s3.amazonaws.com/grcp-ui-5065/cfn-template.yaml"}, "Name": "v1.0", "Type": "CLOUD_FORMATION_TEMPLATE"}' \
     --region us-east-1
@@ -579,7 +579,7 @@ aws servicecatalog create-product \
 Add a custom link in the AWS Console:
 1. Go to **AWS Console** > **Resource Groups** > **Tag Editor** (or any bookmarkable service)
 2. Bookmark: `https://<cloudfront-distribution>.cloudfront.net`
-3. Or use **myApplications** to register GRCP as an application with a direct link
+3. Or use **myApplications** to register SLyK-53 as an application with a direct link
 
 ---
 
