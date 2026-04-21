@@ -1,4 +1,4 @@
-# SLyK-53 (SAE Light Yaml Kit): Bedrock Agent + API Gateway + Console Integration
+# SLyK-53 (SAE Lightweight Yaml Kit): Bedrock Agent + API Gateway + Console Integration
 
 ## Implementation Guide
 
@@ -275,7 +275,7 @@ aws bedrock-agent create-agent \
     --agent-name "SLyK-53-Security-Assistant" \
     --description "SLyK-53 security compliance, remediation, and hardening assistant for System 5065" \
     --foundation-model "amazon.titan-text-express-v1" \
-    --instruction "You are SLyK, the SAE Light Yaml Kit security assistant for NOAA System 5065. You are part of the GRCP (GRC Platform) family of tools. You help users assess NIST 800-53 controls, remediate findings, and harden AWS assets. Always explain what you're doing and ask for confirmation before making changes. Provide specific, actionable guidance with AWS CLI commands." \
+    --instruction "You are SLyK, the SAE Lightweight Yaml Kit security assistant for NOAA System 5065. You are part of the GRCP (GRC Platform) family of tools. You help users assess NIST 800-53 controls, remediate findings, and harden AWS assets. Always explain what you're doing and ask for confirmation before making changes. Provide specific, actionable guidance with AWS CLI commands." \
     --agent-resource-role-arn "arn:aws:iam::656443597515:role/saelar-role" \
     --region us-east-1
 ```
