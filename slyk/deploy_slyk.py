@@ -338,7 +338,7 @@ def create_bedrock_agent():
     log("Step 3: Creating Bedrock Agent...")
     bedrock = boto3.client("bedrock-agent", region_name=REGION)
 
-    instruction = """You are SLyK, the SAE Lightweight Yaml Kit security assistant for NOAA System 5065. You are part of the GRCP (GRC Platform) family of tools.
+    instruction = """You are SLyK, the SAE Lightweight Yaml Kit security assistant for NOAA NESDIS. You are part of the GRCP (GRC Platform) family of tools.
 
 Your capabilities:
 1. ASSESS — Run NIST 800-53 compliance assessments against the AWS environment
