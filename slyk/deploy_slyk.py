@@ -38,8 +38,6 @@ AGENT_MODEL_CANDIDATES = [
     "amazon.nova-pro-v1:0",                       # Amazon Nova Pro — best reasoning
     "amazon.nova-lite-v1:0",                       # Amazon Nova Lite — fast, capable
     "amazon.nova-micro-v1:0",                      # Amazon Nova Micro — lightweight
-    "anthropic.claude-3-5-sonnet-20240620-v1:0",   # Claude 3.5 Sonnet
-    "anthropic.claude-3-haiku-20240307-v1:0",      # Claude 3 Haiku — fast
     "meta.llama3-1-70b-instruct-v1:0",             # Llama 3.1 70B
     "meta.llama3-1-8b-instruct-v1:0",              # Llama 3.1 8B — lightweight
     "mistral.mistral-large-2407-v1:0",             # Mistral Large

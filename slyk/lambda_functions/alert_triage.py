@@ -25,8 +25,6 @@ BEDROCK_MODEL_CANDIDATES = [
     "amazon.nova-pro-v1:0",
     "amazon.nova-lite-v1:0",
     "amazon.nova-micro-v1:0",
-    "anthropic.claude-3-5-sonnet-20240620-v1:0",
-    "anthropic.claude-3-haiku-20240307-v1:0",
     "meta.llama3-1-70b-instruct-v1:0",
     "meta.llama3-1-8b-instruct-v1:0",
     "mistral.mistral-large-2407-v1:0",
