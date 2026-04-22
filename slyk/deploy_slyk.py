@@ -241,6 +241,7 @@ def create_lambda_functions():
         "slyk-assess": "assess.py",
         "slyk-remediate": "remediate.py",
         "slyk-harden": "harden.py",
+        "slyk-alert-triage": "alert_triage.py",
     }
 
     config["lambda_arns"] = {}
@@ -387,14 +388,26 @@ Guidelines:
                     ],
                     "responses": {"200": {"description": "Hardening results"}}
                 }
+            },
+            "/triage": {
+                "post": {
+                    "operationId": "triageAlerts",
+                    "summary": "Triage Security Hub alerts — analyze findings, generate remediation, and send notifications",
+                    "parameters": [
+                        {"name": "severity", "in": "query", "schema": {"type": "string"}, "description": "Filter by severity: CRITICAL,HIGH,MEDIUM or blank for CRITICAL,HIGH"},
+                        {"name": "max_findings", "in": "query", "schema": {"type": "string"}, "description": "Maximum findings to triage (default 10)"}
+                    ],
+                    "responses": {"200": {"description": "Triaged findings with AI analysis and remediation scripts"}}
+                }
             }
         }
     }
 
     action_groups = {
-        "ASSESS": {"lambda": config["lambda_arns"]["slyk-assess"], "paths": ["/assess"]},
+        "ASSESS": {"lambda": config["lambda_arns"]["slyk-assess"], "paths": ["/assess", "/securityhub"]},
         "REMEDIATE": {"lambda": config["lambda_arns"]["slyk-remediate"], "paths": ["/remediate"]},
         "HARDEN": {"lambda": config["lambda_arns"]["slyk-harden"], "paths": ["/harden"]},
+        "TRIAGE": {"lambda": config["lambda_arns"]["slyk-alert-triage"], "paths": ["/triage"]},
     }
 
     for ag_name, ag_config in action_groups.items():
@@ -443,10 +456,181 @@ Guidelines:
 
 
 # =========================================================================
-# STEP 4: Test the Agent
+# STEP 4: EventBridge + SNS (Proactive Alerting)
+# =========================================================================
+def create_eventbridge_sns():
+    log("Step 4: Creating EventBridge rule and SNS topic for proactive alerts...")
+
+    # Create SNS topic
+    sns = boto3.client("sns", region_name=REGION)
+    try:
+        topic_resp = sns.create_topic(
+            Name="SLyK-53-Security-Alerts",
+            Tags=[
+                {"Key": "Project", "Value": "SLyK-53"},
+                {"Key": "Team", "Value": "SAE"},
+            ]
+        )
+        config["sns_topic_arn"] = topic_resp["TopicArn"]
+        ok(f"SNS topic created: {config['sns_topic_arn']}")
+    except ClientError as e:
+        if "already exists" in str(e).lower():
+            config["sns_topic_arn"] = f"arn:aws:sns:{REGION}:{ACCOUNT_ID}:SLyK-53-Security-Alerts"
+            warn("SNS topic already exists — reusing")
+        else:
+            warn(f"Could not create SNS topic: {e}")
+            config["sns_topic_arn"] = ""
+
+    # Prompt for email subscription
+    if config.get("sns_topic_arn"):
+        print(f"\n  {YELLOW}To receive email alerts, subscribe your email:{NC}")
+        print(f"    aws sns subscribe --topic-arn {config['sns_topic_arn']} --protocol email --notification-endpoint your@email.com\n")
+
+    # Update alert_triage Lambda with SNS ARN
+    if config.get("sns_topic_arn") and config.get("lambda_arns", {}).get("slyk-alert-triage"):
+        try:
+            lam = boto3.client("lambda", region_name=REGION)
+            lam.update_function_configuration(
+                FunctionName="slyk-alert-triage",
+                Environment={"Variables": {
+                    "S3_BUCKET_NAME": S3_BUCKET,
+                    "AWS_DEFAULT_REGION": REGION,
+                    "SLYK_ALERT_TOPIC_ARN": config["sns_topic_arn"],
+                    "BEDROCK_MODEL": AGENT_MODEL,
+                }},
+            )
+            ok("Updated alert-triage Lambda with SNS topic ARN")
+        except Exception as e:
+            warn(f"Could not update Lambda env: {e}")
+
+    # Create EventBridge rule
+    events = boto3.client("events", region_name=REGION)
+    rule_name = "SLyK-53-SecurityHub-HighRisk"
+
+    event_pattern = {
+        "source": ["aws.securityhub"],
+        "detail-type": ["Security Hub Findings - Imported"],
+        "detail": {
+            "findings": {
+                "Severity": {
+                    "Label": ["CRITICAL", "HIGH"]
+                },
+                "RecordState": ["ACTIVE"],
+                "Workflow": {
+                    "Status": ["NEW"]
+                }
+            }
+        }
+    }
+
+    try:
+        events.put_rule(
+            Name=rule_name,
+            Description="Triggers SLyK-53 alert triage on CRITICAL/HIGH Security Hub findings",
+            EventPattern=json.dumps(event_pattern),
+            State="ENABLED",
+            Tags=[
+                {"Key": "Project", "Value": "SLyK-53"},
+                {"Key": "Team", "Value": "SAE"},
+            ]
+        )
+        ok(f"EventBridge rule created: {rule_name}")
+    except ClientError as e:
+        warn(f"Could not create EventBridge rule: {e}")
+
+    # Add Lambda as target
+    triage_arn = config.get("lambda_arns", {}).get("slyk-alert-triage", "")
+    if triage_arn:
+        try:
+            events.put_targets(
+                Rule=rule_name,
+                Targets=[{
+                    "Id": "SLyK-AlertTriage",
+                    "Arn": triage_arn,
+                }]
+            )
+            ok("EventBridge target: slyk-alert-triage Lambda")
+
+            # Grant EventBridge permission to invoke Lambda
+            lam = boto3.client("lambda", region_name=REGION)
+            try:
+                lam.add_permission(
+                    FunctionName="slyk-alert-triage",
+                    StatementId="AllowEventBridgeInvoke",
+                    Action="lambda:InvokeFunction",
+                    Principal="events.amazonaws.com",
+                    SourceArn=f"arn:aws:events:{REGION}:{ACCOUNT_ID}:rule/{rule_name}",
+                )
+            except ClientError:
+                pass
+
+        except ClientError as e:
+            warn(f"Could not add EventBridge target: {e}")
+
+    # Also add SNS as a direct target for immediate notification
+    if config.get("sns_topic_arn"):
+        try:
+            events.put_targets(
+                Rule=rule_name,
+                Targets=[{
+                    "Id": "SLyK-SNS-Direct",
+                    "Arn": config["sns_topic_arn"],
+                    "InputTransformer": {
+                        "InputPathsMap": {
+                            "severity": "$.detail.findings[0].Severity.Label",
+                            "title": "$.detail.findings[0].Title",
+                            "resource": "$.detail.findings[0].Resources[0].Id",
+                            "account": "$.detail.findings[0].AwsAccountId",
+                        },
+                        "InputTemplate": '"[SLyK-53] <severity> finding: <title> | Resource: <resource> | Account: <account>"'
+                    }
+                }]
+            )
+            ok("EventBridge target: SNS direct notification")
+
+            # Grant EventBridge permission to publish to SNS
+            try:
+                sns.set_topic_attributes(
+                    TopicArn=config["sns_topic_arn"],
+                    AttributeName="Policy",
+                    AttributeValue=json.dumps({
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Sid": "AllowEventBridge",
+                            "Effect": "Allow",
+                            "Principal": {"Service": "events.amazonaws.com"},
+                            "Action": "sns:Publish",
+                            "Resource": config["sns_topic_arn"],
+                        }]
+                    })
+                )
+            except:
+                pass
+
+        except ClientError as e:
+            warn(f"Could not add SNS target: {e}")
+
+    ok("Proactive alerting configured!")
+    print(f"""
+  {CYAN}How it works:{NC}
+    Security Hub detects CRITICAL/HIGH finding
+        → EventBridge triggers automatically
+        → slyk-alert-triage Lambda:
+            1. Analyzes the finding
+            2. Maps to NIST control family
+            3. Generates remediation scripts
+            4. Calls Bedrock for AI risk assessment
+            5. Sends alert via SNS with finding + fix
+            6. Logs to S3 for audit trail
+        → SNS sends direct email/Slack notification
+""")
+
+
+# =========================================================================
+# STEP 5: Test the Agent
 # =========================================================================
 def test_agent():
-    log("Step 4: Testing the agent...")
+    log("Step 5: Testing the agent...")
 
     if not config.get("agent_id") or not config.get("agent_alias_id"):
         warn("Skipping test — agent not fully configured")
@@ -483,10 +667,10 @@ def test_agent():
 
 
 # =========================================================================
-# STEP 5: Save Config
+# STEP 6: Save Config
 # =========================================================================
 def save_config():
-    log("Step 5: Saving configuration...")
+    log("Step 6: Saving configuration...")
 
     config_data = {
         "agent_id": config.get("agent_id", ""),
@@ -494,6 +678,7 @@ def save_config():
         "lambda_role_arn": config.get("lambda_role_arn", ""),
         "agent_role_arn": config.get("agent_role_arn", ""),
         "lambda_arns": config.get("lambda_arns", {}),
+        "sns_topic_arn": config.get("sns_topic_arn", ""),
         "region": REGION,
         "account_id": ACCOUNT_ID,
         "s3_bucket": S3_BUCKET,
@@ -542,6 +727,11 @@ def print_summary():
       Alias ID:  {config.get('agent_alias_id', 'N/A')}
       Model:     {AGENT_MODEL}
 
+    Proactive Alerting:
+      SNS Topic: {config.get('sns_topic_arn', 'N/A')}
+      EventBridge Rule: SLyK-53-SecurityHub-HighRisk
+      Triggers on: CRITICAL + HIGH Security Hub findings
+
   {CYAN}How to Test:{NC}
     1. Go to AWS Console > Amazon Bedrock > Agents
     2. Select "{AGENT_NAME}"
@@ -581,6 +771,8 @@ def main():
     create_lambda_functions()
     print()
     create_bedrock_agent()
+    print()
+    create_eventbridge_sns()
     print()
     test_agent()
     print()
