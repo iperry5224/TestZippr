@@ -285,6 +285,7 @@ def create_lambda_functions():
         "slyk-remediate": "remediate.py",
         "slyk-harden": "harden.py",
         "slyk-alert-triage": "alert_triage.py",
+        "slyk-runbooks": "runbooks.py",
     }
 
     config["lambda_arns"] = {}
@@ -442,6 +443,17 @@ Guidelines:
                     ],
                     "responses": {"200": {"description": "Triaged findings with AI analysis and remediation scripts"}}
                 }
+            },
+            "/runbooks": {
+                "post": {
+                    "operationId": "executeRunbook",
+                    "summary": "List or execute predefined ISSO runbooks (monthly compliance, quarterly hardening, incident response, ATO readiness, POA&M review, system onboarding)",
+                    "parameters": [
+                        {"name": "action", "in": "query", "schema": {"type": "string", "enum": ["list", "execute"]}, "description": "List available runbooks or execute one"},
+                        {"name": "runbook_id", "in": "query", "schema": {"type": "string"}, "description": "Runbook to execute: monthly_compliance, quarterly_hardening, incident_response, ato_readiness, poam_review, system_onboarding"}
+                    ],
+                    "responses": {"200": {"description": "Runbook catalog or execution results"}}
+                }
             }
         }
     }
@@ -451,6 +463,7 @@ Guidelines:
         "REMEDIATE": {"lambda": config["lambda_arns"]["slyk-remediate"], "paths": ["/remediate"]},
         "HARDEN": {"lambda": config["lambda_arns"]["slyk-harden"], "paths": ["/harden"]},
         "TRIAGE": {"lambda": config["lambda_arns"]["slyk-alert-triage"], "paths": ["/triage"]},
+        "RUNBOOKS": {"lambda": config["lambda_arns"]["slyk-runbooks"], "paths": ["/runbooks"]},
     }
 
     for ag_name, ag_config in action_groups.items():
