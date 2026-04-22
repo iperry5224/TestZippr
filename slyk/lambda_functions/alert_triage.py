@@ -21,7 +21,20 @@ from botocore.exceptions import ClientError
 REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 S3_BUCKET = os.environ.get("S3_BUCKET_NAME", "saelarallpurpose")
 SNS_TOPIC_ARN = os.environ.get("SLYK_ALERT_TOPIC_ARN", "")
-BEDROCK_MODEL = os.environ.get("BEDROCK_MODEL", "amazon.titan-text-express-v1")
+BEDROCK_MODEL_CANDIDATES = [
+    "amazon.nova-pro-v1:0",
+    "amazon.nova-lite-v1:0",
+    "amazon.nova-micro-v1:0",
+    "anthropic.claude-3-5-sonnet-20240620-v1:0",
+    "anthropic.claude-3-haiku-20240307-v1:0",
+    "meta.llama3-1-70b-instruct-v1:0",
+    "meta.llama3-1-8b-instruct-v1:0",
+    "mistral.mistral-large-2407-v1:0",
+    "mistral.mixtral-8x7b-instruct-v0:1",
+    "amazon.titan-text-express-v1",
+    "amazon.titan-text-lite-v1",
+]
+BEDROCK_MODEL = os.environ.get("BEDROCK_MODEL", BEDROCK_MODEL_CANDIDATES[0])
 
 NIST_MAP = {
     "AwsIamUser": "AC", "AwsIamPolicy": "AC", "AwsIamRole": "AC",
@@ -84,11 +97,11 @@ def generate_auto_remediation(finding):
 
 
 def call_bedrock_analysis(finding):
-    """Use Bedrock to generate an AI risk assessment of the finding."""
-    try:
-        bedrock = boto3.client("bedrock-runtime", region_name=REGION)
+    """Use Bedrock to generate an AI risk assessment of the finding.
+    Tries models in succession order until one responds."""
+    bedrock = boto3.client("bedrock-runtime", region_name=REGION)
 
-        prompt = f"""You are SLyK, an AI security analyst. A Security Hub finding has been detected. Provide a brief risk assessment in 3-4 sentences covering:
+    prompt = f"""You are SLyK, an AI security analyst. A Security Hub finding has been detected. Provide a brief risk assessment in 3-4 sentences covering:
 1. What this finding means for the organization
 2. The potential impact if not addressed
 3. Priority level (Immediate/High/Medium)
@@ -100,14 +113,20 @@ Description: {finding.get('Description', '')[:500]}
 Resource: {finding.get('Resources', [{}])[0].get('Type', '')} - {finding.get('Resources', [{}])[0].get('Id', '')[:100]}
 """
 
-        response = bedrock.converse(
-            modelId=BEDROCK_MODEL,
-            messages=[{"role": "user", "content": [{"text": prompt}]}],
-            inferenceConfig={"maxTokens": 500, "temperature": 0.3},
-        )
-        return response["output"]["message"]["content"][0]["text"]
-    except Exception as e:
-        return f"AI analysis unavailable: {e}"
+    models_to_try = [BEDROCK_MODEL] + [m for m in BEDROCK_MODEL_CANDIDATES if m != BEDROCK_MODEL]
+
+    for model_id in models_to_try:
+        try:
+            response = bedrock.converse(
+                modelId=model_id,
+                messages=[{"role": "user", "content": [{"text": prompt}]}],
+                inferenceConfig={"maxTokens": 500, "temperature": 0.3},
+            )
+            return response["output"]["message"]["content"][0]["text"]
+        except Exception:
+            continue
+
+    return "AI analysis unavailable — no Bedrock models accessible"
 
 
 def send_sns_alert(finding, nist_family, scripts, ai_analysis):

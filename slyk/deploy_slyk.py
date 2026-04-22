@@ -32,7 +32,22 @@ from botocore.exceptions import ClientError
 
 REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 ACCOUNT_ID = None
-AGENT_MODEL = "amazon.titan-text-express-v1"
+# Model succession plan — agent uses the first available model
+# Order: most capable → most lightweight fallback
+AGENT_MODEL_CANDIDATES = [
+    "amazon.nova-pro-v1:0",                       # Amazon Nova Pro — best reasoning
+    "amazon.nova-lite-v1:0",                       # Amazon Nova Lite — fast, capable
+    "amazon.nova-micro-v1:0",                      # Amazon Nova Micro — lightweight
+    "anthropic.claude-3-5-sonnet-20240620-v1:0",   # Claude 3.5 Sonnet
+    "anthropic.claude-3-haiku-20240307-v1:0",      # Claude 3 Haiku — fast
+    "meta.llama3-1-70b-instruct-v1:0",             # Llama 3.1 70B
+    "meta.llama3-1-8b-instruct-v1:0",              # Llama 3.1 8B — lightweight
+    "mistral.mistral-large-2407-v1:0",             # Mistral Large
+    "mistral.mixtral-8x7b-instruct-v0:1",         # Mixtral 8x7B
+    "amazon.titan-text-express-v1",                # Titan Express — last resort
+    "amazon.titan-text-lite-v1",                   # Titan Lite — absolute fallback
+]
+AGENT_MODEL = AGENT_MODEL_CANDIDATES[0]  # Default, will be updated by probe
 S3_BUCKET = os.environ.get("S3_BUCKET_NAME", "saelarallpurpose")
 UI_BUCKET = f"slyk-ui-{REGION}"
 LAMBDA_ROLE_NAME = "SLyK-Lambda-Role"
@@ -63,6 +78,36 @@ def warn(msg):
 
 def fail(msg):
     print(f"{RED}  ✗{NC} {msg}")
+
+
+def probe_available_model():
+    """Test each model candidate to find the first one that's accessible."""
+    global AGENT_MODEL
+    log("Probing for available Bedrock models...")
+    bedrock = boto3.client("bedrock-runtime", region_name=REGION)
+
+    for model_id in AGENT_MODEL_CANDIDATES:
+        try:
+            bedrock.converse(
+                modelId=model_id,
+                messages=[{"role": "user", "content": [{"text": "test"}]}],
+                inferenceConfig={"maxTokens": 1},
+            )
+            AGENT_MODEL = model_id
+            ok(f"Primary model: {model_id}")
+            return model_id
+        except ClientError as e:
+            error_code = e.response.get("Error", {}).get("Code", "")
+            if error_code in ("AccessDeniedException", "ResourceNotFoundException", "ValidationException"):
+                continue
+            else:
+                continue
+        except Exception:
+            continue
+
+    warn("No models responded — using default. Enable a model in the Bedrock console.")
+    AGENT_MODEL = AGENT_MODEL_CANDIDATES[0]
+    return AGENT_MODEL
 
 
 def banner():
@@ -207,7 +252,7 @@ def create_iam_roles():
         "Statement": [
             {
                 "Effect": "Allow",
-                "Action": ["bedrock:InvokeModel"],
+                "Action": ["bedrock:InvokeModel", "bedrock:InvokeModelWithResponseStream"],
                 "Resource": [f"arn:aws:bedrock:{REGION}::foundation-model/*"]
             },
             {
@@ -765,6 +810,8 @@ def main():
         fail(f"Cannot access AWS: {e}")
         sys.exit(1)
 
+    print()
+    probe_available_model()
     print()
     create_iam_roles()
     print()
