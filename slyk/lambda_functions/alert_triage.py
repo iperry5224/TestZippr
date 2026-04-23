@@ -18,7 +18,7 @@ import boto3
 from datetime import datetime
 from botocore.exceptions import ClientError
 
-REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
+REGION = os.environ.get("SLYK_REGION", os.environ.get("AWS_REGION", "us-east-1"))
 S3_BUCKET = os.environ.get("S3_BUCKET_NAME", "saelarallpurpose")
 SNS_TOPIC_ARN = os.environ.get("SLYK_ALERT_TOPIC_ARN", "")
 BEDROCK_MODEL_CANDIDATES = [

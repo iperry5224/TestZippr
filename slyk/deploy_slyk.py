@@ -317,7 +317,7 @@ def create_lambda_functions():
                 Description=f"SLyK-53 {func_name.split('-')[1]} function",
                 Environment={"Variables": {
                     "S3_BUCKET_NAME": S3_BUCKET,
-                    "AWS_DEFAULT_REGION": REGION,
+                    "SLYK_REGION": REGION,
                 }},
             )
             config["lambda_arns"][func_name] = resp["FunctionArn"]
@@ -562,7 +562,7 @@ def create_eventbridge_sns():
                 FunctionName="slyk-alert-triage",
                 Environment={"Variables": {
                     "S3_BUCKET_NAME": S3_BUCKET,
-                    "AWS_DEFAULT_REGION": REGION,
+                    "SLYK_REGION": REGION,
                     "SLYK_ALERT_TOPIC_ARN": config["sns_topic_arn"],
                     "BEDROCK_MODEL": AGENT_MODEL,
                 }},

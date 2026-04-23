@@ -17,7 +17,7 @@ import boto3
 from datetime import datetime, timezone
 from botocore.exceptions import ClientError
 
-REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
+REGION = os.environ.get("SLYK_REGION", os.environ.get("AWS_REGION", "us-east-1"))
 S3_BUCKET = os.environ.get("S3_BUCKET_NAME", "saelarallpurpose")
 
 BEDROCK_MODEL_CANDIDATES = [
