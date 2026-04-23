@@ -165,9 +165,15 @@ def create_iam_roles():
         config["lambda_role_arn"] = role["Role"]["Arn"]
         ok(f"Created {LAMBDA_ROLE_NAME}")
     except ClientError as e:
-        if e.response["Error"]["Code"] == "EntityAlreadyExists":
-            config["lambda_role_arn"] = f"arn:aws:iam::{ACCOUNT_ID}:role/{LAMBDA_ROLE_NAME}"
-            warn(f"{LAMBDA_ROLE_NAME} already exists — reusing")
+        error_code = e.response["Error"]["Code"]
+        if error_code in ("EntityAlreadyExists", "AccessDenied", "AccessDeniedException"):
+            try:
+                existing = iam.get_role(RoleName=LAMBDA_ROLE_NAME)
+                config["lambda_role_arn"] = existing["Role"]["Arn"]
+                warn(f"{LAMBDA_ROLE_NAME} already exists — reusing")
+            except:
+                config["lambda_role_arn"] = f"arn:aws:iam::{ACCOUNT_ID}:role/{LAMBDA_ROLE_NAME}"
+                warn(f"Cannot create/read role — assuming ARN")
         else:
             raise
 
@@ -239,9 +245,15 @@ def create_iam_roles():
         config["agent_role_arn"] = role["Role"]["Arn"]
         ok(f"Created {AGENT_ROLE_NAME}")
     except ClientError as e:
-        if e.response["Error"]["Code"] == "EntityAlreadyExists":
-            config["agent_role_arn"] = f"arn:aws:iam::{ACCOUNT_ID}:role/{AGENT_ROLE_NAME}"
-            warn(f"{AGENT_ROLE_NAME} already exists — reusing")
+        error_code = e.response["Error"]["Code"]
+        if error_code in ("EntityAlreadyExists", "AccessDenied", "AccessDeniedException"):
+            try:
+                existing = iam.get_role(RoleName=AGENT_ROLE_NAME)
+                config["agent_role_arn"] = existing["Role"]["Arn"]
+                warn(f"{AGENT_ROLE_NAME} already exists — reusing")
+            except:
+                config["agent_role_arn"] = f"arn:aws:iam::{ACCOUNT_ID}:role/{AGENT_ROLE_NAME}"
+                warn(f"Cannot create/read role — assuming ARN")
         else:
             raise
 
