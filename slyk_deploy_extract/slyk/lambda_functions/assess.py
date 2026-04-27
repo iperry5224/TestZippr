@@ -179,6 +179,7 @@ SECURITYHUB_NIST_MAP = {
 def import_security_hub_findings(max_findings=100, severity_filter=None):
     """Import findings from AWS Security Hub and map to NIST controls."""
     try:
+        max_findings = max(1, min(int(max_findings or 100), 500))
         sh = boto3.client("securityhub")
 
         filters = {
@@ -192,7 +193,10 @@ def import_security_hub_findings(max_findings=100, severity_filter=None):
         paginator_token = None
 
         while True:
-            kwargs = {"Filters": filters, "MaxResults": min(max_findings - len(findings), 100)}
+            batch = min(max_findings - len(findings), 100)
+            if batch < 1:
+                break
+            kwargs = {"Filters": filters, "MaxResults": batch}
             if paginator_token:
                 kwargs["NextToken"] = paginator_token
 
@@ -265,6 +269,27 @@ def import_security_hub_findings(max_findings=100, severity_filter=None):
         return {"error": str(e), "total_findings": 0, "findings": []}
 
 
+def _action_params(event):
+    """Build name->value from Bedrock event; safe if parameters is null or odd-shaped."""
+    raw = event.get("parameters")
+    if not raw:
+        return {}
+    if not isinstance(raw, list):
+        return {}
+    out = {}
+    for p in raw:
+        if not isinstance(p, dict):
+            continue
+        n = p.get("name")
+        if n is None or n == "":
+            continue
+        v = p.get("value", "")
+        if v is not None and not isinstance(v, str):
+            v = str(v)
+        out[n] = v or ""
+    return out
+
+
 def run_assessment(families=None):
     results = []
     for control_id, (name, check_fn) in CONTROL_CHECKS.items():
@@ -279,74 +304,82 @@ def run_assessment(families=None):
 
 
 def handler(event, context):
-    params = {p["name"]: p["value"] for p in event.get("parameters", [])}
+    # Must match Bedrock action invocation (OpenAPI uses GET for these tools)
+    http_method = event.get("httpMethod") or "GET"
+    if not isinstance(event, dict):
+        event = {}
+    params = _action_params(event)
     api_path = event.get("apiPath", "")
 
-    # Route to Security Hub import if requested
-    if api_path == "/securityhub" or params.get("source") == "securityhub":
-        max_findings = int(params.get("max_findings", "50"))
-        severity = params.get("severity", "").upper()
-        severity_filter = severity.split(",") if severity else None
-
-        sh_results = import_security_hub_findings(
-            max_findings=max_findings,
-            severity_filter=severity_filter,
-        )
-
-        body = json.dumps(sh_results)
-
+    def _ok(payload_obj, code=200):
+        body = json.dumps(payload_obj, default=str)
         return {
             "messageVersion": "1.0",
             "response": {
                 "actionGroup": event.get("actionGroup", ""),
-                "apiPath": api_path,
-                "httpMethod": "POST",
-                "httpStatusCode": 200,
+                "apiPath": event.get("apiPath", api_path),
+                "httpMethod": http_method,
+                "httpStatusCode": code,
                 "responseBody": {"application/json": {"body": body}},
             },
         }
 
-    # Standard NIST assessment
-    families_str = params.get("families", "ALL")
-    families = families_str.split(",") if families_str != "ALL" else ["ALL"]
-    include_securityhub = params.get("include_securityhub", "false").lower() == "true"
+    try:
+        # Route to Security Hub import if requested
+        if api_path == "/securityhub" or params.get("source") == "securityhub":
+            try:
+                max_findings = int(params.get("max_findings", "50") or "50")
+            except (TypeError, ValueError):
+                max_findings = 50
+            max_findings = max(1, min(max_findings, 500))
+            severity = (params.get("severity") or "").upper()
+            severity_filter = severity.split(",") if severity else None
 
-    results = run_assessment(families)
+            sh_results = import_security_hub_findings(
+                max_findings=max_findings,
+                severity_filter=severity_filter,
+            )
 
-    passed = sum(1 for r in results if r["status"] == "PASS")
-    failed = sum(1 for r in results if r["status"] == "FAIL")
-    warnings = sum(1 for r in results if r["status"] == "WARNING")
-    total = len(results)
-    compliance_pct = round(passed / total * 100, 1) if total > 0 else 0
+            return _ok(sh_results)
 
-    summary = {
-        "account_id": get_account_id(),
-        "total_controls": total,
-        "passed": passed,
-        "failed": failed,
-        "warnings": warnings,
-        "compliance_percentage": compliance_pct,
-    }
+        # Standard NIST assessment
+        families_str = str(params.get("families", "ALL") or "ALL")
+        families = families_str.split(",") if families_str != "ALL" else ["ALL"]
+        include_securityhub = (params.get("include_securityhub", "false") or "false").lower() == "true"
 
-    response_data = {"summary": summary, "controls": results}
+        results = run_assessment(families)
 
-    # Include Security Hub findings if requested
-    if include_securityhub:
-        sh_results = import_security_hub_findings(max_findings=50, severity_filter=["CRITICAL", "HIGH"])
-        response_data["security_hub"] = sh_results
-        summary["security_hub_findings"] = sh_results["total_findings"]
-        summary["critical_findings"] = sh_results["severity_counts"].get("CRITICAL", 0)
-        summary["high_findings"] = sh_results["severity_counts"].get("HIGH", 0)
+        passed = sum(1 for r in results if r["status"] == "PASS")
+        failed = sum(1 for r in results if r["status"] == "FAIL")
+        warnings = sum(1 for r in results if r["status"] == "WARNING")
+        total = len(results)
+        compliance_pct = round(passed / total * 100, 1) if total > 0 else 0
 
-    body = json.dumps(response_data)
+        summary = {
+            "account_id": get_account_id(),
+            "total_controls": total,
+            "passed": passed,
+            "failed": failed,
+            "warnings": warnings,
+            "compliance_percentage": compliance_pct,
+        }
 
-    return {
-        "messageVersion": "1.0",
-        "response": {
-            "actionGroup": event.get("actionGroup", ""),
-            "apiPath": event.get("apiPath", ""),
-            "httpMethod": "POST",
-            "httpStatusCode": 200,
-            "responseBody": {"application/json": {"body": body}},
-        },
-    }
+        response_data = {"summary": summary, "controls": results}
+
+        if include_securityhub:
+            sh_results = import_security_hub_findings(max_findings=50, severity_filter=["CRITICAL", "HIGH"])
+            response_data["security_hub"] = sh_results
+            summary["security_hub_findings"] = sh_results["total_findings"]
+            summary["critical_findings"] = sh_results["severity_counts"].get("CRITICAL", 0)
+            summary["high_findings"] = sh_results["severity_counts"].get("HIGH", 0)
+
+        return _ok(response_data)
+    except Exception as e:
+        return _ok(
+            {
+                "error": "slyk-assess failed",
+                "message": str(e),
+                "type": type(e).__name__,
+            },
+            code=200,
+        )

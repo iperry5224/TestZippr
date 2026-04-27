@@ -237,8 +237,27 @@ def remediate_securityhub_finding(finding_id, action="generate"):
         return {"error": str(e)}
 
 
+def _action_params(event):
+    raw = event.get("parameters")
+    if not raw or not isinstance(raw, list):
+        return {}
+    out = {}
+    for p in raw:
+        if not isinstance(p, dict):
+            continue
+        n = p.get("name")
+        if n is None or n == "":
+            continue
+        v = p.get("value", "")
+        out[n] = v if isinstance(v, str) else (str(v) if v is not None else "")
+    return out
+
+
 def handler(event, context):
-    params = {p["name"]: p["value"] for p in event.get("parameters", [])}
+    http_method = event.get("httpMethod") or "GET"
+    if not isinstance(event, dict):
+        event = {}
+    params = _action_params(event)
     control_id = params.get("control_id", "").upper()
     action = params.get("action", "generate")
     finding_id = params.get("finding_id", "")
@@ -252,7 +271,7 @@ def handler(event, context):
             "response": {
                 "actionGroup": event.get("actionGroup", ""),
                 "apiPath": event.get("apiPath", ""),
-                "httpMethod": "POST",
+                "httpMethod": http_method,
                 "httpStatusCode": 200,
                 "responseBody": {"application/json": {"body": body}},
             },
@@ -300,7 +319,7 @@ def handler(event, context):
         "response": {
             "actionGroup": event.get("actionGroup", ""),
             "apiPath": event.get("apiPath", ""),
-            "httpMethod": "POST",
+            "httpMethod": http_method,
             "httpStatusCode": 200,
             "responseBody": {"application/json": {"body": body}},
         },
