@@ -1,0 +1,16 @@
+SLyK-53 — deploy notes for AWS account 656443597515
+Tenant label (console): nesdis-ncis-ospocsta-5006
+
+1. Open AWS CloudShell in this account (or use credentials for 656443597515).
+2. Upload and unzip this archive, or: git pull TestZippr and use folder slyk_deploy_extract/slyk.
+3. Create an S3 bucket in the same region (name must be globally unique), e.g.:
+     slyk-grcp-656443597515
+   If that name is taken, pick another and set:
+     export S3_BUCKET_NAME=your-unique-bucket
+4. From the slyk folder (where deploy_slyk.py lives):
+     source ./CLOUDSHELL_ENV_ospocsta_656443597515.sh
+     python3 deploy_slyk.py
+5. SLYK_EXPECT_ACCOUNT_ID=656443597515 makes deploy_slyk.py fail fast if the wrong
+   AWS role/user is active.
+
+Files: deploy_slyk.py, delete_slyk.py, lambda_functions/, CLOUDSHELL_ENV_ospocsta_656443597515.sh
