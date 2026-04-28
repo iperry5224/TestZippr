@@ -237,71 +237,52 @@ def remediate_securityhub_finding(finding_id, action="generate"):
         return {"error": str(e)}
 
 
+def _respond(event, body_data):
+    body = json.dumps(body_data, default=str) if not isinstance(body_data, str) else body_data
+    if event.get("function"):
+        return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "function": event.get("function", ""), "functionResponse": {"responseBody": {"TEXT": {"body": body}}}}}
+    return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "apiPath": event.get("apiPath", ""), "httpMethod": "POST", "httpStatusCode": 200, "responseBody": {"application/json": {"body": body}}}}
+
+
 def handler(event, context):
     params = {p["name"]: p["value"] for p in event.get("parameters", [])}
     control_id = params.get("control_id", "").upper()
     action = params.get("action", "generate")
     finding_id = params.get("finding_id", "")
 
-    # Route to Security Hub remediation if finding_id provided
     if finding_id:
         result = remediate_securityhub_finding(finding_id, action)
-        body = json.dumps(result)
-        return {
-            "messageVersion": "1.0",
-            "response": {
-                "actionGroup": event.get("actionGroup", ""),
-                "apiPath": event.get("apiPath", ""),
-                "httpMethod": "POST",
-                "httpStatusCode": 200,
-                "responseBody": {"application/json": {"body": body}},
-            },
-        }
+        return _respond(event, result)
 
     playbook = REMEDIATION_PLAYBOOKS.get(control_id)
     if not playbook:
         available = ", ".join(REMEDIATION_PLAYBOOKS.keys())
-        body = json.dumps({
-            "error": f"No remediation playbook for {control_id}",
-            "available_controls": available,
-            "tip": "You can also provide a finding_id from Security Hub for targeted remediation",
-        })
-    else:
-        targets = playbook["scan"]()
-        scripts = playbook["generate"](targets)
+        return _respond(event, {"error": f"No remediation playbook for {control_id}", "available_controls": available, "tip": "You can also provide a finding_id from Security Hub for targeted remediation"})
 
-        result = {
-            "control_id": control_id,
-            "title": playbook["title"],
-            "description": playbook["description"],
-            "targets_found": len(targets),
-            "targets": targets[:10] if not isinstance(targets[0], tuple) else [f"{t[0]}:{t[1]}" for t in targets[:10]] if targets else [],
-            "remediation_scripts": scripts,
-            "action": action,
-        }
+    targets = playbook["scan"]()
+    scripts = playbook["generate"](targets)
 
-        if action == "execute":
-            executed = []
-            for script in scripts:
-                if script.startswith("#"):
-                    continue
-                try:
-                    import subprocess
-                    subprocess.run(script, shell=True, capture_output=True, timeout=30)
-                    executed.append({"script": script[:80], "status": "executed"})
-                except Exception as e:
-                    executed.append({"script": script[:80], "status": f"failed: {e}"})
-            result["execution_results"] = executed
-
-        body = json.dumps(result)
-
-    return {
-        "messageVersion": "1.0",
-        "response": {
-            "actionGroup": event.get("actionGroup", ""),
-            "apiPath": event.get("apiPath", ""),
-            "httpMethod": "POST",
-            "httpStatusCode": 200,
-            "responseBody": {"application/json": {"body": body}},
-        },
+    result = {
+        "control_id": control_id,
+        "title": playbook["title"],
+        "description": playbook["description"],
+        "targets_found": len(targets),
+        "targets": targets[:10] if targets and not isinstance(targets[0], tuple) else [f"{t[0]}:{t[1]}" for t in targets[:10]] if targets else [],
+        "remediation_scripts": scripts,
+        "action": action,
     }
+
+    if action == "execute":
+        executed = []
+        for script in scripts:
+            if script.startswith("#"):
+                continue
+            try:
+                import subprocess
+                subprocess.run(script, shell=True, capture_output=True, timeout=30)
+                executed.append({"script": script[:80], "status": "executed"})
+            except Exception as e:
+                executed.append({"script": script[:80], "status": f"failed: {e}"})
+        result["execution_results"] = executed
+
+    return _respond(event, result)

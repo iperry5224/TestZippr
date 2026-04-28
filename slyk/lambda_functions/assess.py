@@ -278,6 +278,14 @@ def run_assessment(families=None):
     return results
 
 
+def _respond(event, body_data):
+    """Build response for both function-based and API-based action groups."""
+    body = json.dumps(body_data, default=str) if not isinstance(body_data, str) else body_data
+    if event.get("function"):
+        return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "function": event.get("function", ""), "functionResponse": {"responseBody": {"TEXT": {"body": body}}}}}
+    return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "apiPath": event.get("apiPath", ""), "httpMethod": "POST", "httpStatusCode": 200, "responseBody": {"application/json": {"body": body}}}}
+
+
 def handler(event, context):
     params = {p["name"]: p["value"] for p in event.get("parameters", [])}
     api_path = event.get("apiPath", "")
@@ -293,18 +301,7 @@ def handler(event, context):
             severity_filter=severity_filter,
         )
 
-        body = json.dumps(sh_results)
-
-        return {
-            "messageVersion": "1.0",
-            "response": {
-                "actionGroup": event.get("actionGroup", ""),
-                "apiPath": api_path,
-                "httpMethod": "POST",
-                "httpStatusCode": 200,
-                "responseBody": {"application/json": {"body": body}},
-            },
-        }
+        return _respond(event, sh_results)
 
     # Standard NIST assessment
     families_str = params.get("families", "ALL")
@@ -338,15 +335,4 @@ def handler(event, context):
         summary["critical_findings"] = sh_results["severity_counts"].get("CRITICAL", 0)
         summary["high_findings"] = sh_results["severity_counts"].get("HIGH", 0)
 
-    body = json.dumps(response_data)
-
-    return {
-        "messageVersion": "1.0",
-        "response": {
-            "actionGroup": event.get("actionGroup", ""),
-            "apiPath": event.get("apiPath", ""),
-            "httpMethod": "POST",
-            "httpStatusCode": 200,
-            "responseBody": {"application/json": {"body": body}},
-        },
-    }
+    return _respond(event, response_data)

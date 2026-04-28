@@ -141,6 +141,13 @@ def harden_iam(action):
     return findings
 
 
+def _respond(event, body_data):
+    body = json.dumps(body_data, default=str) if not isinstance(body_data, str) else body_data
+    if event.get("function"):
+        return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "function": event.get("function", ""), "functionResponse": {"responseBody": {"TEXT": {"body": body}}}}}
+    return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "apiPath": event.get("apiPath", ""), "httpMethod": "POST", "httpStatusCode": 200, "responseBody": {"application/json": {"body": body}}}}
+
+
 def handler(event, context):
     params = {p["name"]: p["value"] for p in event.get("parameters", [])}
     asset_type = params.get("asset_type", "s3").lower()
@@ -167,13 +174,4 @@ def handler(event, context):
         "findings": findings,
     }
 
-    return {
-        "messageVersion": "1.0",
-        "response": {
-            "actionGroup": event.get("actionGroup", ""),
-            "apiPath": event.get("apiPath", ""),
-            "httpMethod": "POST",
-            "httpStatusCode": 200,
-            "responseBody": {"application/json": {"body": json.dumps(result)}},
-        },
-    }
+    return _respond(event, result)

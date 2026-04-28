@@ -724,13 +724,6 @@ def handler(event, context):
             "available": available,
         })
 
-    return {
-        "messageVersion": "1.0",
-        "response": {
-            "actionGroup": event.get("actionGroup", ""),
-            "apiPath": event.get("apiPath", ""),
-            "httpMethod": "POST",
-            "httpStatusCode": 200,
-            "responseBody": {"application/json": {"body": body}},
-        },
-    }
+    if event.get("function"):
+        return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "function": event.get("function", ""), "functionResponse": {"responseBody": {"TEXT": {"body": body}}}}}
+    return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "apiPath": event.get("apiPath", ""), "httpMethod": "POST", "httpStatusCode": 200, "responseBody": {"application/json": {"body": body}}}}

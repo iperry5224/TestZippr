@@ -269,25 +269,17 @@ def handler(event, context):
             "alert_sent": alert_sent,
         })
 
-    # Return format depends on caller
-    if event.get("actionGroup"):
-        body = json.dumps({
-            "findings_processed": len(results),
-            "alerts_sent": sum(1 for r in results if r["alert_sent"]),
-            "results": results,
-        })
-        return {
-            "messageVersion": "1.0",
-            "response": {
-                "actionGroup": event.get("actionGroup", ""),
-                "apiPath": event.get("apiPath", ""),
-                "httpMethod": "POST",
-                "httpStatusCode": 200,
-                "responseBody": {"application/json": {"body": body}},
-            },
-        }
-
-    return {
+    response_data = {
         "findings_processed": len(results),
         "alerts_sent": sum(1 for r in results if r["alert_sent"]),
+        "results": results,
     }
+
+    # Return format depends on caller
+    if event.get("actionGroup"):
+        body = json.dumps(response_data, default=str)
+        if event.get("function"):
+            return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "function": event.get("function", ""), "functionResponse": {"responseBody": {"TEXT": {"body": body}}}}}
+        return {"messageVersion": "1.0", "response": {"actionGroup": event.get("actionGroup", ""), "apiPath": event.get("apiPath", ""), "httpMethod": "POST", "httpStatusCode": 200, "responseBody": {"application/json": {"body": body}}}}
+
+    return response_data
