@@ -48,7 +48,7 @@ save_deployed_etag() {
 
 stop_services() {
     log "Stopping GRCP services..."
-    for svc in grcp-saelar grcp-sopra grcp-beekeeper saelar sopra beekeeper; do
+    for svc in grcp-saelar grcp-sopra grcp-beekeeper grcp-slyk; do
         systemctl stop "$svc" 2>/dev/null || true
     done
     pkill -f "streamlit run" 2>/dev/null || true
@@ -57,7 +57,7 @@ stop_services() {
 
 start_services() {
     log "Starting GRCP services..."
-    for svc in grcp-saelar grcp-sopra grcp-beekeeper; do
+    for svc in grcp-saelar grcp-sopra grcp-beekeeper grcp-slyk; do
         if systemctl is-enabled "$svc" 2>/dev/null; then
             systemctl start "$svc"
             log "  Started $svc"

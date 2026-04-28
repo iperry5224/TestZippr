@@ -3,7 +3,7 @@
 Migrate from grc_tools to GRCP
 ================================
 Renames directories, services, and deploy agent from the old
-SAELAR/SOPRA naming to the unified GRCP naming.
+old service naming to the unified GRCP naming.
 
 Run on EC2: sudo python3 migrate_to_grcp.py
 """
@@ -60,7 +60,7 @@ def main():
 
     # Step 1: Stop all old services
     log("Step 1: Stopping old services...")
-    for svc in ["saelar", "sopra", "beekeeper", "grc-deploy-agent"]:
+    for svc in ["saelar", "sopra", "beekeeper", "grc-deploy-agent", "grcp-saelar", "grcp-sopra", "grcp-beekeeper"]:
         run(f"systemctl stop {svc} 2>/dev/null")
     run("pkill -f 'streamlit run' 2>/dev/null")
     time.sleep(2)
@@ -154,7 +154,7 @@ WantedBy=multi-user.target
 
     # Step 6: Disable old services
     log("Step 5: Disabling old service names...")
-    for old_svc in ["saelar", "sopra", "beekeeper", "grc-deploy-agent"]:
+    for old_svc in ["saelar", "sopra", "beekeeper", "grc-deploy-agent", "grc-deploy-agent"]:
         run(f"systemctl disable {old_svc} 2>/dev/null")
         old_file = f"/etc/systemd/system/{old_svc}.service"
         if os.path.isfile(old_file):
@@ -251,7 +251,7 @@ WantedBy=multi-user.target
   Deploy agent: grcp-deploy-agent (polls s3://{S3_BUCKET}/deployments/grcp-latest.zip)
 
   Old services archived (not deleted):
-    saelar.service.old, sopra.service.old, grc-deploy-agent.service.old
+    Old services archived (not deleted)
 
   New commands:
     sudo systemctl status grcp-saelar

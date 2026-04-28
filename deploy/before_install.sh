@@ -10,7 +10,7 @@ BACKUP_DIR="/home/ec2-user/.grcp_backups/$(date +%Y%m%d_%H%M%S)"
 echo "[CodeDeploy] Stopping running services..."
 
 # Stop known GRCP services
-for svc in grcp-saelar grcp-sopra grcp-beekeeper saelar sopra beekeeper; do
+for svc in grcp-saelar grcp-sopra grcp-beekeeper grcp-slyk; do
     systemctl stop "$svc" 2>/dev/null || true
 done
 
