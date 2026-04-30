@@ -108,17 +108,33 @@ mkdir -p "$WORK_DIR"
 cd "$WORK_DIR"
 
 echo "  Cloning $REPO_URL ..."
-git clone --depth 1 "$REPO_URL" 2>&1 | tail -3
+git clone --depth 1 "$REPO_URL" 2>&1 | tail -5
 if [ $? -ne 0 ]; then
     echo -e "${RED}  ✗ Failed to clone repo${NC}"
     exit 1
 fi
 echo -e "${GREEN}  ✓ Repo cloned${NC}"
 
+# Debug: show what was cloned
+echo "  Contents of $WORK_DIR:"
+ls -la "$WORK_DIR"
+
 # Navigate to the SLyK deploy folder
 SLYK_DIR="$WORK_DIR/TestZippr/slyk_deploy_extract/slyk"
+
+# If TestZippr folder doesn't exist, maybe it cloned directly
+if [ ! -d "$WORK_DIR/TestZippr" ]; then
+    # Check if slyk_deploy_extract exists directly (repo cloned without wrapper)
+    if [ -d "$WORK_DIR/slyk_deploy_extract/slyk" ]; then
+        SLYK_DIR="$WORK_DIR/slyk_deploy_extract/slyk"
+        echo -e "${YELLOW}  ! Repo cloned without TestZippr wrapper — adjusting path${NC}"
+    fi
+fi
+
 if [ ! -d "$SLYK_DIR" ]; then
     echo -e "${RED}  ✗ SLyK folder not found at $SLYK_DIR${NC}"
+    echo "  Searching for slyk folder..."
+    find "$WORK_DIR" -type d -name "slyk" 2>/dev/null | head -5
     exit 1
 fi
 cd "$SLYK_DIR"
