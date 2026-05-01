@@ -50,8 +50,10 @@ VARIANT = os.environ.get("SLYK_VARIANT", "")
 VARIANT_SUFFIX = f"-{VARIANT}" if VARIANT else ""
 VARIANT_PREFIX = f"{VARIANT.capitalize()}_" if VARIANT else ""
 
-LAMBDA_ROLE_NAME = f"{VARIANT_PREFIX}SLyK-Lambda-Role"
-AGENT_ROLE_NAME = f"{VARIANT_PREFIX}SLyK-Agent-Role"
+# IAM roles - always use base names (without variant) since they already exist
+# Only the agent name and Lambda function names get the variant prefix/suffix
+LAMBDA_ROLE_NAME = "SLyK-Lambda-Role"
+AGENT_ROLE_NAME = "SLyK-Agent-Role"
 AGENT_NAME = f"{VARIANT_PREFIX}SLyK-53-Security-Assistant"
 
 RED = "\033[0;31m"
