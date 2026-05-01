@@ -115,35 +115,43 @@ def create_lambda_zip(source_file):
 # STEP 1: IAM Roles
 # =========================================================================
 def create_iam_roles():
-    log("Step 1: Creating IAM roles...")
+    log("Step 1: Configuring IAM roles...")
     iam = boto3.client("iam")
 
-    # Lambda execution role
-    lambda_trust = {
-        "Version": "2012-10-17",
-        "Statement": [{
-            "Effect": "Allow",
-            "Principal": {"Service": "lambda.amazonaws.com"},
-            "Action": "sts:AssumeRole"
-        }]
-    }
-
+    # Check if Lambda role already exists first (avoids AccessDenied on CreateRole)
     try:
-        role = iam.create_role(
-            RoleName=LAMBDA_ROLE_NAME,
-            AssumeRolePolicyDocument=json.dumps(lambda_trust),
-            Description="SLyK-53 Lambda execution role"
-        )
+        role = iam.get_role(RoleName=LAMBDA_ROLE_NAME)
         config["lambda_role_arn"] = role["Role"]["Arn"]
-        ok(f"Created {LAMBDA_ROLE_NAME}")
+        ok(f"{LAMBDA_ROLE_NAME} already exists — reusing")
     except ClientError as e:
-        if e.response["Error"]["Code"] == "EntityAlreadyExists":
-            config["lambda_role_arn"] = f"arn:aws:iam::{ACCOUNT_ID}:role/{LAMBDA_ROLE_NAME}"
-            warn(f"{LAMBDA_ROLE_NAME} already exists — reusing")
+        if e.response["Error"]["Code"] == "NoSuchEntity":
+            # Role doesn't exist, try to create it
+            lambda_trust = {
+                "Version": "2012-10-17",
+                "Statement": [{
+                    "Effect": "Allow",
+                    "Principal": {"Service": "lambda.amazonaws.com"},
+                    "Action": "sts:AssumeRole"
+                }]
+            }
+            try:
+                role = iam.create_role(
+                    RoleName=LAMBDA_ROLE_NAME,
+                    AssumeRolePolicyDocument=json.dumps(lambda_trust),
+                    Description="SLyK-53 Lambda execution role"
+                )
+                config["lambda_role_arn"] = role["Role"]["Arn"]
+                ok(f"Created {LAMBDA_ROLE_NAME}")
+            except ClientError as ce:
+                if ce.response["Error"]["Code"] == "AccessDenied":
+                    fail(f"No permission to create {LAMBDA_ROLE_NAME}. Please ask your admin to create it.")
+                    config["lambda_role_arn"] = f"arn:aws:iam::{ACCOUNT_ID}:role/{LAMBDA_ROLE_NAME}"
+                else:
+                    raise
         else:
             raise
 
-    # Attach policies to Lambda role
+    # Attach policies to Lambda role (skip if no permission)
     policies = [
         "arn:aws:iam::aws:policy/ReadOnlyAccess",
         "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -151,8 +159,8 @@ def create_iam_roles():
     for policy_arn in policies:
         try:
             iam.attach_role_policy(RoleName=LAMBDA_ROLE_NAME, PolicyArn=policy_arn)
-        except:
-            pass
+        except ClientError:
+            warn(f"Could not attach {policy_arn.split('/')[-1]} (may already be attached or lack permission)")
 
     # Add inline policy for S3 write + hardening actions
     inline_policy = {
@@ -184,36 +192,43 @@ def create_iam_roles():
             PolicyName="SLyK-Hardening-Permissions",
             PolicyDocument=json.dumps(inline_policy)
         )
-    except:
-        pass
+        ok("Lambda role configured with hardening permissions")
+    except ClientError:
+        warn("Could not update Lambda role inline policy (may lack iam:PutRolePolicy)")
 
-    ok("Lambda role configured with ReadOnlyAccess + hardening permissions")
-
-    # Bedrock Agent role
-    agent_trust = {
-        "Version": "2012-10-17",
-        "Statement": [{
-            "Effect": "Allow",
-            "Principal": {"Service": "bedrock.amazonaws.com"},
-            "Action": "sts:AssumeRole",
-            "Condition": {
-                "StringEquals": {"aws:SourceAccount": ACCOUNT_ID},
-            }
-        }]
-    }
-
+    # Bedrock Agent role - check if exists first
     try:
-        role = iam.create_role(
-            RoleName=AGENT_ROLE_NAME,
-            AssumeRolePolicyDocument=json.dumps(agent_trust),
-            Description="SLyK-53 Bedrock Agent role"
-        )
+        role = iam.get_role(RoleName=AGENT_ROLE_NAME)
         config["agent_role_arn"] = role["Role"]["Arn"]
-        ok(f"Created {AGENT_ROLE_NAME}")
+        ok(f"{AGENT_ROLE_NAME} already exists — reusing")
     except ClientError as e:
-        if e.response["Error"]["Code"] == "EntityAlreadyExists":
-            config["agent_role_arn"] = f"arn:aws:iam::{ACCOUNT_ID}:role/{AGENT_ROLE_NAME}"
-            warn(f"{AGENT_ROLE_NAME} already exists — reusing")
+        if e.response["Error"]["Code"] == "NoSuchEntity":
+            # Role doesn't exist, try to create it
+            agent_trust = {
+                "Version": "2012-10-17",
+                "Statement": [{
+                    "Effect": "Allow",
+                    "Principal": {"Service": "bedrock.amazonaws.com"},
+                    "Action": "sts:AssumeRole",
+                    "Condition": {
+                        "StringEquals": {"aws:SourceAccount": ACCOUNT_ID},
+                    }
+                }]
+            }
+            try:
+                role = iam.create_role(
+                    RoleName=AGENT_ROLE_NAME,
+                    AssumeRolePolicyDocument=json.dumps(agent_trust),
+                    Description="SLyK-53 Bedrock Agent role"
+                )
+                config["agent_role_arn"] = role["Role"]["Arn"]
+                ok(f"Created {AGENT_ROLE_NAME}")
+            except ClientError as ce:
+                if ce.response["Error"]["Code"] == "AccessDenied":
+                    fail(f"No permission to create {AGENT_ROLE_NAME}. Please ask your admin to create it.")
+                    config["agent_role_arn"] = f"arn:aws:iam::{ACCOUNT_ID}:role/{AGENT_ROLE_NAME}"
+                else:
+                    raise
         else:
             raise
 
@@ -238,11 +253,11 @@ def create_iam_roles():
             PolicyName="SLyK-Agent-Permissions",
             PolicyDocument=json.dumps(agent_policy)
         )
-    except:
-        pass
+        ok("Agent role configured with Bedrock + Lambda invoke permissions")
+    except ClientError:
+        warn("Could not update Agent role inline policy (may lack iam:PutRolePolicy)")
 
-    ok("Agent role configured with Bedrock + Lambda invoke permissions")
-    time.sleep(10)
+    time.sleep(5)
 
 
 # =========================================================================
