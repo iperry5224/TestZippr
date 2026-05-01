@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuth()
   }, [])
 
-  const login = async (username: string, password: string) => {
+  const login = async (username: string, _password: string) => {
     // In production, this would use Cognito
     // For demo, we'll simulate authentication
     setIsLoading(true)
