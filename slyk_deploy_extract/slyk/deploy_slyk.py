@@ -45,9 +45,14 @@ ACCOUNT_ID = None
 AGENT_MODEL = os.environ.get("SLYK_AGENT_MODEL", "amazon.nova-pro-v1:0")
 S3_BUCKET = os.environ.get("S3_BUCKET_NAME", "saelarallpurpose")
 UI_BUCKET = f"slyk-ui-{REGION}"
-LAMBDA_ROLE_NAME = "SLyK-Lambda-Role"
-AGENT_ROLE_NAME = "SLyK-Agent-Role"
-AGENT_NAME = "SLyK-53-Security-Assistant"
+# Resource naming - set SLYK_VARIANT env var to customize (e.g., "new" for New_SLyK-53)
+VARIANT = os.environ.get("SLYK_VARIANT", "")
+VARIANT_SUFFIX = f"-{VARIANT}" if VARIANT else ""
+VARIANT_PREFIX = f"{VARIANT.capitalize()}_" if VARIANT else ""
+
+LAMBDA_ROLE_NAME = f"{VARIANT_PREFIX}SLyK-Lambda-Role"
+AGENT_ROLE_NAME = f"{VARIANT_PREFIX}SLyK-Agent-Role"
+AGENT_NAME = f"{VARIANT_PREFIX}SLyK-53-Security-Assistant"
 
 RED = "\033[0;31m"
 GREEN = "\033[0;32m"
@@ -247,10 +252,17 @@ def create_lambda_functions():
     log("Step 2: Creating Lambda functions...")
     lam = boto3.client("lambda", region_name=REGION)
 
+    # Base function names - variant suffix applied if SLYK_VARIANT is set
+    base_functions = {
+        "assess": "assess.py",
+        "remediate": "remediate.py",
+        "harden": "harden.py",
+    }
+    
+    # Apply variant suffix to function names
     functions = {
-        "slyk-assess": "assess.py",
-        "slyk-remediate": "remediate.py",
-        "slyk-harden": "harden.py",
+        f"slyk{VARIANT_SUFFIX}-{name}": source 
+        for name, source in base_functions.items()
     }
 
     config["lambda_arns"] = {}
@@ -267,7 +279,7 @@ def create_lambda_functions():
                 Code={"ZipFile": zip_bytes},
                 Timeout=300,
                 MemorySize=512,
-                Description=f"SLyK-53 {func_name.split('-')[1]} function",
+                Description=f"{VARIANT_PREFIX}SLyK-53 {func_name.split('-')[-1]} function",
                 # Do not set AWS_DEFAULT_REGION or AWS_REGION here — Lambda reserves them.
                 Environment={"Variables": {"S3_BUCKET_NAME": S3_BUCKET}},
             )
@@ -479,9 +491,14 @@ Guidelines:
     _delete_draft_action_groups(bedrock, config["agent_id"])
     time.sleep(3)
 
+    # Build Lambda ARN keys based on variant
+    assess_key = f"slyk{VARIANT_SUFFIX}-assess"
+    remediate_key = f"slyk{VARIANT_SUFFIX}-remediate"
+    harden_key = f"slyk{VARIANT_SUFFIX}-harden"
+
     action_groups = {
         "ASSESS": {
-            "lambda": config["lambda_arns"]["slyk-assess"],
+            "lambda": config["lambda_arns"][assess_key],
             "path": "/assess",
             "op": "assessCompliance",
             "desc": "Run NIST 800-53 compliance assessment against the AWS environment; optional Security Hub context.",
@@ -503,7 +520,7 @@ Guidelines:
             ],
         },
         "REMEDIATE": {
-            "lambda": config["lambda_arns"]["slyk-remediate"],
+            "lambda": config["lambda_arns"][remediate_key],
             "path": "/remediate",
             "op": "remediateControl",
             "desc": "Generate or execute remediation for a failed NIST control or Security Hub finding.",
@@ -520,7 +537,7 @@ Guidelines:
             ],
         },
         "HARDEN": {
-            "lambda": config["lambda_arns"]["slyk-harden"],
+            "lambda": config["lambda_arns"][harden_key],
             "path": "/harden",
             "op": "hardenAssets",
             "desc": "Scan and harden AWS assets (e.g., S3, EC2, IAM) with review-first changes.",
@@ -665,9 +682,9 @@ def print_summary():
       Agent:   {config.get('agent_role_arn', 'N/A')}
 
     Lambda Functions:
-      slyk-assess:     {config.get('lambda_arns', {}).get('slyk-assess', 'N/A')}
-      slyk-remediate:  {config.get('lambda_arns', {}).get('slyk-remediate', 'N/A')}
-      slyk-harden:     {config.get('lambda_arns', {}).get('slyk-harden', 'N/A')}
+      {f"slyk{VARIANT_SUFFIX}-assess"}:     {config.get('lambda_arns', {}).get(f"slyk{VARIANT_SUFFIX}-assess", 'N/A')}
+      {f"slyk{VARIANT_SUFFIX}-remediate"}:  {config.get('lambda_arns', {}).get(f"slyk{VARIANT_SUFFIX}-remediate", 'N/A')}
+      {f"slyk{VARIANT_SUFFIX}-harden"}:     {config.get('lambda_arns', {}).get(f"slyk{VARIANT_SUFFIX}-harden", 'N/A')}
 
     Bedrock Agent:
       Agent ID:  {config.get('agent_id', 'N/A')}

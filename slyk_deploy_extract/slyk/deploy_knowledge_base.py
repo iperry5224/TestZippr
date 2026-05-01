@@ -26,10 +26,15 @@ REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 ACCOUNT_ID = None
 S3_BUCKET = os.environ.get("S3_BUCKET_NAME", "saelarallpurpose")
 
-KB_NAME = "SLyK-Knowledge-Base"
-KB_DESCRIPTION = "SLyK-53 compliance documentation knowledge base"
-DATA_SOURCE_NAME = "slyk-compliance-docs"
-COLLECTION_NAME = "slyk-kb-collection"
+# Resource naming - set SLYK_VARIANT env var to customize (e.g., "new" for New_SLyK-53)
+VARIANT = os.environ.get("SLYK_VARIANT", "")
+VARIANT_SUFFIX = f"-{VARIANT}" if VARIANT else ""
+VARIANT_PREFIX = f"{VARIANT.capitalize()}_" if VARIANT else ""
+
+KB_NAME = f"{VARIANT_PREFIX}SLyK-Knowledge-Base"
+KB_DESCRIPTION = f"{VARIANT_PREFIX}SLyK-53 compliance documentation knowledge base"
+DATA_SOURCE_NAME = f"slyk{VARIANT_SUFFIX}-compliance-docs"
+COLLECTION_NAME = f"slyk{VARIANT_SUFFIX}-kb-collection"
 
 RED = "\033[0;31m"
 GREEN = "\033[0;32m"

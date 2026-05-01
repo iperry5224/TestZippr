@@ -28,13 +28,18 @@ ACCOUNT_ID = None
 S3_BUCKET = os.environ.get("S3_BUCKET_NAME", "saelarallpurpose")
 
 # Resource names
-IDENTITY_POOL_NAME = "SLyK-Identity-Pool"
-USER_POOL_NAME = "SLyK-User-Pool"
-API_NAME = "SLyK-API"
-SESSIONS_TABLE = "slyk-sessions"
-AUDIT_TABLE = "slyk-audit-log"
-UI_BUCKET_PREFIX = "slyk-ui"
-KB_NAME = "SLyK-Knowledge-Base"
+# Resource naming - set SLYK_VARIANT env var to customize (e.g., "new" for New_SLyK-53)
+VARIANT = os.environ.get("SLYK_VARIANT", "")
+VARIANT_SUFFIX = f"-{VARIANT}" if VARIANT else ""
+VARIANT_PREFIX = f"{VARIANT.capitalize()}_" if VARIANT else ""
+
+IDENTITY_POOL_NAME = f"{VARIANT_PREFIX}SLyK-Identity-Pool"
+USER_POOL_NAME = f"{VARIANT_PREFIX}SLyK-User-Pool"
+API_NAME = f"{VARIANT_PREFIX}SLyK-API"
+SESSIONS_TABLE = f"slyk{VARIANT_SUFFIX}-sessions"
+AUDIT_TABLE = f"slyk{VARIANT_SUFFIX}-audit-log"
+UI_BUCKET_PREFIX = f"slyk{VARIANT_SUFFIX}-ui"
+KB_NAME = f"{VARIANT_PREFIX}SLyK-Knowledge-Base"
 
 RED = "\033[0;31m"
 GREEN = "\033[0;32m"

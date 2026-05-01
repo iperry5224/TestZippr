@@ -11,10 +11,16 @@ import boto3
 from botocore.exceptions import ClientError
 
 REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
-AGENT_NAME = "SLyK-53-Security-Assistant"
-LAMBDA_NAMES = ("slyk-assess", "slyk-remediate", "slyk-harden")
-LAMBDA_ROLE = "SLyK-Lambda-Role"
-AGENT_ROLE = "SLyK-Agent-Role"
+
+# Resource naming - set SLYK_VARIANT env var to match deployment (e.g., "new" for New_SLyK-53)
+VARIANT = os.environ.get("SLYK_VARIANT", "")
+VARIANT_SUFFIX = f"-{VARIANT}" if VARIANT else ""
+VARIANT_PREFIX = f"{VARIANT.capitalize()}_" if VARIANT else ""
+
+AGENT_NAME = f"{VARIANT_PREFIX}SLyK-53-Security-Assistant"
+LAMBDA_NAMES = (f"slyk{VARIANT_SUFFIX}-assess", f"slyk{VARIANT_SUFFIX}-remediate", f"slyk{VARIANT_SUFFIX}-harden")
+LAMBDA_ROLE = f"{VARIANT_PREFIX}SLyK-Lambda-Role"
+AGENT_ROLE = f"{VARIANT_PREFIX}SLyK-Agent-Role"
 S3_BUCKET = os.environ.get("S3_BUCKET_NAME", "slyk-grcp-016230494923")
 CONFIG_KEY = "slyk/slyk_config.json"
 SLYK_EXPECT = os.environ.get("SLYK_EXPECT_ACCOUNT_ID")
