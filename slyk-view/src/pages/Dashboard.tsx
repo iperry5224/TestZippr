@@ -356,7 +356,7 @@ export default function Dashboard() {
         <div className="lg:col-span-2 space-y-4">
           <h2 className="text-lg font-semibold text-dark-text">Security Controls</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {controlsData.map((control, index) => (
+            {controlsData.map((control) => (
               <ControlCard key={control.controlId} {...control} />
             ))}
           </div>

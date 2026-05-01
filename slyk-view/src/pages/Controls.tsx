@@ -1,13 +1,10 @@
 import { motion } from 'framer-motion'
 import { useParams } from 'react-router-dom'
 import { 
-  Shield, 
   Play, 
-  FileText, 
   CheckCircle, 
   XCircle, 
   AlertTriangle,
-  ChevronRight,
   Download,
   Wrench
 } from 'lucide-react'

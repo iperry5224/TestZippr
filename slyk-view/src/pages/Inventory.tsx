@@ -9,8 +9,7 @@ import {
   CheckCircle,
   XCircle,
   AlertTriangle,
-  Search,
-  Filter
+  Search
 } from 'lucide-react'
 import clsx from 'clsx'
 
