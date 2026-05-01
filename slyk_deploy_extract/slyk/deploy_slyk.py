@@ -253,10 +253,11 @@ def create_lambda_functions():
     lam = boto3.client("lambda", region_name=REGION)
 
     # Base function names - variant suffix applied if SLYK_VARIANT is set
+    # Using the new security controls (AC-2, AU-6, CM-6, SI-2, RA-5)
     base_functions = {
-        "assess": "assess.py",
-        "remediate": "remediate.py",
-        "harden": "harden.py",
+        "assess": "assess_new.py",
+        "remediate": "remediate_new.py",
+        "harden": "harden_new.py",
     }
     
     # Apply variant suffix to function names
@@ -442,10 +443,17 @@ def create_bedrock_agent():
 
     instruction = """You are SLyK, the SAE Lightweight Yaml Kit security assistant for NOAA System 5065. You are part of the GRCP (GRC Platform) family of tools.
 
-Your capabilities:
-1. ASSESS — Run NIST 800-53 compliance assessments against the AWS environment
-2. REMEDIATE — Generate and execute remediation scripts for failed controls
-3. HARDEN — Scan and harden AWS assets (S3, EC2, IAM)
+Your capabilities cover these NIST 800-53 security controls:
+- AC-2 (Account Management): Automated detection of unauthorized account creation
+- AU-6 (Audit Review, Analysis, and Reporting): Real-time analysis of audit logs for anomalies
+- CM-6 (Configuration Settings): Automated verification of system configuration against baselines
+- SI-2 (Flaw Remediation): Automated generation of remediation runbooks and patching logic
+- RA-5 (Vulnerability Monitoring and Scanning): Security scan coverage analysis
+
+Actions:
+1. ASSESS — Run compliance assessments for AC-2, AU-6, CM-6, SI-2, RA-5 controls
+2. REMEDIATE — Generate and execute remediation playbooks for each control
+3. HARDEN — Scan and harden AWS assets (accounts, audit config, EC2, S3, scanning services)
 
 Guidelines:
 - Always explain what you're about to do before doing it
@@ -501,49 +509,36 @@ Guidelines:
             "lambda": config["lambda_arns"][assess_key],
             "path": "/assess",
             "op": "assessCompliance",
-            "desc": "Run NIST 800-53 compliance assessment against the AWS environment; optional Security Hub context.",
+            "desc": "Run NIST 800-53 compliance assessment for new security controls: AC-2 (Account Management), AU-6 (Audit Review), CM-6 (Configuration Settings), SI-2 (Flaw Remediation), RA-5 (Vulnerability Scanning).",
             "params": [
                 _param(
                     "families",
-                    "Comma-separated control families (e.g. AC,IA) or ALL for full assessment",
+                    "Comma-separated control families (AC, AU, CM, SI, RA) or ALL for full assessment. AC=Account Management, AU=Audit, CM=Configuration, SI=Flaw Remediation, RA=Vulnerability Scanning",
                 ),
-                _param(
-                    "include_securityhub",
-                    "Set true to merge Security Hub findings into the report",
-                ),
-                _param(
-                    "source",
-                    "Use securityhub with max_findings to import Security Hub findings instead of full NIST scan",
-                ),
-                _param("max_findings", "Max Security Hub findings when using source=securityhub"),
-                _param("severity", "Optional severity filter for Security Hub (comma-separated)"),
             ],
         },
         "REMEDIATE": {
             "lambda": config["lambda_arns"][remediate_key],
             "path": "/remediate",
             "op": "remediateControl",
-            "desc": "Generate or execute remediation for a failed NIST control or Security Hub finding.",
+            "desc": "Generate or execute remediation playbooks for security controls: AC-2 (unauthorized accounts), AU-6 (audit config), CM-6 (configuration drift), SI-2 (patching), RA-5 (scanning coverage).",
             "params": [
                 _param(
                     "control_id",
-                    "NIST control ID (e.g. AC-2) when not using finding_id",
+                    "NIST control ID: AC-2, AU-6, CM-6, SI-2, or RA-5",
+                    required=True,
                 ),
-                _param("action", "generate or execute (default generate)"),
-                _param(
-                    "finding_id",
-                    "Optional Security Hub finding id for targeted remediation",
-                ),
+                _param("action", "generate (show scripts) or execute (run scripts). Default: generate"),
             ],
         },
         "HARDEN": {
             "lambda": config["lambda_arns"][harden_key],
             "path": "/harden",
             "op": "hardenAssets",
-            "desc": "Scan and harden AWS assets (e.g., S3, EC2, IAM) with review-first changes.",
+            "desc": "Scan and harden AWS assets aligned with new controls: accounts/iam (AC-2), audit/cloudtrail (AU-6), config/ec2/s3 (CM-6), scanning/inspector/guardduty (RA-5).",
             "params": [
-                _param("asset_type", "s3, ec2, or iam (default s3)"),
-                _param("action", "scan or fix (default scan)"),
+                _param("asset_type", "Asset type to harden: all, accounts, iam, ac2, audit, cloudtrail, au6, config, ec2, s3, cm6, scanning, inspector, guardduty, ra5. Default: all"),
+                _param("action", "scan (report issues) or fix (apply hardening). Default: scan"),
             ],
         },
     }
