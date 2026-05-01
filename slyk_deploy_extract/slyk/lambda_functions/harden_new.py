@@ -448,6 +448,24 @@ def _action_params(event):
     return out
 
 
+def publish_event(detail_type, detail):
+    """Publish event to EventBridge for notifications."""
+    try:
+        events = boto3.client("events")
+        events.put_events(
+            Entries=[
+                {
+                    "Source": "slyk.harden",
+                    "DetailType": detail_type,
+                    "Detail": json.dumps(detail, default=str),
+                    "EventBusName": "default"
+                }
+            ]
+        )
+    except Exception:
+        pass  # Don't fail hardening if notification fails
+
+
 def handler(event, context):
     """Lambda handler for Bedrock Agent action group."""
     http_method = event.get("httpMethod") or "GET"
@@ -487,6 +505,23 @@ def handler(event, context):
         "findings": all_findings,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+
+    # Publish events for critical/high findings
+    critical_findings = [
+        f for f in all_findings
+        for i in f.get("issues", [])
+        if i.get("status") == "FAIL"
+    ]
+    if critical_findings:
+        publish_event("SLyK Security Finding", {
+            "severity": "CRITICAL" if action == "scan" else "HIGH",
+            "status": "FAIL",
+            "action": action,
+            "total_issues": total_issues,
+            "issues_fixed": fixed_count,
+            "message": f"Hardening scan found {total_issues} issues across {len(all_findings)} assets",
+            "findings": [f["asset"] for f in critical_findings[:10]]
+        })
 
     return {
         "messageVersion": "1.0",

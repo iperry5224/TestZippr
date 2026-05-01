@@ -694,6 +694,24 @@ def _action_params(event):
     return out
 
 
+def publish_event(detail_type, detail):
+    """Publish event to EventBridge for notifications."""
+    try:
+        events = boto3.client("events")
+        events.put_events(
+            Entries=[
+                {
+                    "Source": "slyk.assess",
+                    "DetailType": detail_type,
+                    "Detail": json.dumps(detail, default=str),
+                    "EventBusName": "default"
+                }
+            ]
+        )
+    except Exception:
+        pass  # Don't fail assessment if notification fails
+
+
 def run_assessment(families=None):
     """Run assessment for specified control families."""
     results = []
@@ -756,6 +774,20 @@ def handler(event, context):
         }
 
         response_data = {"summary": summary, "controls": results}
+
+        # Publish events for failed/warning controls
+        for result in results:
+            if result["status"] in ["FAIL", "WARNING"]:
+                publish_event("SLyK Assessment Result", {
+                    "status": result["status"],
+                    "control_id": result["control_id"],
+                    "control_name": result.get("control_name", ""),
+                    "message": f"Control {result['control_id']} status: {result['status']}",
+                    "findings": result.get("findings", [])[:5],
+                    "recommendations": result.get("recommendations", [])[:3],
+                    "account_id": summary["account_id"],
+                    "severity": "CRITICAL" if result["status"] == "FAIL" else "HIGH"
+                })
 
         return _ok(response_data)
 

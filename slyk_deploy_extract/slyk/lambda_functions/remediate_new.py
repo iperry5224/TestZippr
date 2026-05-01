@@ -362,6 +362,24 @@ def _action_params(event):
     return out
 
 
+def publish_event(detail_type, detail):
+    """Publish event to EventBridge for notifications."""
+    try:
+        events = boto3.client("events")
+        events.put_events(
+            Entries=[
+                {
+                    "Source": "slyk.remediate",
+                    "DetailType": detail_type,
+                    "Detail": json.dumps(detail, default=str),
+                    "EventBusName": "default"
+                }
+            ]
+        )
+    except Exception:
+        pass  # Don't fail remediation if notification fails
+
+
 def handler(event, context):
     """Lambda handler for Bedrock Agent action group."""
     http_method = event.get("httpMethod") or "GET"
@@ -406,6 +424,24 @@ def handler(event, context):
                 except Exception as e:
                     executed.append({"script": script[:80], "status": f"failed: {e}"})
             result["execution_results"] = executed
+            
+            # Publish remediation event
+            publish_event("SLyK Remediation Action", {
+                "control_id": control_id,
+                "action": "execute",
+                "issues_remediated": len(executed),
+                "message": f"Executed {len(executed)} remediation scripts for {control_id}",
+                "scripts_executed": [e["script"] for e in executed[:5]]
+            })
+        else:
+            # Publish event for generated playbook
+            if issues:
+                publish_event("SLyK Remediation Action", {
+                    "control_id": control_id,
+                    "action": "generate",
+                    "issues_found": len(issues),
+                    "message": f"Generated remediation playbook for {control_id} with {len(issues)} issues"
+                })
 
         body = json.dumps(result, default=str)
 
