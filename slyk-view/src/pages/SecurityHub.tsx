@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   Shield,
@@ -23,32 +23,6 @@ import {
   Cell
 } from 'recharts'
 
-// Mock data - in production, this would come from the Lambda function
-const mockSecurityHubData = {
-  severity_summary: {
-    CRITICAL: 1,
-    HIGH: 9,
-    MEDIUM: 15,
-    LOW: 8,
-    INFORMATIONAL: 3
-  },
-  findings_by_control: {
-    "AC-2": { name: "Account Management", count: 4, critical: 0, high: 4 },
-    "AU-6": { name: "Audit Review", count: 5, critical: 0, high: 5 },
-    "CM-6": { name: "Configuration Settings", count: 5, critical: 0, high: 0 },
-    "SI-2": { name: "Flaw Remediation", count: 2, critical: 1, high: 0 },
-    "RA-5": { name: "Vulnerability Scanning", count: 0, critical: 0, high: 0 }
-  },
-  recent_alerts: [
-    { title: "S3.8 - S3 buckets should block public access", severity: "HIGH", resource: "AwsS3Bucket", time: "2026-05-04 12:07" },
-    { title: "S3.9 - Server access logging should be enabled", severity: "MEDIUM", resource: "AwsS3Bucket", time: "2026-05-04 12:07" },
-    { title: "S3.5 - S3 buckets should require SSL", severity: "MEDIUM", resource: "AwsS3Bucket", time: "2026-05-04 12:07" },
-    { title: "IAM.4 - IAM root user access key should not exist", severity: "CRITICAL", resource: "AwsAccount", time: "2026-05-04 11:30" },
-    { title: "CloudTrail.1 - CloudTrail should be enabled", severity: "HIGH", resource: "AwsAccount", time: "2026-05-04 10:15" }
-  ],
-  total_active_findings: 36
-}
-
 const SEVERITY_COLORS = {
   CRITICAL: '#ef4444',
   HIGH: '#f97316',
@@ -65,23 +39,56 @@ const SEVERITY_ICONS = {
   INFORMATIONAL: Info
 }
 
+// API Gateway endpoint
+const API_URL = "https://zc06lwmk4j.execute-api.us-east-1.amazonaws.com/prod"
+
+// Default data structure
+const defaultData = {
+  severity_summary: { CRITICAL: 0, HIGH: 0, MEDIUM: 0, LOW: 0, INFORMATIONAL: 0 },
+  findings_by_control: {
+    "AC-2": { name: "Account Management", count: 0, critical: 0, high: 0 },
+    "AU-6": { name: "Audit Review", count: 0, critical: 0, high: 0 },
+    "CM-6": { name: "Configuration Settings", count: 0, critical: 0, high: 0 },
+    "SI-2": { name: "Flaw Remediation", count: 0, critical: 0, high: 0 },
+    "RA-5": { name: "Vulnerability Scanning", count: 0, critical: 0, high: 0 }
+  },
+  recent_alerts: [],
+  total_active_findings: 0
+}
+
 export default function SecurityHub() {
-  const [data] = useState(mockSecurityHubData)
-  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState(defaultData)
+  const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState(new Date())
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchData = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`${API_URL}/securityhub`)
+      if (!response.ok) throw new Error('Failed to fetch data')
+      const result = await response.json()
+      if (result.status === 'SUCCESS') {
+        setData(result)
+        setLastUpdated(new Date())
+      } else {
+        throw new Error(result.message || 'Unknown error')
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load data')
+      console.error('Error fetching Security Hub data:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   const refreshData = async () => {
-    setLoading(true)
-    // In production, this would call the Lambda function
-    // const response = await fetch('/api/securityhub')
-    // const newData = await response.json()
-    // setData(newData)
-    
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false)
-      setLastUpdated(new Date())
-    }, 1000)
+    await fetchData()
   }
 
   // Prepare chart data
