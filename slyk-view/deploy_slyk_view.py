@@ -91,7 +91,7 @@ def create_s3_bucket():
             raise
 
     # Configure for static website hosting
-    s3.put_bucket_website_configuration(
+    s3.put_bucket_website(
         Bucket=S3_BUCKET_NAME,
         WebsiteConfiguration={
             "IndexDocument": {"Suffix": "index.html"},
