@@ -6,6 +6,7 @@ import {
   ShieldAlert,
   MessageSquare,
   Server,
+  Wrench,
   FileText,
   Settings,
   ChevronLeft,
@@ -25,6 +26,7 @@ const navItems = [
   { path: '/securityhub', icon: ShieldAlert, label: 'Security Hub' },
   { path: '/chat', icon: MessageSquare, label: 'Ask SLyK' },
   { path: '/inventory', icon: Server, label: 'Inventory' },
+  { path: '/remediation', icon: Wrench, label: 'Remediation' },
   { path: '/reports', icon: FileText, label: 'Reports' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ]

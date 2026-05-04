@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import Controls from './pages/Controls'
 import Chat from './pages/Chat'
 import Inventory from './pages/Inventory'
+import Remediation from './pages/Remediation'
 import Reports from './pages/Reports'
 import Settings from './pages/Settings'
 import SecurityHub from './pages/SecurityHub'
@@ -33,6 +34,7 @@ function App() {
                   <Route path="/securityhub" element={<SecurityHub />} />
                   <Route path="/chat" element={<Chat />} />
                   <Route path="/inventory" element={<Inventory />} />
+                  <Route path="/remediation" element={<Remediation />} />
                   <Route path="/reports" element={<Reports />} />
                   <Route path="/settings" element={<Settings />} />
                 </Routes>
