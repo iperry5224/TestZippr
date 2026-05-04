@@ -52,7 +52,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <h1 className="text-xl font-bold gradient-text">SLyK-View</h1>
+              <h1 className="text-xl font-bold gradient-text">CSTA</h1>
               <p className="text-xs text-dark-muted">Security Dashboard</p>
             </motion.div>
           )}
@@ -108,8 +108,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       {/* Version */}
       {!collapsed && (
         <div className="px-4 py-3 text-xs text-dark-muted border-t border-dark-border/50">
-          <p>SLyK-View v1.0.0</p>
-          <p>GRCP Platform</p>
+          <p>CSTA v1.0.0</p>
+          <p>Cyber Security Tool Analysis</p>
         </div>
       )}
     </motion.aside>

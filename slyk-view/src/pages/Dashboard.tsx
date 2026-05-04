@@ -187,10 +187,10 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl font-bold gradient-text"
           >
-            Security Dashboard
+            nesdis-ncis-ospocsta-5006
           </motion.h1>
           <p className="text-dark-muted mt-1">
-            NIST 800-53 Compliance Overview
+            Account ID: 656443597515 • NIST 800-53 Compliance
           </p>
         </div>
         
