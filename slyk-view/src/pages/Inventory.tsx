@@ -107,16 +107,16 @@ export default function Inventory() {
     { key: 'rds', label: 'RDS Databases', icon: Cloud, count: inventoryData.rds.length },
   ]
 
-  const currentData = inventoryData[selectedType as keyof typeof inventoryData] || []
-  const filteredData = currentData.filter(item => 
+  const currentData: Resource[] = inventoryData[selectedType as keyof InventoryData] || []
+  const filteredData = currentData.filter((item: Resource) => 
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.id.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const totalResources = Object.values(inventoryData).flat().length
-  const compliantCount = Object.values(inventoryData).flat().filter(r => r.status === 'compliant').length
-  const warningCount = Object.values(inventoryData).flat().filter(r => r.status === 'warning').length
-  const nonCompliantCount = Object.values(inventoryData).flat().filter(r => r.status === 'non-compliant').length
+  const compliantCount = Object.values(inventoryData).flat().filter((r: Resource) => r.status === 'compliant').length
+  const warningCount = Object.values(inventoryData).flat().filter((r: Resource) => r.status === 'warning').length
+  const nonCompliantCount = Object.values(inventoryData).flat().filter((r: Resource) => r.status === 'non-compliant').length
 
   if (loading) {
     return (
@@ -272,7 +272,7 @@ export default function Inventory() {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((resource, index) => {
+            {filteredData.map((resource: Resource, index: number) => {
               const config = statusConfig[resource.status as keyof typeof statusConfig]
               const Icon = config.icon
               return (
