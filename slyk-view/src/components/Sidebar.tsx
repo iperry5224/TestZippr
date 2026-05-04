@@ -109,7 +109,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       {!collapsed && (
         <div className="px-4 py-3 text-xs text-dark-muted border-t border-dark-border/50">
           <p>CSTA v1.0.0</p>
-          <p>Cyber Security Tool Analysis</p>
+          <p>Cyber Security Tools Analysis</p>
         </div>
       )}
     </motion.aside>
