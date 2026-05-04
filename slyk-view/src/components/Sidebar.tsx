@@ -8,6 +8,7 @@ import {
   Server,
   Wrench,
   FileText,
+  BookOpen,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -28,6 +29,7 @@ const navItems = [
   { path: '/inventory', icon: Server, label: 'Inventory' },
   { path: '/remediation', icon: Wrench, label: 'Remediation' },
   { path: '/reports', icon: FileText, label: 'Reports' },
+  { path: '/knowledgebase', icon: BookOpen, label: 'Knowledge Base' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ]
 

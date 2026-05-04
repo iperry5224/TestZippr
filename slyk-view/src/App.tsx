@@ -8,6 +8,7 @@ import Chat from './pages/Chat'
 import Inventory from './pages/Inventory'
 import Remediation from './pages/Remediation'
 import Reports from './pages/Reports'
+import KnowledgeBase from './pages/KnowledgeBase'
 import Settings from './pages/Settings'
 import SecurityHub from './pages/SecurityHub'
 import { TenantProvider } from './context/TenantContext'
@@ -36,6 +37,7 @@ function App() {
                   <Route path="/inventory" element={<Inventory />} />
                   <Route path="/remediation" element={<Remediation />} />
                   <Route path="/reports" element={<Reports />} />
+                  <Route path="/knowledgebase" element={<KnowledgeBase />} />
                   <Route path="/settings" element={<Settings />} />
                 </Routes>
               </AnimatePresence>
