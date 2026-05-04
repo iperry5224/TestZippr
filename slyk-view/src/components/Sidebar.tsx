@@ -53,7 +53,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               exit={{ opacity: 0 }}
             >
               <h1 className="text-xl font-bold gradient-text">CSTA</h1>
-              <p className="text-xs text-dark-muted">Security Dashboard</p>
+              <p className="text-xs text-dark-muted">Cyber Security Tools Analysis</p>
             </motion.div>
           )}
         </div>
