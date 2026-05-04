@@ -24,104 +24,157 @@ import {
 import ComplianceGauge from '../components/ComplianceGauge'
 import ControlCard from '../components/ControlCard'
 import AlertsFeed from '../components/AlertsFeed'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-// Mock data - in production, this comes from the API
-const complianceHistory = [
-  { date: 'Mon', score: 72 },
-  { date: 'Tue', score: 75 },
-  { date: 'Wed', score: 73 },
-  { date: 'Thu', score: 78 },
-  { date: 'Fri', score: 76 },
-  { date: 'Sat', score: 80 },
-  { date: 'Sun', score: 82 },
-]
+// API Gateway endpoint
+const API_URL = "https://zc06lwmk4j.execute-api.us-east-1.amazonaws.com/prod"
 
-const controlsData = [
-  { 
-    controlId: 'AC-2', 
-    name: 'Account Management', 
-    description: 'Automated detection of unauthorized account creation and MFA enforcement',
-    status: 'WARNING' as const,
-    findings: 3,
-    lastChecked: '2 hours ago'
-  },
-  { 
-    controlId: 'AU-6', 
-    name: 'Audit Review & Analysis', 
-    description: 'Real-time analysis of audit logs for anomalies and security events',
-    status: 'PASS' as const,
-    findings: 0,
-    lastChecked: '2 hours ago'
-  },
-  { 
-    controlId: 'CM-6', 
-    name: 'Configuration Settings', 
-    description: 'Automated verification of system configuration against baselines',
-    status: 'FAIL' as const,
-    findings: 5,
-    lastChecked: '2 hours ago'
-  },
-  { 
-    controlId: 'SI-2', 
-    name: 'Flaw Remediation', 
-    description: 'Automated remediation runbooks and patching logic',
-    status: 'WARNING' as const,
-    findings: 8,
-    lastChecked: '2 hours ago'
-  },
-  { 
-    controlId: 'RA-5', 
-    name: 'Vulnerability Scanning', 
-    description: 'Security scan coverage analysis relative to total inventory',
-    status: 'PASS' as const,
-    findings: 0,
-    lastChecked: '2 hours ago'
-  },
-]
+// Types
+interface ControlData {
+  controlId: string
+  name: string
+  description: string
+  status: 'PASS' | 'WARNING' | 'FAIL'
+  findings: number
+  lastChecked: string
+}
 
-const alerts = [
-  {
-    id: '1',
-    type: 'critical' as const,
-    title: 'IMDSv2 Not Enforced',
-    message: '2 EC2 instances are not using IMDSv2. This is a security risk that could allow SSRF attacks.',
-    timestamp: '5 minutes ago',
-    controlId: 'CM-6'
-  },
-  {
-    id: '2',
-    type: 'warning' as const,
-    title: 'Users Without MFA',
-    message: '3 IAM users do not have MFA enabled. Consider enforcing MFA for all users.',
-    timestamp: '1 hour ago',
-    controlId: 'AC-2'
-  },
-  {
-    id: '3',
-    type: 'warning' as const,
-    title: 'Pending Patches',
-    message: '8 instances have critical patches pending installation.',
-    timestamp: '3 hours ago',
-    controlId: 'SI-2'
-  },
-]
+interface Alert {
+  id: string
+  type: 'critical' | 'warning' | 'info'
+  title: string
+  message: string
+  timestamp: string
+  controlId: string
+}
 
-const statusDistribution = [
-  { name: 'Pass', value: 2, color: '#10B981' },
-  { name: 'Warning', value: 2, color: '#F59E0B' },
-  { name: 'Fail', value: 1, color: '#EF4444' },
-]
+// Control descriptions
+const CONTROL_DESCRIPTIONS: Record<string, string> = {
+  'AC-2': 'Automated detection of unauthorized account creation and MFA enforcement',
+  'AU-6': 'Real-time analysis of audit logs for anomalies and security events',
+  'CM-6': 'Automated verification of system configuration against baselines',
+  'SI-2': 'Automated remediation runbooks and patching logic',
+  'RA-5': 'Security scan coverage analysis relative to total inventory'
+}
 
 export default function Dashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const complianceScore = 78
-  const previousScore = 72
+  const [loading, setLoading] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
+  const [complianceScore, setComplianceScore] = useState(0)
+  const [controlsData, setControlsData] = useState<ControlData[]>([])
+  const [alerts, setAlerts] = useState<Alert[]>([])
+  const [statusDistribution, setStatusDistribution] = useState([
+    { name: 'Pass', value: 0, color: '#10B981' },
+    { name: 'Warning', value: 0, color: '#F59E0B' },
+    { name: 'Fail', value: 0, color: '#EF4444' },
+  ])
+  const [complianceHistory, setComplianceHistory] = useState([
+    { date: 'Mon', score: 70 },
+    { date: 'Tue', score: 72 },
+    { date: 'Wed', score: 71 },
+    { date: 'Thu', score: 74 },
+    { date: 'Fri', score: 73 },
+    { date: 'Sat', score: 76 },
+    { date: 'Sun', score: 78 },
+  ])
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${API_URL}/securityhub`)
+      if (!response.ok) throw new Error('Failed to fetch')
+      const data = await response.json()
+      
+      if (data.status === 'SUCCESS') {
+        // Calculate compliance score based on findings
+        const totalFindings = data.total_active_findings || 0
+        const score = Math.max(0, Math.min(100, 100 - (totalFindings * 2)))
+        setComplianceScore(score)
+        
+        // Update compliance history with new score
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'short' })
+        setComplianceHistory(prev => {
+          const updated = [...prev.slice(1), { date: today, score }]
+          return updated
+        })
+        
+        // Transform findings_by_control to controlsData
+        const controls: ControlData[] = Object.entries(data.findings_by_control || {}).map(([id, info]: [string, any]) => {
+          let status: 'PASS' | 'WARNING' | 'FAIL' = 'PASS'
+          if (info.critical > 0) status = 'FAIL'
+          else if (info.high > 0 || info.count > 3) status = 'WARNING'
+          else if (info.count > 0) status = 'WARNING'
+          
+          return {
+            controlId: id,
+            name: info.name,
+            description: CONTROL_DESCRIPTIONS[id] || info.name,
+            status,
+            findings: info.count,
+            lastChecked: 'Just now'
+          }
+        })
+        setControlsData(controls)
+        
+        // Calculate status distribution
+        const pass = controls.filter(c => c.status === 'PASS').length
+        const warning = controls.filter(c => c.status === 'WARNING').length
+        const fail = controls.filter(c => c.status === 'FAIL').length
+        setStatusDistribution([
+          { name: 'Pass', value: pass, color: '#10B981' },
+          { name: 'Warning', value: warning, color: '#F59E0B' },
+          { name: 'Fail', value: fail, color: '#EF4444' },
+        ])
+        
+        // Transform recent_alerts to alerts
+        const newAlerts: Alert[] = (data.recent_alerts || []).map((alert: any, index: number) => ({
+          id: String(index + 1),
+          type: alert.severity === 'CRITICAL' ? 'critical' : alert.severity === 'HIGH' ? 'warning' : 'info',
+          title: alert.title?.substring(0, 50) || 'Security Finding',
+          message: `Resource: ${alert.resource || 'Unknown'}`,
+          timestamp: alert.time || 'Recently',
+          controlId: 'CM-6'
+        }))
+        setAlerts(newAlerts)
+        
+        setLastUpdated(new Date())
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    await fetchData()
     setIsRefreshing(false)
+  }
+
+  const previousScore = complianceHistory.length > 1 ? complianceHistory[complianceHistory.length - 2].score : complianceScore
+
+  const getTimeAgo = (date: Date) => {
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
+    if (seconds < 60) return 'Just now'
+    if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`
+    return `${Math.floor(seconds / 86400)} days ago`
+  }
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <RefreshCw className="w-12 h-12 text-slyk-primary animate-spin mx-auto mb-4" />
+          <p className="text-dark-muted">Loading dashboard data...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -144,7 +197,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm text-dark-muted">
             <Clock className="w-4 h-4" />
-            Last updated: 2 hours ago
+            Last updated: {getTimeAgo(lastUpdated)}
           </div>
           <button
             onClick={handleRefresh}
@@ -168,7 +221,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-muted text-sm">Total Controls</p>
-              <p className="text-3xl font-bold text-dark-text mt-1">5</p>
+              <p className="text-3xl font-bold text-dark-text mt-1">{controlsData.length}</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-slyk-primary/20 flex items-center justify-center">
               <Shield className="w-6 h-6 text-slyk-primary" />
@@ -185,7 +238,9 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-muted text-sm">Passing</p>
-              <p className="text-3xl font-bold text-slyk-success mt-1">2</p>
+              <p className="text-3xl font-bold text-slyk-success mt-1">
+                {statusDistribution.find(s => s.name === 'Pass')?.value || 0}
+              </p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-slyk-success/20 flex items-center justify-center">
               <CheckCircle className="w-6 h-6 text-slyk-success" />
@@ -202,7 +257,9 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-muted text-sm">Warnings</p>
-              <p className="text-3xl font-bold text-slyk-warning mt-1">2</p>
+              <p className="text-3xl font-bold text-slyk-warning mt-1">
+                {statusDistribution.find(s => s.name === 'Warning')?.value || 0}
+              </p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-slyk-warning/20 flex items-center justify-center">
               <AlertTriangle className="w-6 h-6 text-slyk-warning" />
@@ -219,7 +276,9 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-dark-muted text-sm">Failing</p>
-              <p className="text-3xl font-bold text-slyk-danger mt-1">1</p>
+              <p className="text-3xl font-bold text-slyk-danger mt-1">
+                {statusDistribution.find(s => s.name === 'Fail')?.value || 0}
+              </p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-slyk-danger/20 flex items-center justify-center">
               <XCircle className="w-6 h-6 text-slyk-danger" />
@@ -243,18 +302,18 @@ export default function Dashboard() {
             <ComplianceGauge score={complianceScore} size="lg" />
             
             <div className="flex items-center gap-2 mt-4">
-              {complianceScore > previousScore ? (
+              {complianceScore >= previousScore ? (
                 <>
                   <TrendingUp className="w-5 h-5 text-slyk-success" />
                   <span className="text-slyk-success">
-                    +{complianceScore - previousScore}% from last week
+                    {complianceScore > previousScore ? `+${complianceScore - previousScore}%` : 'No change'} from last check
                   </span>
                 </>
               ) : (
                 <>
                   <TrendingDown className="w-5 h-5 text-slyk-danger" />
                   <span className="text-slyk-danger">
-                    {complianceScore - previousScore}% from last week
+                    {complianceScore - previousScore}% from last check
                   </span>
                 </>
               )}
