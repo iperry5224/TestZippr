@@ -260,7 +260,7 @@ def create_cognito_user_pool():
             },
             AutoVerifiedAttributes=["email"],
             UsernameAttributes=["email"],
-            MfaConfiguration="OPTIONAL",
+            MfaConfiguration="OFF",
             UserPoolTags={
                 "Application": "SLyK-View",
                 "Environment": "Production"
