@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   Shield,
@@ -8,7 +8,6 @@ import {
   Info,
   RefreshCw,
   ExternalLink,
-  TrendingUp,
   Activity
 } from 'lucide-react'
 import {
@@ -67,7 +66,7 @@ const SEVERITY_ICONS = {
 }
 
 export default function SecurityHub() {
-  const [data, setData] = useState(mockSecurityHubData)
+  const [data] = useState(mockSecurityHubData)
   const [loading, setLoading] = useState(false)
   const [lastUpdated, setLastUpdated] = useState(new Date())
 
@@ -100,7 +99,6 @@ export default function SecurityHub() {
   }))
 
   const totalFindings = data.total_active_findings
-  const criticalHigh = data.severity_summary.CRITICAL + data.severity_summary.HIGH
 
   return (
     <div className="min-h-screen bg-dark-bg p-6">
