@@ -23,7 +23,29 @@ import {
   Cell
 } from 'recharts'
 
-const SEVERITY_COLORS = {
+// Type definitions
+interface Alert {
+  title: string
+  severity: string
+  resource: string
+  time: string
+}
+
+interface ControlInfo {
+  name: string
+  count: number
+  critical: number
+  high: number
+}
+
+interface SecurityHubData {
+  severity_summary: Record<string, number>
+  findings_by_control: Record<string, ControlInfo>
+  recent_alerts: Alert[]
+  total_active_findings: number
+}
+
+const SEVERITY_COLORS: Record<string, string> = {
   CRITICAL: '#ef4444',
   HIGH: '#f97316',
   MEDIUM: '#eab308',
@@ -31,7 +53,7 @@ const SEVERITY_COLORS = {
   INFORMATIONAL: '#3b82f6'
 }
 
-const SEVERITY_ICONS = {
+const SEVERITY_ICONS: Record<string, typeof AlertCircle> = {
   CRITICAL: AlertCircle,
   HIGH: AlertTriangle,
   MEDIUM: Info,
@@ -43,7 +65,7 @@ const SEVERITY_ICONS = {
 const API_URL = "https://zc06lwmk4j.execute-api.us-east-1.amazonaws.com/prod"
 
 // Default data structure
-const defaultData = {
+const defaultData: SecurityHubData = {
   severity_summary: { CRITICAL: 0, HIGH: 0, MEDIUM: 0, LOW: 0, INFORMATIONAL: 0 },
   findings_by_control: {
     "AC-2": { name: "Account Management", count: 0, critical: 0, high: 0 },
@@ -57,14 +79,12 @@ const defaultData = {
 }
 
 export default function SecurityHub() {
-  const [data, setData] = useState(defaultData)
+  const [data, setData] = useState<SecurityHubData>(defaultData)
   const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState(new Date())
-  const [error, setError] = useState<string | null>(null)
 
   const fetchData = async () => {
     setLoading(true)
-    setError(null)
     try {
       const response = await fetch(`${API_URL}/securityhub`)
       if (!response.ok) throw new Error('Failed to fetch data')
@@ -76,7 +96,6 @@ export default function SecurityHub() {
         throw new Error(result.message || 'Unknown error')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load data')
       console.error('Error fetching Security Hub data:', err)
     } finally {
       setLoading(false)
