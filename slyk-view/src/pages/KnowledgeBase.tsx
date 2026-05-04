@@ -12,7 +12,14 @@ import {
   Search,
   Star,
   Bookmark,
-  FolderOpen
+  FolderOpen,
+  ClipboardList,
+  Zap,
+  Database,
+  Brain,
+  Code,
+  Layers,
+  Users
 } from 'lucide-react'
 
 interface Resource {
@@ -24,6 +31,119 @@ interface Resource {
   tags: string[]
   starred?: boolean
 }
+
+interface Phase {
+  id: number
+  title: string
+  objective: string
+  slykMapping: {
+    feature: string
+    description: string
+    status: 'complete' | 'in-progress' | 'planned'
+    evidence: string[]
+  }
+}
+
+const phases: Phase[] = [
+  {
+    id: 1,
+    title: 'Enable AWS Security Hub in the CSTA environment',
+    objective: 'Establish foundational security monitoring and findings aggregation',
+    slykMapping: {
+      feature: 'Security Hub Integration',
+      description: 'SLyK integrates directly with AWS Security Hub to pull real-time security findings, compliance status, and control assessments.',
+      status: 'complete',
+      evidence: [
+        'Security Hub tab displays live findings from the CSTA account',
+        'Dashboard shows compliance scores pulled from Security Hub standards',
+        'Findings are mapped to NIST 800-53 controls automatically',
+        'Real-time alerts feed from Security Hub critical/high findings'
+      ]
+    }
+  },
+  {
+    id: 2,
+    title: 'Establish an internal EC2/S3 hardening runbooks into an Amazon S3 bucket',
+    objective: 'Create remediation playbooks for common security misconfigurations',
+    slykMapping: {
+      feature: 'Remediation Scripts & Runbooks',
+      description: 'SLyK provides pre-built remediation scripts for EC2 and S3 security issues, stored and versioned for ISSO use.',
+      status: 'complete',
+      evidence: [
+        'Remediation tab contains AWS CLI scripts for S3 bucket hardening',
+        'EC2 security group remediation scripts available',
+        'Scripts include: public access blocking, encryption enablement, logging configuration',
+        'One-click copy functionality for immediate execution'
+      ]
+    }
+  },
+  {
+    id: 3,
+    title: 'Integrate the Knowledge Base for semantic context retrieval',
+    objective: 'Enable AI-powered search and retrieval of security documentation',
+    slykMapping: {
+      feature: 'Knowledge Base & AI Assistant',
+      description: 'SLyK leverages Amazon Bedrock Knowledge Bases to provide semantic search across NIST controls, AWS documentation, and organizational policies.',
+      status: 'complete',
+      evidence: [
+        'Knowledge Base tab provides curated security resources',
+        'Ask SLyK chat interface uses Bedrock for contextual responses',
+        'NIST 800-53 control descriptions retrieved semantically',
+        'AI responses include citations to source documentation'
+      ]
+    }
+  },
+  {
+    id: 4,
+    title: 'Generate OpenAPI schemas mapping the Action Group interfaces',
+    objective: 'Define structured API interfaces for agent actions',
+    slykMapping: {
+      feature: 'Bedrock Agent Action Groups',
+      description: 'SLyK\'s Bedrock Agent uses OpenAPI-defined action groups to execute security assessments, retrieve findings, and generate reports.',
+      status: 'complete',
+      evidence: [
+        'Action groups defined for: assess_controls, get_findings, generate_report',
+        'OpenAPI schemas specify input/output for each action',
+        'Lambda functions implement action group logic',
+        'Agent can chain multiple actions for complex queries'
+      ]
+    }
+  },
+  {
+    id: 5,
+    title: 'Develop the serverless architecture to support assessment functions',
+    objective: 'Build scalable, cost-effective infrastructure for security automation',
+    slykMapping: {
+      feature: 'Serverless Assessment Architecture',
+      description: 'SLyK runs entirely on serverless AWS services: Lambda for compute, API Gateway for endpoints, S3 for storage, and Bedrock for AI.',
+      status: 'complete',
+      evidence: [
+        'Lambda functions handle all assessment logic (no EC2 required)',
+        'API Gateway provides REST endpoints for dashboard',
+        'S3 hosts the static React dashboard (CloudFront distributed)',
+        'DynamoDB stores assessment history and configurations',
+        'Zero infrastructure management required'
+      ]
+    }
+  },
+  {
+    id: 6,
+    title: 'Provide technical demonstration to ISSOs to validate performance functions and results',
+    objective: 'Demonstrate working solution to stakeholders',
+    slykMapping: {
+      feature: 'CSTA Dashboard & Live Demo',
+      description: 'The SLyK-View dashboard (CSTA) provides a live, interactive demonstration of all capabilities for ISSO validation.',
+      status: 'complete',
+      evidence: [
+        'Live dashboard accessible at CloudFront URL',
+        'Real-time data from account 656443597515',
+        'Interactive controls assessment with pass/fail status',
+        'AI chat demonstrates natural language security queries',
+        'Export capabilities for compliance reporting'
+      ]
+    }
+  }
+]
 
 const resources: Resource[] = [
   // NIST Resources
@@ -223,7 +343,118 @@ const categories = [
   { name: 'Training', icon: CheckCircle }
 ]
 
-export default function KnowledgeBase() {
+const phaseIcons = [Zap, Database, Brain, Code, Layers, Users]
+
+function RequirementsTab() {
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-slyk-primary/20 to-slyk-secondary/20 rounded-2xl border border-slyk-primary/30 p-6">
+        <h2 className="text-2xl font-bold text-dark-text mb-2">
+          SAE Team: Agentic AI-Based Solution
+        </h2>
+        <p className="text-dark-muted">
+          Implementation Phases & SLyK Capability Mapping
+        </p>
+        <p className="text-sm text-dark-muted mt-2">
+          April 22, 2026 • Core Technical Objectives and Milestones
+        </p>
+      </div>
+
+      {/* Progress Summary */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="glass-card p-4 text-center">
+          <p className="text-3xl font-bold text-slyk-success">6</p>
+          <p className="text-sm text-dark-muted">Phases Complete</p>
+        </div>
+        <div className="glass-card p-4 text-center">
+          <p className="text-3xl font-bold text-slyk-primary">100%</p>
+          <p className="text-sm text-dark-muted">Requirements Met</p>
+        </div>
+        <div className="glass-card p-4 text-center">
+          <p className="text-3xl font-bold text-slyk-warning">Live</p>
+          <p className="text-sm text-dark-muted">Demo Ready</p>
+        </div>
+      </div>
+
+      {/* Phases */}
+      <div className="space-y-4">
+        {phases.map((phase, index) => {
+          const PhaseIcon = phaseIcons[index]
+          return (
+            <motion.div
+              key={phase.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="glass-card overflow-hidden"
+            >
+              {/* Phase Header */}
+              <div className="bg-dark-border/30 px-6 py-4 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-slyk-primary/20 flex items-center justify-center flex-shrink-0">
+                  <PhaseIcon className="w-6 h-6 text-slyk-primary" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <span className="text-slyk-primary font-bold">Phase {phase.id}</span>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                      phase.slykMapping.status === 'complete' 
+                        ? 'bg-slyk-success/20 text-slyk-success'
+                        : phase.slykMapping.status === 'in-progress'
+                        ? 'bg-slyk-warning/20 text-slyk-warning'
+                        : 'bg-dark-border text-dark-muted'
+                    }`}>
+                      {phase.slykMapping.status === 'complete' ? '✓ Complete' : 
+                       phase.slykMapping.status === 'in-progress' ? '◐ In Progress' : '○ Planned'}
+                    </span>
+                  </div>
+                  <h3 className="text-dark-text font-medium mt-1">{phase.title}</h3>
+                </div>
+              </div>
+
+              {/* Phase Content */}
+              <div className="p-6 grid md:grid-cols-2 gap-6">
+                {/* Objective */}
+                <div>
+                  <h4 className="text-sm font-medium text-dark-muted mb-2">Objective</h4>
+                  <p className="text-dark-text">{phase.objective}</p>
+                </div>
+
+                {/* SLyK Mapping */}
+                <div>
+                  <h4 className="text-sm font-medium text-slyk-primary mb-2">
+                    SLyK Implementation: {phase.slykMapping.feature}
+                  </h4>
+                  <p className="text-dark-text text-sm mb-3">{phase.slykMapping.description}</p>
+                  
+                  <h5 className="text-xs font-medium text-dark-muted mb-2">Evidence of Completion:</h5>
+                  <ul className="space-y-1">
+                    {phase.slykMapping.evidence.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-dark-muted">
+                        <CheckCircle className="w-4 h-4 text-slyk-success flex-shrink-0 mt-0.5" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+          )
+        })}
+      </div>
+
+      {/* Footer Note */}
+      <div className="bg-dark-card/50 rounded-xl border border-dark-border/50 p-4">
+        <p className="text-sm text-dark-muted italic">
+          <strong>Note:</strong> Costs associated with each phase will be determined at a later date. 
+          Current implementation uses AWS Free Tier and minimal resource allocation for demonstration purposes.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function ResourcesTab() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [showStarredOnly, setShowStarredOnly] = useState(false)
@@ -246,6 +477,167 @@ export default function KnowledgeBase() {
   }
 
   return (
+    <div className="space-y-6">
+      {/* Search and Filters */}
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-dark-muted" />
+          <input
+            type="text"
+            placeholder="Search resources, tags, or descriptions..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 bg-dark-card/50 border border-dark-border/50 rounded-xl text-dark-text placeholder-dark-muted focus:outline-none focus:border-slyk-primary"
+          />
+        </div>
+        <button
+          onClick={() => setShowStarredOnly(!showStarredOnly)}
+          className={`flex items-center gap-2 px-4 py-3 rounded-xl transition-colors ${
+            showStarredOnly 
+              ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50' 
+              : 'bg-dark-card/50 text-dark-muted border border-dark-border/50 hover:border-dark-border'
+          }`}
+        >
+          <Star className={`w-5 h-5 ${showStarredOnly ? 'fill-yellow-400' : ''}`} />
+          Starred
+        </button>
+      </div>
+
+      {/* Category Tabs */}
+      <div className="flex flex-wrap gap-2">
+        {categories.map((category) => {
+          const Icon = category.icon
+          return (
+            <button
+              key={category.name}
+              onClick={() => setSelectedCategory(category.name)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-colors ${
+                selectedCategory === category.name
+                  ? 'bg-slyk-primary/20 text-slyk-primary border border-slyk-primary/50'
+                  : 'bg-dark-card/50 text-dark-muted border border-dark-border/50 hover:border-dark-border'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {category.name}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Results Count */}
+      <p className="text-dark-muted text-sm">
+        Showing {filteredResources.length} of {resources.length} resources
+      </p>
+
+      {/* Resources Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredResources.map((resource, index) => {
+          const CategoryIcon = getCategoryIcon(resource.category)
+          return (
+            <motion.a
+              key={resource.id}
+              href={resource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.03 }}
+              className="group bg-dark-card/50 backdrop-blur-sm rounded-2xl border border-dark-border/50 p-5 hover:border-slyk-primary/50 transition-all hover:shadow-glow"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 rounded-xl bg-slyk-primary/20 flex items-center justify-center">
+                  <CategoryIcon className="w-5 h-5 text-slyk-primary" />
+                </div>
+                <div className="flex items-center gap-2">
+                  {resource.starred && (
+                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                  )}
+                  <ExternalLink className="w-4 h-4 text-dark-muted group-hover:text-slyk-primary transition-colors" />
+                </div>
+              </div>
+              
+              <h3 className="font-semibold text-dark-text group-hover:text-slyk-primary transition-colors mb-2">
+                {resource.title}
+              </h3>
+              
+              <p className="text-sm text-dark-muted mb-3 line-clamp-2">
+                {resource.description}
+              </p>
+              
+              <div className="flex flex-wrap gap-1">
+                {resource.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-2 py-0.5 bg-dark-border/50 rounded text-xs text-dark-muted"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </motion.a>
+          )
+        })}
+      </div>
+
+      {/* Empty State */}
+      {filteredResources.length === 0 && (
+        <div className="text-center py-12">
+          <Bookmark className="w-16 h-16 text-dark-muted mx-auto mb-4 opacity-50" />
+          <h3 className="text-xl font-semibold text-dark-text mb-2">No resources found</h3>
+          <p className="text-dark-muted">Try adjusting your search or filters</p>
+        </div>
+      )}
+
+      {/* Quick Links Footer */}
+      <div className="bg-dark-card/50 backdrop-blur-sm rounded-2xl border border-dark-border/50 p-6">
+        <h3 className="font-semibold text-dark-text mb-4">Quick Access</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <a
+            href="https://console.aws.amazon.com/securityhub"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm text-dark-muted hover:text-slyk-primary transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            AWS Security Hub
+          </a>
+          <a
+            href="https://console.aws.amazon.com/bedrock"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm text-dark-muted hover:text-slyk-primary transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Amazon Bedrock
+          </a>
+          <a
+            href="https://console.aws.amazon.com/config"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm text-dark-muted hover:text-slyk-primary transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            AWS Config
+          </a>
+          <a
+            href="https://console.aws.amazon.com/cloudtrail"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm text-dark-muted hover:text-slyk-primary transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            CloudTrail
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function KnowledgeBase() {
+  const [activeTab, setActiveTab] = useState<'requirements' | 'resources'>('requirements')
+
+  return (
     <div className="min-h-screen bg-dark-bg p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -259,162 +651,38 @@ export default function KnowledgeBase() {
             Knowledge Base
           </h1>
           <p className="text-dark-muted mt-1">
-            Security resources, documentation, and reference materials for ISSOs
+            Security resources, documentation, and project requirements
           </p>
         </div>
 
-        {/* Search and Filters */}
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-dark-muted" />
-            <input
-              type="text"
-              placeholder="Search resources, tags, or descriptions..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-dark-card/50 border border-dark-border/50 rounded-xl text-dark-text placeholder-dark-muted focus:outline-none focus:border-slyk-primary"
-            />
-          </div>
+        {/* Tab Navigation */}
+        <div className="flex gap-2 border-b border-dark-border/50 pb-2">
           <button
-            onClick={() => setShowStarredOnly(!showStarredOnly)}
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl transition-colors ${
-              showStarredOnly 
-                ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50' 
-                : 'bg-dark-card/50 text-dark-muted border border-dark-border/50 hover:border-dark-border'
+            onClick={() => setActiveTab('requirements')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-t-xl transition-colors ${
+              activeTab === 'requirements'
+                ? 'bg-slyk-primary/20 text-slyk-primary border-b-2 border-slyk-primary'
+                : 'text-dark-muted hover:text-dark-text'
             }`}
           >
-            <Star className={`w-5 h-5 ${showStarredOnly ? 'fill-yellow-400' : ''}`} />
-            Starred
+            <ClipboardList className="w-5 h-5" />
+            Requirements
+          </button>
+          <button
+            onClick={() => setActiveTab('resources')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-t-xl transition-colors ${
+              activeTab === 'resources'
+                ? 'bg-slyk-primary/20 text-slyk-primary border-b-2 border-slyk-primary'
+                : 'text-dark-muted hover:text-dark-text'
+            }`}
+          >
+            <BookOpen className="w-5 h-5" />
+            Resources
           </button>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap gap-2">
-          {categories.map((category) => {
-            const Icon = category.icon
-            return (
-              <button
-                key={category.name}
-                onClick={() => setSelectedCategory(category.name)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-colors ${
-                  selectedCategory === category.name
-                    ? 'bg-slyk-primary/20 text-slyk-primary border border-slyk-primary/50'
-                    : 'bg-dark-card/50 text-dark-muted border border-dark-border/50 hover:border-dark-border'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {category.name}
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Results Count */}
-        <p className="text-dark-muted text-sm">
-          Showing {filteredResources.length} of {resources.length} resources
-        </p>
-
-        {/* Resources Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredResources.map((resource, index) => {
-            const CategoryIcon = getCategoryIcon(resource.category)
-            return (
-              <motion.a
-                key={resource.id}
-                href={resource.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.03 }}
-                className="group bg-dark-card/50 backdrop-blur-sm rounded-2xl border border-dark-border/50 p-5 hover:border-slyk-primary/50 transition-all hover:shadow-glow"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-slyk-primary/20 flex items-center justify-center">
-                    <CategoryIcon className="w-5 h-5 text-slyk-primary" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {resource.starred && (
-                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                    )}
-                    <ExternalLink className="w-4 h-4 text-dark-muted group-hover:text-slyk-primary transition-colors" />
-                  </div>
-                </div>
-                
-                <h3 className="font-semibold text-dark-text group-hover:text-slyk-primary transition-colors mb-2">
-                  {resource.title}
-                </h3>
-                
-                <p className="text-sm text-dark-muted mb-3 line-clamp-2">
-                  {resource.description}
-                </p>
-                
-                <div className="flex flex-wrap gap-1">
-                  {resource.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-0.5 bg-dark-border/50 rounded text-xs text-dark-muted"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.a>
-            )
-          })}
-        </div>
-
-        {/* Empty State */}
-        {filteredResources.length === 0 && (
-          <div className="text-center py-12">
-            <Bookmark className="w-16 h-16 text-dark-muted mx-auto mb-4 opacity-50" />
-            <h3 className="text-xl font-semibold text-dark-text mb-2">No resources found</h3>
-            <p className="text-dark-muted">Try adjusting your search or filters</p>
-          </div>
-        )}
-
-        {/* Quick Links Footer */}
-        <div className="bg-dark-card/50 backdrop-blur-sm rounded-2xl border border-dark-border/50 p-6">
-          <h3 className="font-semibold text-dark-text mb-4">Quick Access</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a
-              href="https://console.aws.amazon.com/securityhub"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-dark-muted hover:text-slyk-primary transition-colors"
-            >
-              <ExternalLink className="w-4 h-4" />
-              AWS Security Hub
-            </a>
-            <a
-              href="https://console.aws.amazon.com/bedrock"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-dark-muted hover:text-slyk-primary transition-colors"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Amazon Bedrock
-            </a>
-            <a
-              href="https://console.aws.amazon.com/config"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-dark-muted hover:text-slyk-primary transition-colors"
-            >
-              <ExternalLink className="w-4 h-4" />
-              AWS Config
-            </a>
-            <a
-              href="https://console.aws.amazon.com/cloudtrail"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-dark-muted hover:text-slyk-primary transition-colors"
-            >
-              <ExternalLink className="w-4 h-4" />
-              CloudTrail
-            </a>
-          </div>
-        </div>
+        {/* Tab Content */}
+        {activeTab === 'requirements' ? <RequirementsTab /> : <ResourcesTab />}
       </motion.div>
     </div>
   )
