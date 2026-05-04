@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Wrench,
@@ -9,13 +9,10 @@ import {
   Shield,
   Eye,
   Clock,
-  User,
   CheckCircle,
-  XCircle,
   ChevronDown,
   ChevronUp,
-  Terminal,
-  RefreshCw
+  Terminal
 } from 'lucide-react'
 
 // Types
