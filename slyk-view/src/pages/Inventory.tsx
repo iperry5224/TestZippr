@@ -107,16 +107,20 @@ export default function Inventory() {
     { key: 'rds', label: 'RDS Databases', icon: Cloud, count: inventoryData.rds.length },
   ]
 
-  const currentData: Resource[] = inventoryData[selectedType as keyof InventoryData] || []
+  const resourceKeys = ['ec2', 's3', 'iam', 'rds'] as const
+  const currentData: Resource[] = resourceKeys.includes(selectedType as any) 
+    ? (inventoryData[selectedType as 'ec2' | 's3' | 'iam' | 'rds'] || [])
+    : []
   const filteredData = currentData.filter((item: Resource) => 
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.id.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const totalResources = Object.values(inventoryData).flat().length
-  const compliantCount = Object.values(inventoryData).flat().filter((r: Resource) => r.status === 'compliant').length
-  const warningCount = Object.values(inventoryData).flat().filter((r: Resource) => r.status === 'warning').length
-  const nonCompliantCount = Object.values(inventoryData).flat().filter((r: Resource) => r.status === 'non-compliant').length
+  const allResources = [...inventoryData.ec2, ...inventoryData.s3, ...inventoryData.iam, ...inventoryData.rds]
+  const totalResources = allResources.length
+  const compliantCount = allResources.filter((r: Resource) => r.status === 'compliant').length
+  const warningCount = allResources.filter((r: Resource) => r.status === 'warning').length
+  const nonCompliantCount = allResources.filter((r: Resource) => r.status === 'non-compliant').length
 
   if (loading) {
     return (
