@@ -364,18 +364,36 @@ def create_cognito_identity_pool():
         }]
     }
 
+    role_arn = None
+    
+    # First check if role already exists
     try:
-        role = iam.create_role(
-            RoleName=role_name,
-            AssumeRolePolicyDocument=json.dumps(trust_policy),
-            Description="Role for SLyK-View authenticated users"
-        )
-        role_arn = role["Role"]["Arn"]
-        ok(f"Created IAM role: {role_name}")
+        existing_role = iam.get_role(RoleName=role_name)
+        role_arn = existing_role["Role"]["Arn"]
+        warn(f"IAM role already exists: {role_name}")
     except ClientError as e:
-        if "EntityAlreadyExists" in str(e):
+        if "NoSuchEntity" in str(e):
+            # Role doesn't exist, try to create it
+            try:
+                role = iam.create_role(
+                    RoleName=role_name,
+                    AssumeRolePolicyDocument=json.dumps(trust_policy),
+                    Description="Role for SLyK-View authenticated users"
+                )
+                role_arn = role["Role"]["Arn"]
+                ok(f"Created IAM role: {role_name}")
+            except ClientError as create_err:
+                if "AccessDenied" in str(create_err):
+                    warn(f"Cannot create IAM role (AccessDenied). Please create '{role_name}' manually or ask an admin.")
+                    warn("Continuing without IAM role configuration...")
+                    config["cognito_identity_pool_id"] = identity_pool_id
+                    return identity_pool_id
+                else:
+                    raise
+        elif "AccessDenied" in str(e):
+            # Can't even check if role exists, assume it might exist
             role_arn = f"arn:aws:iam::{ACCOUNT_ID}:role/{role_name}"
-            warn(f"IAM role already exists: {role_name}")
+            warn(f"Cannot verify IAM role (AccessDenied). Assuming role exists: {role_name}")
         else:
             raise
 
@@ -402,20 +420,29 @@ def create_cognito_identity_pool():
             PolicyDocument=json.dumps(policy)
         )
         ok("Attached Bedrock access policy")
-    except ClientError:
-        warn("Could not attach policy (may already exist)")
+    except ClientError as e:
+        if "AccessDenied" in str(e):
+            warn("Could not attach policy (AccessDenied - may need admin)")
+        else:
+            warn("Could not attach policy (may already exist)")
 
     # Set identity pool roles
-    try:
-        cognito_identity.set_identity_pool_roles(
-            IdentityPoolId=identity_pool_id,
-            Roles={
-                "authenticated": role_arn
-            }
-        )
-        ok("Configured Identity Pool roles")
-    except ClientError:
-        warn("Could not set Identity Pool roles")
+    if role_arn:
+        try:
+            cognito_identity.set_identity_pool_roles(
+                IdentityPoolId=identity_pool_id,
+                Roles={
+                    "authenticated": role_arn
+                }
+            )
+            ok("Configured Identity Pool roles")
+        except ClientError as e:
+            if "AccessDenied" in str(e):
+                warn("Could not set Identity Pool roles (AccessDenied)")
+            else:
+                warn("Could not set Identity Pool roles")
+    else:
+        warn("Skipping Identity Pool role configuration (no role ARN)")
 
     config["cognito_identity_pool_id"] = identity_pool_id
     return identity_pool_id
