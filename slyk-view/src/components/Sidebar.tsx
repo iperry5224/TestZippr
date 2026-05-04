@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import {
   LayoutDashboard,
   Shield,
+  ShieldAlert,
   MessageSquare,
   Server,
   FileText,
@@ -21,6 +22,7 @@ interface SidebarProps {
 const navItems = [
   { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/controls', icon: Shield, label: 'Controls' },
+  { path: '/securityhub', icon: ShieldAlert, label: 'Security Hub' },
   { path: '/chat', icon: MessageSquare, label: 'Ask SLyK' },
   { path: '/inventory', icon: Server, label: 'Inventory' },
   { path: '/reports', icon: FileText, label: 'Reports' },

@@ -8,6 +8,7 @@ import Chat from './pages/Chat'
 import Inventory from './pages/Inventory'
 import Reports from './pages/Reports'
 import Settings from './pages/Settings'
+import SecurityHub from './pages/SecurityHub'
 import { TenantProvider } from './context/TenantContext'
 import { AuthProvider } from './context/AuthContext'
 
@@ -29,6 +30,7 @@ function App() {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/controls" element={<Controls />} />
                   <Route path="/controls/:controlId" element={<Controls />} />
+                  <Route path="/securityhub" element={<SecurityHub />} />
                   <Route path="/chat" element={<Chat />} />
                   <Route path="/inventory" element={<Inventory />} />
                   <Route path="/reports" element={<Reports />} />
