@@ -19,7 +19,12 @@ import {
   Brain,
   Code,
   Layers,
-  Users
+  Users,
+  Network,
+  Terminal,
+  HelpCircle,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react'
 
 interface Resource {
@@ -454,6 +459,346 @@ function RequirementsTab() {
   )
 }
 
+function ArchitectureTab() {
+  const [expandedSop, setExpandedSop] = useState<string | null>(null)
+
+  const architectureComponents = [
+    {
+      name: 'Frontend (React Dashboard)',
+      icon: Server,
+      color: '#6366F1',
+      details: [
+        'React + TypeScript + Vite',
+        'Hosted on S3: slyk-view-656443597515-us-east-1',
+        'Distributed via CloudFront (E3STZQQDVPKXS9)',
+        'URL: dymaxfdlmvkiy.cloudfront.net'
+      ]
+    },
+    {
+      name: 'API Gateway',
+      icon: Network,
+      color: '#10B981',
+      details: [
+        'REST API: zc06lwmk4j.execute-api.us-east-1',
+        'Endpoints: /securityhub, /inventory, /assess',
+        'CORS enabled for dashboard access',
+        'Deployed to prod stage'
+      ]
+    },
+    {
+      name: 'Lambda Functions',
+      icon: Code,
+      color: '#F59E0B',
+      details: [
+        'slyk-securityhub-findings: Security Hub integration',
+        'slyk-inventory: AWS resource inventory',
+        'slyk-assess: Control assessment logic',
+        'Runtime: Python 3.11, 256MB memory'
+      ]
+    },
+    {
+      name: 'Amazon Bedrock',
+      icon: Brain,
+      color: '#8B5CF6',
+      details: [
+        'Agent: New_SLyK-53-Security-Assistant',
+        'Model: Claude (Anthropic)',
+        'Knowledge Base: NIST 800-53 documentation',
+        'Action Groups: assess, findings, reports'
+      ]
+    },
+    {
+      name: 'Security Hub',
+      icon: Shield,
+      color: '#EF4444',
+      details: [
+        'Aggregates findings from AWS services',
+        'NIST 800-53 control mapping',
+        'Real-time compliance scoring',
+        'Integration with Config rules'
+      ]
+    },
+    {
+      name: 'Data Sources',
+      icon: Database,
+      color: '#06B6D4',
+      details: [
+        'S3: 17 buckets monitored',
+        'EC2: Instance compliance tracking',
+        'IAM: User/role security analysis',
+        'RDS: Database encryption status'
+      ]
+    }
+  ]
+
+  const sops = [
+    {
+      id: 'sop-001',
+      title: 'SOP-001: Daily Security Review',
+      frequency: 'Daily (business days)',
+      steps: [
+        'Access CSTA dashboard and review compliance score',
+        'Check alerts feed for CRITICAL/HIGH findings',
+        'Review Security Hub tab, filter by severity',
+        'For CRITICAL: initiate remediation within 24 hours',
+        'For HIGH: create POA&M entry within 72 hours',
+        'Document actions in ticketing system'
+      ]
+    },
+    {
+      id: 'sop-002',
+      title: 'SOP-002: Weekly Compliance Assessment',
+      frequency: 'Weekly (Mondays)',
+      steps: [
+        'Run full assessment via Dashboard refresh',
+        'Document compliance score and compare to previous week',
+        'Review all control families in Controls tab',
+        'Verify resource counts in Inventory tab',
+        'Generate weekly compliance report',
+        'Update SSP and POA&M as needed'
+      ]
+    },
+    {
+      id: 'sop-003',
+      title: 'SOP-003: Remediation Execution',
+      frequency: 'As needed',
+      steps: [
+        'Identify finding: note control ID and affected resource',
+        'Navigate to Remediation tab, find relevant control',
+        'Copy remediation script',
+        'Test in non-production environment if possible',
+        'Execute script against affected resource',
+        'Verify fix in Security Hub (up to 24 hours)',
+        'Update POA&M with closure date'
+      ]
+    },
+    {
+      id: 'sop-004',
+      title: 'SOP-004: AI Assistant Usage',
+      frequency: 'As needed',
+      steps: [
+        'Click "Ask SLyK" in sidebar',
+        'Formulate specific query with context',
+        'Example: "What are the requirements for AC-2?"',
+        'Example: "How do I remediate public S3 access?"',
+        'Review AI response and verify against official docs',
+        'Use guidance to inform decisions'
+      ]
+    },
+    {
+      id: 'sop-005',
+      title: 'SOP-005: Incident Response Integration',
+      frequency: 'During incidents',
+      steps: [
+        'Check CSTA dashboard for related findings',
+        'Review affected resource in Inventory',
+        'Use Ask SLyK for relevant control guidance',
+        'Document pre-incident compliance state',
+        'Export findings for incident report',
+        'Post-incident: update controls based on lessons learned'
+      ]
+    }
+  ]
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-slyk-primary/20 to-slyk-secondary/20 rounded-2xl border border-slyk-primary/30 p-6">
+        <h2 className="text-2xl font-bold text-dark-text mb-2">
+          CSTA Architecture & Standard Operating Procedures
+        </h2>
+        <p className="text-dark-muted">
+          Technical architecture overview and operational procedures for ISSOs
+        </p>
+        <div className="flex gap-4 mt-4">
+          <div className="text-sm">
+            <span className="text-dark-muted">Account:</span>{' '}
+            <span className="text-slyk-primary font-mono">656443597515</span>
+          </div>
+          <div className="text-sm">
+            <span className="text-dark-muted">Environment:</span>{' '}
+            <span className="text-slyk-success">nesdis-ncis-ospocsta-5006</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Architecture Diagram */}
+      <div>
+        <h3 className="text-xl font-semibold text-dark-text mb-4 flex items-center gap-2">
+          <Network className="w-5 h-5 text-slyk-primary" />
+          System Architecture
+        </h3>
+        
+        {/* Visual Architecture */}
+        <div className="glass-card p-6 mb-4">
+          <pre className="text-xs text-dark-muted font-mono overflow-x-auto">
+{`┌─────────────────────────────────────────────────────────────────────────────┐
+│                              CSTA Architecture                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────────────────────┐   │
+│  │   Browser   │────▶│ CloudFront  │────▶│  S3 (Static Dashboard)      │   │
+│  │   (ISSO)    │     │   (CDN)     │     │  slyk-view-656443597515-*   │   │
+│  └─────────────┘     └─────────────┘     └─────────────────────────────┘   │
+│         │                                                                   │
+│         │ API Calls                                                         │
+│         ▼                                                                   │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                        API Gateway (REST)                            │   │
+│  │                    zc06lwmk4j.execute-api.us-east-1                  │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│         │                    │                    │                         │
+│         ▼                    ▼                    ▼                         │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                   │
+│  │   Lambda    │     │   Lambda    │     │   Lambda    │                   │
+│  │ securityhub │     │  inventory  │     │   assess    │                   │
+│  └─────────────┘     └─────────────┘     └─────────────┘                   │
+│         │                    │                    │                         │
+│         ▼                    ▼                    ▼                         │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                   │
+│  │  Security   │     │  S3, EC2,   │     │   Config    │                   │
+│  │    Hub      │     │  IAM, RDS   │     │   Rules     │                   │
+│  └─────────────┘     └─────────────┘     └─────────────┘                   │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                        Amazon Bedrock                                │   │
+│  │  ┌─────────────────┐     ┌─────────────────────────────────────┐    │   │
+│  │  │  Bedrock Agent  │────▶│  Knowledge Base (NIST 800-53 Docs)  │    │   │
+│  │  │  SLyK-53        │     │  Security Documentation             │    │   │
+│  │  └─────────────────┘     └─────────────────────────────────────┘    │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘`}
+          </pre>
+        </div>
+
+        {/* Component Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {architectureComponents.map((component, index) => {
+            const Icon = component.icon
+            return (
+              <motion.div
+                key={component.name}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="glass-card p-4"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: `${component.color}20` }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: component.color }} />
+                  </div>
+                  <h4 className="font-semibold text-dark-text">{component.name}</h4>
+                </div>
+                <ul className="space-y-1">
+                  {component.details.map((detail, i) => (
+                    <li key={i} className="text-sm text-dark-muted flex items-start gap-2">
+                      <span className="text-slyk-primary mt-1">•</span>
+                      <span className="font-mono text-xs">{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* SOPs */}
+      <div>
+        <h3 className="text-xl font-semibold text-dark-text mb-4 flex items-center gap-2">
+          <Terminal className="w-5 h-5 text-slyk-primary" />
+          Standard Operating Procedures
+        </h3>
+        
+        <div className="space-y-3">
+          {sops.map((sop) => (
+            <div key={sop.id} className="glass-card overflow-hidden">
+              <button
+                onClick={() => setExpandedSop(expandedSop === sop.id ? null : sop.id)}
+                className="w-full px-6 py-4 flex items-center justify-between hover:bg-dark-border/20 transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-slyk-primary/20 flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-slyk-primary" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-semibold text-dark-text">{sop.title}</h4>
+                    <p className="text-sm text-dark-muted">Frequency: {sop.frequency}</p>
+                  </div>
+                </div>
+                {expandedSop === sop.id ? (
+                  <ChevronDown className="w-5 h-5 text-dark-muted" />
+                ) : (
+                  <ChevronRight className="w-5 h-5 text-dark-muted" />
+                )}
+              </button>
+              
+              {expandedSop === sop.id && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  className="px-6 pb-4 border-t border-dark-border/30"
+                >
+                  <ol className="mt-4 space-y-2">
+                    {sop.steps.map((step, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm">
+                        <span className="w-6 h-6 rounded-full bg-slyk-primary/20 text-slyk-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                          {i + 1}
+                        </span>
+                        <span className="text-dark-text pt-0.5">{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </motion.div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Reference */}
+      <div className="glass-card p-6">
+        <h3 className="text-lg font-semibold text-dark-text mb-4 flex items-center gap-2">
+          <HelpCircle className="w-5 h-5 text-slyk-primary" />
+          Quick Reference
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="text-sm font-medium text-dark-muted mb-2">Key URLs</h4>
+            <ul className="space-y-1 text-sm">
+              <li className="flex justify-between">
+                <span className="text-dark-muted">Dashboard:</span>
+                <span className="font-mono text-slyk-primary">dymaxfdlmvkiy.cloudfront.net</span>
+              </li>
+              <li className="flex justify-between">
+                <span className="text-dark-muted">API:</span>
+                <span className="font-mono text-slyk-primary">zc06lwmk4j.execute-api...</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-sm font-medium text-dark-muted mb-2">Response Times</h4>
+            <ul className="space-y-1 text-sm">
+              <li className="flex justify-between">
+                <span className="text-dark-muted">CRITICAL findings:</span>
+                <span className="text-slyk-danger">24 hours</span>
+              </li>
+              <li className="flex justify-between">
+                <span className="text-dark-muted">HIGH findings:</span>
+                <span className="text-slyk-warning">72 hours</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ResourcesTab() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
@@ -635,7 +980,7 @@ function ResourcesTab() {
 }
 
 export default function KnowledgeBase() {
-  const [activeTab, setActiveTab] = useState<'requirements' | 'resources'>('requirements')
+  const [activeTab, setActiveTab] = useState<'requirements' | 'architecture' | 'resources'>('requirements')
 
   return (
     <div className="min-h-screen bg-dark-bg p-6">
@@ -669,6 +1014,17 @@ export default function KnowledgeBase() {
             Requirements
           </button>
           <button
+            onClick={() => setActiveTab('architecture')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-t-xl transition-colors ${
+              activeTab === 'architecture'
+                ? 'bg-slyk-primary/20 text-slyk-primary border-b-2 border-slyk-primary'
+                : 'text-dark-muted hover:text-dark-text'
+            }`}
+          >
+            <Network className="w-5 h-5" />
+            Architecture & SOP
+          </button>
+          <button
             onClick={() => setActiveTab('resources')}
             className={`flex items-center gap-2 px-6 py-3 rounded-t-xl transition-colors ${
               activeTab === 'resources'
@@ -682,7 +1038,9 @@ export default function KnowledgeBase() {
         </div>
 
         {/* Tab Content */}
-        {activeTab === 'requirements' ? <RequirementsTab /> : <ResourcesTab />}
+        {activeTab === 'requirements' && <RequirementsTab />}
+        {activeTab === 'architecture' && <ArchitectureTab />}
+        {activeTab === 'resources' && <ResourcesTab />}
       </motion.div>
     </div>
   )
