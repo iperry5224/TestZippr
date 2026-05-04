@@ -22,14 +22,26 @@ import os
 import re
 import sys
 import glob
+import tempfile
 from datetime import datetime
+
+
+def _default_output_path(prefix: str, safe_name: str = "") -> str:
+    """Return a cross-platform writable path for generated documents."""
+    output_dir = os.environ.get("SAELAR_OUTPUT_DIR")
+    if not output_dir:
+        output_dir = os.path.join(tempfile.gettempdir(), "saelar_docs")
+    os.makedirs(output_dir, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d")
+    filename = f"{prefix}_{safe_name}_{timestamp}.docx" if safe_name else f"{prefix}_{timestamp}.docx"
+    return os.path.join(output_dir, filename)
 
 
 def create_comparison_document(output_path: str = None):
     """Generate SAELAR vs AWS Audit Manager comparison as Word document."""
     
     if output_path is None:
-        output_path = r'C:\Users\iperr\OneDrive\Desktop\AI-Guides\SAELAR_vs_AWS_Audit_Manager_Comparison.docx'
+        output_path = _default_output_path("SAELAR_vs_AWS_Audit_Manager_Comparison")
     
     doc = Document()
 
@@ -593,7 +605,7 @@ def create_ssp_document(ssp_data: dict, output_path: str = None):
     if output_path is None:
         system_name = ssp_data.get('system_info', {}).get('system_name', 'System')
         safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\SSP_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
+        output_path = _default_output_path("SSP", safe_name)
     
     doc = Document()
     
@@ -888,7 +900,7 @@ def create_poam_document(ssp_data: dict, output_path: str = None):
     if output_path is None:
         system_name = ssp_data.get('system_info', {}).get('system_name', 'System')
         safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\POAM_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
+        output_path = _default_output_path("POAM", safe_name)
     
     doc = Document()
     
@@ -1065,7 +1077,7 @@ def create_rar_document(rar_data: dict, output_path: str = None):
     if output_path is None:
         system_name = rar_data.get('system_info', {}).get('system_name', 'System')
         safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\RAR_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
+        output_path = _default_output_path("RAR", safe_name)
     
     doc = Document()
     

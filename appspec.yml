@@ -1,0 +1,17 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/grcp
+    overwrite: true
+file_exists_behavior: OVERWRITE
+
+hooks:
+  BeforeInstall:
+    - location: deploy/before_install.sh
+      timeout: 60
+      runas: root
+  AfterInstall:
+    - location: deploy/after_install.sh
+      timeout: 120
+      runas: root

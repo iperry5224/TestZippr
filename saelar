@@ -1,0 +1,230 @@
+#!/bin/bash
+#===============================================================================
+#  SAELAR Command-Line Tool
+#===============================================================================
+#  Usage:
+#    ./saelar install update    - Apply update patch (overwrites fixed files)
+#    ./saelar start             - Start the SAELAR application
+#    ./saelar stop              - Stop the running SAELAR application
+#    ./saelar status            - Check if SAELAR is running
+#
+#  Version: 3.1 (March 2026)
+#===============================================================================
+
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+banner() {
+    echo ""
+    echo -e "${CYAN}╔═══════════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║   SAELAR - Security Architecture & Evaluation                        ║${NC}"
+    echo -e "${CYAN}║   Linear Assessment Reporting Tool                                    ║${NC}"
+    echo -e "${CYAN}╚═══════════════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+}
+
+#-------------------------------------------------------------------------------
+# saelar install update
+#-------------------------------------------------------------------------------
+do_install_update() {
+    banner
+    echo -e "${BLUE}[SAELAR Update]${NC} Applying patch to fix I/O errors..."
+    echo ""
+
+    # Detect SAELAR install directory
+    SAELAR_DIR=""
+    for candidate in \
+        "$SCRIPT_DIR" \
+        "/home/ec2-user/saelar" \
+        "/home/ec2-user/SAELAR-53" \
+        "/home/ubuntu/saelar" \
+        "/opt/saelar" \
+        "/home/ssm-user/saelar"; do
+        if [ -f "$candidate/nist_setup.py" ]; then
+            SAELAR_DIR="$candidate"
+            break
+        fi
+    done
+
+    if [ -z "$SAELAR_DIR" ]; then
+        echo -e "${YELLOW}[!]${NC} Could not auto-detect SAELAR install directory."
+        echo "    Searching entire filesystem..."
+        FOUND=$(find / -maxdepth 4 -name "nist_setup.py" -not -path "*/update_patch/*" 2>/dev/null | head -1)
+        if [ -n "$FOUND" ]; then
+            SAELAR_DIR="$(dirname "$FOUND")"
+        fi
+    fi
+
+    if [ -z "$SAELAR_DIR" ]; then
+        echo -e "${RED}[ERROR]${NC} Cannot find SAELAR installation (nist_setup.py)."
+        echo "        Please run this from the SAELAR install directory."
+        exit 1
+    fi
+
+    echo -e "${GREEN}[✓]${NC} Found SAELAR at: ${SAELAR_DIR}"
+    echo ""
+
+    # Stop running instance
+    echo -e "${BLUE}[1/4]${NC} Stopping running SAELAR instance..."
+    if pkill -f "streamlit run nist_setup.py" 2>/dev/null; then
+        echo -e "${GREEN}[✓]${NC} Stopped running instance"
+        sleep 2
+    else
+        echo -e "${YELLOW}[!]${NC} No running instance found (OK)"
+    fi
+
+    # Backup current files
+    BACKUP_DIR="${SAELAR_DIR}/.backup_$(date +%Y%m%d_%H%M%S)"
+    echo -e "${BLUE}[2/4]${NC} Backing up current files to ${BACKUP_DIR}..."
+    mkdir -p "$BACKUP_DIR"
+
+    for f in wordy.py nist_setup.py risk_score_app.py risk_score_calculator.py \
+             nist_dashboard.py nist_pages.py nist_auth.py ssp_generator.py \
+             nist_800_53_rev5_full.py nist_800_53_controls.py cisa_kev_checker.py \
+             start_saelar.sh; do
+        if [ -f "$SAELAR_DIR/$f" ]; then
+            cp "$SAELAR_DIR/$f" "$BACKUP_DIR/$f"
+        fi
+    done
+    echo -e "${GREEN}[✓]${NC} Backup complete"
+
+    # Copy updated files
+    echo -e "${BLUE}[3/4]${NC} Installing updated files..."
+
+    PATCH_DIR="$SCRIPT_DIR/update_patch"
+    if [ ! -d "$PATCH_DIR" ]; then
+        echo -e "${RED}[ERROR]${NC} update_patch/ directory not found."
+        echo "        Make sure you unzipped the update package correctly."
+        exit 1
+    fi
+
+    FILE_COUNT=0
+    while IFS= read -r -d '' src_file; do
+        rel_path="${src_file#$PATCH_DIR/}"
+        dest="$SAELAR_DIR/$rel_path"
+        dest_dir="$(dirname "$dest")"
+        mkdir -p "$dest_dir"
+        cp -f "$src_file" "$dest"
+        echo -e "  ${GREEN}✓${NC} $rel_path"
+        FILE_COUNT=$((FILE_COUNT + 1))
+    done < <(find "$PATCH_DIR" -type f -print0)
+
+    echo -e "${GREEN}[✓]${NC} Updated ${FILE_COUNT} files"
+
+    # Set permissions
+    echo -e "${BLUE}[4/4]${NC} Setting permissions..."
+    chmod +x "$SAELAR_DIR/start_saelar.sh" 2>/dev/null || true
+    chmod +x "$SAELAR_DIR/saelar" 2>/dev/null || true
+    echo -e "${GREEN}[✓]${NC} Permissions set"
+
+    # Done
+    echo ""
+    echo -e "${GREEN}╔═══════════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${GREEN}║                    UPDATE COMPLETE!                                    ║${NC}"
+    echo -e "${GREEN}╚═══════════════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "  Backup saved to: ${BACKUP_DIR}"
+    echo ""
+    echo -e "  ${CYAN}What was fixed:${NC}"
+    echo "    - Document generation (SSP/POA&M/RAR) no longer uses Windows paths"
+    echo "    - Generated docs saved to /tmp/saelar_docs/ (or \$SAELAR_OUTPUT_DIR)"
+    echo "    - Fixed leaked file handles in S3 uploads"
+    echo "    - Fixed risk calculator file upload bug"
+    echo ""
+    echo -e "  To restart SAELAR:"
+    echo -e "    ${CYAN}./start_saelar.sh${NC}"
+    echo ""
+
+    read -p "  Start SAELAR now? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        do_start
+    fi
+}
+
+#-------------------------------------------------------------------------------
+# saelar start
+#-------------------------------------------------------------------------------
+do_start() {
+    echo -e "${BLUE}[SAELAR]${NC} Starting..."
+    if [ -f "./start_saelar.sh" ]; then
+        exec ./start_saelar.sh
+    else
+        exec streamlit run nist_setup.py \
+            --server.port "${SAELAR_PORT:-8484}" \
+            --server.address 0.0.0.0 \
+            --server.headless true \
+            --server.fileWatcherType none
+    fi
+}
+
+#-------------------------------------------------------------------------------
+# saelar stop
+#-------------------------------------------------------------------------------
+do_stop() {
+    echo -e "${BLUE}[SAELAR]${NC} Stopping..."
+    if pkill -f "streamlit run nist_setup.py" 2>/dev/null; then
+        echo -e "${GREEN}[✓]${NC} SAELAR stopped"
+    else
+        echo -e "${YELLOW}[!]${NC} No running SAELAR instance found"
+    fi
+}
+
+#-------------------------------------------------------------------------------
+# saelar status
+#-------------------------------------------------------------------------------
+do_status() {
+    if pgrep -f "streamlit run nist_setup.py" > /dev/null 2>&1; then
+        PID=$(pgrep -f "streamlit run nist_setup.py" | head -1)
+        echo -e "${GREEN}[✓]${NC} SAELAR is running (PID: ${PID})"
+    else
+        echo -e "${YELLOW}[!]${NC} SAELAR is not running"
+    fi
+}
+
+#-------------------------------------------------------------------------------
+# Main
+#-------------------------------------------------------------------------------
+case "${1:-}" in
+    install)
+        case "${2:-}" in
+            update)
+                do_install_update
+                ;;
+            *)
+                echo "Usage: saelar install update"
+                exit 1
+                ;;
+        esac
+        ;;
+    start)
+        do_start
+        ;;
+    stop)
+        do_stop
+        ;;
+    status)
+        do_status
+        ;;
+    *)
+        banner
+        echo "Usage: ./saelar <command>"
+        echo ""
+        echo "Commands:"
+        echo "  install update    Apply update patch (fix I/O errors)"
+        echo "  start             Start SAELAR"
+        echo "  stop              Stop SAELAR"
+        echo "  status            Check if SAELAR is running"
+        echo ""
+        exit 1
+        ;;
+esac

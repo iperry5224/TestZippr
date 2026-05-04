@@ -235,6 +235,105 @@ aws bedrock list-foundation-models --region us-east-1 --query 'modelSummaries[*]
         raise Exception(f"Bedrock error: {error_msg}")
 
 
+# =============================================================================
+# BEDROCK KNOWLEDGE BASE (RAG)
+# =============================================================================
+
+def _load_kb_config() -> dict:
+    """Load Knowledge Base config from file or environment."""
+    kb_id = os.environ.get("SAELAR_KB_ID", "")
+    if kb_id:
+        return {"knowledge_base_id": kb_id}
+    config_path = Path(__file__).parent / ".saelar_kb_config.json"
+    if config_path.exists():
+        try:
+            with open(config_path) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def retrieve_from_knowledge_base(query: str, max_results: int = 5, region: str = "us-east-1") -> list:
+    """
+    Retrieve relevant document chunks from the Bedrock Knowledge Base.
+
+    Returns a list of dicts with 'text' and 'score' keys, or an empty list
+    if the KB is not configured or the call fails.
+    """
+    kb_config = _load_kb_config()
+    kb_id = kb_config.get("knowledge_base_id", "")
+    if not kb_id:
+        return []
+
+    try:
+        client = boto3.client("bedrock-agent-runtime", region_name=region)
+        response = client.retrieve(
+            knowledgeBaseId=kb_id,
+            retrievalQuery={"text": query},
+            retrievalConfiguration={
+                "vectorSearchConfiguration": {
+                    "numberOfResults": max_results
+                }
+            },
+        )
+        results = []
+        for item in response.get("retrievalResults", []):
+            text = item.get("content", {}).get("text", "")
+            score = item.get("score", 0)
+            source = item.get("location", {}).get("s3Location", {}).get("uri", "")
+            if text:
+                results.append({"text": text, "score": score, "source": source})
+        return results
+    except Exception as e:
+        print(f"Knowledge Base retrieval failed (non-fatal): {e}")
+        return []
+
+
+def call_ai_with_rag(
+    messages: list,
+    system_prompt: str,
+    max_tokens: int = 4096,
+    region: str = "us-east-1",
+) -> str:
+    """
+    Enhanced AI call that retrieves relevant context from the Knowledge Base
+    before calling the model.  Falls through to plain call_ai if KB is not
+    configured or returns no results.
+    """
+    user_query = ""
+    for msg in reversed(messages):
+        if msg["role"] == "user":
+            user_query = msg["content"]
+            break
+
+    if not user_query:
+        return call_ai(messages, system_prompt, max_tokens, region)
+
+    kb_results = retrieve_from_knowledge_base(user_query, max_results=5, region=region)
+
+    if kb_results:
+        kb_context_parts = [
+            "=== RETRIEVED COMPLIANCE DOCUMENTS (from Knowledge Base) ==="
+        ]
+        for i, r in enumerate(kb_results, 1):
+            source_label = r["source"].split("/")[-1] if r["source"] else "document"
+            kb_context_parts.append(
+                f"\n--- Document {i} (source: {source_label}, relevance: {r['score']:.2f}) ---\n{r['text']}"
+            )
+        kb_context_parts.append(
+            "\n=== END RETRIEVED DOCUMENTS ===\n"
+            "Use the retrieved documents above to inform your answer when relevant. "
+            "Cite the source document when referencing specific information."
+        )
+        kb_context = "\n".join(kb_context_parts)
+        enhanced_prompt = system_prompt + "\n\n" + kb_context
+    else:
+        enhanced_prompt = system_prompt
+
+    return call_ai(messages, enhanced_prompt, max_tokens, region)
+
+
 def get_ai_mode_status() -> dict:
     """
     Get the current AI mode status for display in UI.
@@ -269,10 +368,12 @@ def get_ai_mode_status() -> dict:
                 "color": "#10b981"
             }
         else:
+            kb_config = _load_kb_config()
+            kb_detail = " + Knowledge Base (RAG)" if kb_config.get("knowledge_base_id") else ""
             return {
-                "mode": "Cloud (AWS Bedrock)",
+                "mode": f"Cloud (AWS Bedrock{kb_detail})",
                 "status": "☁️ Cloud Mode",
-                "details": "Internet required",
+                "details": "Data stays within AWS",
                 "color": "#3b82f6"
             }
 
@@ -2244,11 +2345,11 @@ Guidelines:
                 for msg in st.session_state.chad_messages:
                     messages.append({"role": msg["role"], "content": msg["content"]})
                 
-                # Call AI (uses Ollama in air-gapped mode, Bedrock otherwise)
-                assistant_message = call_ai(
+                # Call AI with RAG (retrieves from Knowledge Base, then Bedrock/Ollama)
+                assistant_message = call_ai_with_rag(
                     messages=messages,
                     system_prompt=system_prompt,
-                    max_tokens=8192  # Increased for comprehensive report generation
+                    max_tokens=8192
                 )
                 
                 # Add assistant response to history
@@ -3149,7 +3250,7 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
             with col3:
                 if st.button("📝 Generate RAR Document", use_container_width=True, key="generate_rar_btn"):
                     try:
-                        from wordy import create_rar_document
+                        from wordy import create_rar_markdown
                         import os
                         
                         # Build RAR data from assessment
@@ -3234,53 +3335,28 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                             },
                         }
                         
-                        # Generate document
-                        system_name = system_info.get('system_name', 'System')
-                        safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-                        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\RAR_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
-                        
-                        doc_path = create_rar_document(rar_data, output_path)
-                        
-                        # Store in session state for download/open buttons
-                        st.session_state.rar_generated_path = doc_path
+                        # Generate markdown document (no file I/O)
+                        rar_markdown = create_rar_markdown(rar_data)
+                        st.session_state.rar_generated_md = rar_markdown
                         st.session_state.rar_generated = True
                         st.rerun()
                         
                     except Exception as e:
                         st.error(f"❌ Error generating RAR: {str(e)}")
             
-            # Show download and open buttons if RAR was generated
-            if st.session_state.get('rar_generated', False) and st.session_state.get('rar_generated_path'):
-                doc_path = st.session_state.rar_generated_path
+            # Show download button if RAR was generated
+            if st.session_state.get('rar_generated', False) and st.session_state.get('rar_generated_md'):
+                rar_md = st.session_state.rar_generated_md
                 st.success(f"✅ RAR Document generated!")
                 
-                col_dl1, col_dl2 = st.columns(2)
-                with col_dl1:
-                    # Read the file for download
-                    try:
-                        with open(doc_path, 'rb') as f:
-                            doc_bytes = f.read()
-                        st.download_button(
-                            "📥 Download RAR Document",
-                            data=doc_bytes,
-                            file_name=os.path.basename(doc_path),
-                            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                            use_container_width=True,
-                            key="download_rar_btn"
-                        )
-                    except Exception as e:
-                        st.error(f"Could not read file: {e}")
-                
-                with col_dl2:
-                    if st.button("📂 Open RAR Document", use_container_width=True, key="open_rar_btn"):
-                        try:
-                            import subprocess
-                            subprocess.Popen(['start', '', doc_path], shell=True)
-                            st.info(f"Opening: {os.path.basename(doc_path)}")
-                        except Exception as e:
-                            st.error(f"Could not open file: {e}")
-                
-                st.caption(f"📁 Saved to: {doc_path}")
+                st.download_button(
+                    "📥 Download RAR Document (.md)",
+                    data=rar_md.encode('utf-8'),
+                    file_name=f"RAR_{datetime.now().strftime('%Y%m%d')}.md",
+                    mime="text/markdown",
+                    use_container_width=True,
+                    key="download_rar_btn"
+                )
         
         # NIST 800-30 Enhanced Analysis Tab
         with tab5_risk:
@@ -3701,7 +3777,7 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
         """Render the System Security Plan Generator page."""
         from datetime import datetime
         from ssp_generator import SSPGenerator, SystemCategorization
-        from wordy import create_ssp_document, create_poam_document
+        from wordy import create_ssp_document, create_poam_document, create_ssp_markdown, create_poam_markdown
         
         st.markdown("""
         <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); padding: 1.5rem;
@@ -3849,18 +3925,10 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                         st.session_state.ssp_description = system_description
                         st.session_state.ssp_boundary = authorization_boundary
                         
-                        # Generate Word document
+                        # Generate Markdown document (no file I/O — avoids Errno 5)
                         safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-                        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\SSP_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
-                        
-                        doc_path = create_ssp_document(ssp_data, output_path)
-                        
-                        # Store path for download button
-                        st.session_state.ssp_doc_path = doc_path
-                        
-                        # Read the file for download
-                        with open(doc_path, 'rb') as f:
-                            doc_bytes = f.read()
+                        ssp_markdown = create_ssp_markdown(ssp_data)
+                        doc_bytes = ssp_markdown.encode('utf-8')
                         
                         # Upload to S3 Documentation/SSPs/ folder
                         s3_uploaded = False
@@ -3886,18 +3954,16 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                                 
                                 # Upload SSP to Documentation/SSPs/ folder
-                                s3_key = f"Documentation/SSPs/SSP_{safe_name}_{timestamp}.docx"
+                                s3_key = f"Documentation/SSPs/SSP_{safe_name}_{timestamp}.md"
                                 
-                                s3_client.upload_fileobj(
-                                    open(doc_path, 'rb'),
-                                    s3_bucket,
-                                    s3_key,
-                                    ExtraArgs={
-                                        'Metadata': {
-                                            'document_type': 'System Security Plan (SSP)',
-                                            'system_name': system_name,
-                                            'generated_by': 'SAELAR-53 SSP Generator'
-                                        }
+                                s3_client.put_object(
+                                    Bucket=s3_bucket,
+                                    Key=s3_key,
+                                    Body=doc_bytes,
+                                    Metadata={
+                                        'document_type': 'System Security Plan (SSP)',
+                                        'system_name': system_name,
+                                        'generated_by': 'SAELAR-53 SSP Generator'
                                     }
                                 )
                                 s3_uploaded = True
@@ -3905,22 +3971,20 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                                 
                                 # Create and upload POA&M to Documentation/POA&Ms/ folder
                                 if include_poam and ssp_data.get('poam'):
-                                    poam_local_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\POAM_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
-                                    poam_doc_path = create_poam_document(ssp_data, poam_local_path)
+                                    poam_markdown = create_poam_markdown(ssp_data)
+                                    poam_bytes = poam_markdown.encode('utf-8')
                                     
-                                    poam_s3_key = f"Documentation/POA&Ms/POAM_{safe_name}_{timestamp}.docx"
+                                    poam_s3_key = f"Documentation/POA&Ms/POAM_{safe_name}_{timestamp}.md"
                                     
-                                    s3_client.upload_fileobj(
-                                        open(poam_doc_path, 'rb'),
-                                        s3_bucket,
-                                        poam_s3_key,
-                                        ExtraArgs={
-                                            'Metadata': {
-                                                'document_type': 'Plan of Action & Milestones (POA&M)',
-                                                'system_name': system_name,
-                                                'generated_by': 'SAELAR-53 POA&M Generator',
-                                                'poam_count': str(len(ssp_data.get('poam', [])))
-                                            }
+                                    s3_client.put_object(
+                                        Bucket=s3_bucket,
+                                        Key=poam_s3_key,
+                                        Body=poam_bytes,
+                                        Metadata={
+                                            'document_type': 'Plan of Action & Milestones (POA&M)',
+                                            'system_name': system_name,
+                                            'generated_by': 'SAELAR-53 POA&M Generator',
+                                            'poam_count': str(len(ssp_data.get('poam', [])))
                                         }
                                     )
                                     poam_s3_uploaded = True
@@ -3937,15 +4001,13 @@ V.LOW  |  1   |  2   |  3   |  4   |  5   | ← LOW
                         """, unsafe_allow_html=True)
                         
                         st.download_button(
-                            label="📥 Download SSP Document (.docx)",
+                            label="📥 Download SSP Document (.md)",
                             data=doc_bytes,
-                            file_name=f"SSP_{safe_name}_{datetime.now().strftime('%Y%m%d')}.docx",
-                            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            file_name=f"SSP_{safe_name}_{datetime.now().strftime('%Y%m%d')}.md",
+                            mime="text/markdown",
                             type="primary",
                             use_container_width=True
                         )
-                        
-                        st.info(f"📄 Local copy saved to: `{doc_path}`")
                         
                         if s3_uploaded:
                             st.success(f"☁️ SSP uploaded to S3: `{s3_location}`")

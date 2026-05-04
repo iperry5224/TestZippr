@@ -19,7 +19,7 @@ from botocore.exceptions import ClientError
 from nist_800_53_rev5_full import NIST80053Rev5Assessor, ControlResult, ControlStatus
 
 # S3 bucket for storing assessment results
-S3_BUCKET_NAME = "saegrctest1"
+S3_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME", "saelarallpurpose")
 S3_PREFIX = "nist-assessments/"
 
 # Local folder for storing assessment reports (on Desktop)

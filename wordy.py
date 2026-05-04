@@ -22,14 +22,26 @@ import os
 import re
 import sys
 import glob
+import tempfile
 from datetime import datetime
+
+
+def _default_output_path(prefix: str, safe_name: str = "") -> str:
+    """Return a cross-platform writable path for generated documents."""
+    output_dir = os.environ.get("SAELAR_OUTPUT_DIR")
+    if not output_dir:
+        output_dir = os.path.join(tempfile.gettempdir(), "saelar_docs")
+    os.makedirs(output_dir, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d")
+    filename = f"{prefix}_{safe_name}_{timestamp}.docx" if safe_name else f"{prefix}_{timestamp}.docx"
+    return os.path.join(output_dir, filename)
 
 
 def create_comparison_document(output_path: str = None):
     """Generate SAELAR vs AWS Audit Manager comparison as Word document."""
     
     if output_path is None:
-        output_path = r'C:\Users\iperr\OneDrive\Desktop\AI-Guides\SAELAR_vs_AWS_Audit_Manager_Comparison.docx'
+        output_path = _default_output_path("SAELAR_vs_AWS_Audit_Manager_Comparison")
     
     doc = Document()
 
@@ -593,7 +605,7 @@ def create_ssp_document(ssp_data: dict, output_path: str = None):
     if output_path is None:
         system_name = ssp_data.get('system_info', {}).get('system_name', 'System')
         safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\SSP_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
+        output_path = _default_output_path("SSP", safe_name)
     
     doc = Document()
     
@@ -874,6 +886,180 @@ def create_ssp_document(ssp_data: dict, output_path: str = None):
     return output_path
 
 
+def create_ssp_markdown(ssp_data: dict) -> str:
+    """Generate a System Security Plan as a Markdown string (no file I/O)."""
+    system_info = ssp_data.get('system_info', {})
+    summary = ssp_data.get('summary', {})
+    family_summary = ssp_data.get('family_summary', {})
+    controls = ssp_data.get('controls', [])
+    poam = ssp_data.get('poam', [])
+    stats = ssp_data.get('statistics', {})
+
+    lines = []
+    lines.append("# System Security Plan")
+    lines.append(f"\n**{system_info.get('system_name', 'Information System')}**")
+    lines.append(f"\nSecurity Categorization: {system_info.get('categorization', 'Moderate')}")
+    lines.append(f"Document Version: {ssp_data.get('metadata', {}).get('version', '1.0')}")
+    lines.append(f"Generated: {datetime.now().strftime('%B %d, %Y')}")
+
+    lines.append("\n## Document Control")
+    lines.append("\n| Field | Value |")
+    lines.append("|---|---|")
+    lines.append(f"| System Owner | {system_info.get('system_owner', 'TBD')} |")
+    lines.append(f"| ISSO | {system_info.get('isso_name', 'TBD')} |")
+    lines.append(f"| Authorizing Official | {system_info.get('authorizing_official', 'TBD')} |")
+    lines.append(f"| Categorization | {system_info.get('categorization', 'Moderate')} |")
+    lines.append(f"| Status | {system_info.get('operational_status', 'Operational')} |")
+
+    lines.append("\n## Executive Summary")
+    lines.append(f"\n- **Total Controls Assessed:** {summary.get('total_controls', 0)}")
+    lines.append(f"- **Implemented:** {summary.get('implemented', 0)}")
+    lines.append(f"- **Partially Implemented:** {summary.get('partial', 0)}")
+    lines.append(f"- **Not Implemented:** {summary.get('not_implemented', 0)}")
+    lines.append(f"- **Compliance Percentage:** {summary.get('compliance_percentage', 0)}%")
+    lines.append(f"- **Security Posture:** {summary.get('security_posture', 'Unknown')}")
+
+    if system_info.get('system_description'):
+        lines.append("\n## System Description")
+        lines.append(f"\n{system_info['system_description']}")
+
+    if system_info.get('authorization_boundary'):
+        lines.append("\n## Authorization Boundary")
+        lines.append(f"\n{system_info['authorization_boundary']}")
+
+    if family_summary:
+        lines.append("\n## Control Family Summary")
+        lines.append("\n| Family | Implemented | Partial | Not Implemented | Total | Compliance |")
+        lines.append("|---|---|---|---|---|---|")
+        for family_code, data in family_summary.items():
+            total = data.get('total', 0)
+            impl = data.get('implemented', 0)
+            pct = f"{(impl/total*100):.0f}%" if total > 0 else "N/A"
+            lines.append(f"| {family_code} | {impl} | {data.get('partial', 0)} | {data.get('not_implemented', 0)} | {total} | {pct} |")
+
+    if controls:
+        lines.append("\n## Control Implementation Details")
+        for ctrl in controls:
+            status = ctrl.get('status', 'Unknown')
+            lines.append(f"\n### {ctrl.get('control_id', '')} — {ctrl.get('control_name', '')}")
+            lines.append(f"\n**Status:** {status}")
+            if ctrl.get('findings'):
+                lines.append("\n**Findings:**")
+                for f in ctrl['findings']:
+                    lines.append(f"- {f}")
+            if ctrl.get('recommendations'):
+                lines.append("\n**Recommendations:**")
+                for r in ctrl['recommendations']:
+                    lines.append(f"- {r}")
+
+    if poam:
+        lines.append("\n## Plan of Action & Milestones (POA&M)")
+        lines.append("\n| # | Control | Weakness | Risk | Milestone |")
+        lines.append("|---|---|---|---|---|")
+        for i, item in enumerate(poam, 1):
+            lines.append(f"| {i} | {item.get('control_id', '')} | {item.get('weakness', '')} | {item.get('risk_level', '')} | {item.get('milestone', '')} |")
+
+    lines.append(f"\n---\n\n*Generated by SAELAR SSP Generator | {datetime.now().strftime('%B %d, %Y')}*")
+    return "\n".join(lines)
+
+
+def create_poam_markdown(ssp_data: dict) -> str:
+    """Generate a POA&M document as a Markdown string (no file I/O)."""
+    system_info = ssp_data.get('system_info', {})
+    poam_items = ssp_data.get('poam', [])
+    summary = ssp_data.get('summary', {})
+
+    lines = []
+    lines.append("# Plan of Action & Milestones (POA&M)")
+    lines.append(f"\n**{system_info.get('system_name', 'Information System')}**")
+    lines.append(f"\nGenerated: {datetime.now().strftime('%B %d, %Y')}")
+    lines.append(f"Security Categorization: {system_info.get('categorization', 'Moderate')}")
+    lines.append(f"Total POA&M Items: {len(poam_items)}")
+
+    if poam_items:
+        high = sum(1 for p in poam_items if p.get('risk_level') == 'High')
+        med = sum(1 for p in poam_items if p.get('risk_level') == 'Medium')
+        low = sum(1 for p in poam_items if p.get('risk_level') == 'Low')
+        lines.append(f"\n## Summary")
+        lines.append(f"\n- **High Risk:** {high}")
+        lines.append(f"- **Medium Risk:** {med}")
+        lines.append(f"- **Low Risk:** {low}")
+
+        lines.append(f"\n## POA&M Items")
+        lines.append("\n| # | Control ID | Weakness | Risk Level | Remediation | Milestone | Status |")
+        lines.append("|---|---|---|---|---|---|---|")
+        for i, item in enumerate(poam_items, 1):
+            lines.append(f"| {i} | {item.get('control_id', '')} | {item.get('weakness', '')[:50]} | {item.get('risk_level', '')} | {item.get('remediation', '')[:50]} | {item.get('milestone', '')} | {item.get('status', 'Open')} |")
+    else:
+        lines.append("\n*No POA&M items — all controls implemented.*")
+
+    lines.append(f"\n---\n\n*Generated by SAELAR POA&M Generator | {datetime.now().strftime('%B %d, %Y')}*")
+    return "\n".join(lines)
+
+
+def create_rar_markdown(rar_data: dict) -> str:
+    """Generate a Risk Assessment Report as a Markdown string (no file I/O)."""
+    system_info = rar_data.get('system_info', {})
+    assessment_results = rar_data.get('assessment_results', {})
+    vulnerabilities = rar_data.get('vulnerabilities', [])
+    risk_summary = rar_data.get('risk_summary', {})
+    recommendations = rar_data.get('recommendations', [])
+    poam = rar_data.get('poam', [])
+    stats = rar_data.get('statistics', {})
+
+    system_name = system_info.get('system_name', 'System Name')
+    system_acronym = system_info.get('system_acronym', 'NOAA50xx')
+    categorization = system_info.get('categorization', 'Moderate')
+
+    lines = []
+    lines.append(f"# {system_name} ({system_acronym})")
+    lines.append(f"\n# Risk Assessment Report")
+    lines.append(f"\nGenerated: {datetime.now().strftime('%B %d, %Y')}")
+    lines.append(f"Security Categorization: {categorization}")
+
+    lines.append("\n## Document Control")
+    lines.append("\n| Field | Value |")
+    lines.append("|---|---|")
+    lines.append(f"| System Owner | {system_info.get('system_owner', 'TBD')} |")
+    lines.append(f"| ISSO | {system_info.get('isso_name', 'TBD')} |")
+    lines.append(f"| Authorizing Official | {system_info.get('authorizing_official', 'TBD')} |")
+
+    lines.append("\n## Executive Summary")
+    lines.append(f"\n- **Overall Risk Level:** {risk_summary.get('overall_risk_level', 'Unknown')}")
+    lines.append(f"- **Total Risk Score:** {risk_summary.get('total_risk_score', 0)}")
+    lines.append(f"- **Total Controls Assessed:** {stats.get('total_controls', 0)}")
+    lines.append(f"- **Implemented:** {stats.get('implemented', 0)}")
+    lines.append(f"- **Not Implemented:** {stats.get('not_implemented', 0)}")
+
+    if vulnerabilities:
+        lines.append("\n## Identified Vulnerabilities")
+        lines.append("\n| # | Vulnerability | Severity | Likelihood | Impact |")
+        lines.append("|---|---|---|---|---|")
+        for i, vuln in enumerate(vulnerabilities, 1):
+            lines.append(f"| {i} | {vuln.get('title', '')} | {vuln.get('severity', '')} | {vuln.get('likelihood', '')} | {vuln.get('impact', '')} |")
+
+    if recommendations:
+        lines.append("\n## Recommendations")
+        for i, rec in enumerate(recommendations, 1):
+            if isinstance(rec, dict):
+                lines.append(f"\n### {i}. {rec.get('title', 'Recommendation')}")
+                lines.append(f"\n{rec.get('description', '')}")
+                if rec.get('priority'):
+                    lines.append(f"\n**Priority:** {rec['priority']}")
+            else:
+                lines.append(f"\n{i}. {rec}")
+
+    if poam:
+        lines.append("\n## Associated POA&M Items")
+        lines.append("\n| # | Control | Weakness | Risk Level |")
+        lines.append("|---|---|---|---|")
+        for i, item in enumerate(poam, 1):
+            lines.append(f"| {i} | {item.get('control_id', '')} | {item.get('weakness', '')[:50]} | {item.get('risk_level', '')} |")
+
+    lines.append(f"\n---\n\n*Generated by SAELAR Risk Assessment Report Generator | {datetime.now().strftime('%B %d, %Y')}*")
+    return "\n".join(lines)
+
+
 def create_poam_document(ssp_data: dict, output_path: str = None):
     """
     Generate a standalone Plan of Action & Milestones (POA&M) Word document.
@@ -888,7 +1074,7 @@ def create_poam_document(ssp_data: dict, output_path: str = None):
     if output_path is None:
         system_name = ssp_data.get('system_info', {}).get('system_name', 'System')
         safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\POAM_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
+        output_path = _default_output_path("POAM", safe_name)
     
     doc = Document()
     
@@ -1065,7 +1251,7 @@ def create_rar_document(rar_data: dict, output_path: str = None):
     if output_path is None:
         system_name = rar_data.get('system_info', {}).get('system_name', 'System')
         safe_name = system_name.replace(' ', '_').replace('/', '-')[:30]
-        output_path = rf'C:\Users\iperr\OneDrive\Desktop\AI-Guides\RAR_{safe_name}_{datetime.now().strftime("%Y%m%d")}.docx'
+        output_path = _default_output_path("RAR", safe_name)
     
     doc = Document()
     
